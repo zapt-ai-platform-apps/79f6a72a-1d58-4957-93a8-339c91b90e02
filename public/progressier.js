@@ -1,2 +1,2 @@
-// This is the service worker file that is used to help make this a PWA
+// هذا هو ملف خدمة العامل الذي يساعد في جعل هذا تطبيق PWA
 importScripts("https://progressier.app/z8yY3IKmfpDIw3mSncPh/sw.js");

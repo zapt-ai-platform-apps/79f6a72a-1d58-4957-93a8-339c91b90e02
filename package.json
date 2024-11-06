@@ -1,7 +1,7 @@
 {
   "name": "blind-accessibility-tools",
   "version": "1.0.0",
-  "description": "An application providing accessibility tools for blind and visually impaired users.",
+  "description": "تطبيق يوفر أدوات وصول للمكفوفين وضعاف البصر.",
   "type": "module",
   "scripts": {
     "dev": "vite",

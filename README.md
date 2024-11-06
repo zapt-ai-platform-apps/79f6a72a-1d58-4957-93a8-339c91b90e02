@@ -1,24 +1,24 @@
-# Blind Accessibility Tools
+# أدوات Blind Accessibility
 
-## Overview
+## نظرة عامة
 
-Blind Accessibility Tools is an application designed to provide tools and resources to improve accessibility for blind and visually impaired users. The app aims to offer features that enhance usability and interaction with web content.
+"أدوات Blind Accessibility" هو تطبيق مصمم لتوفير أدوات وموارد لتحسين الوصول للأشخاص المكفوفين وضعاف البصر. يهدف التطبيق إلى تقديم ميزات تعزز سهولة الاستخدام والتفاعل مع محتوى الويب.
 
-Currently, the app displays a welcoming title, with further features to be added in future updates.
+حاليًا، يعرض التطبيق عنوانًا ترحيبيًا، مع المزيد من الميزات التي ستُضاف في التحديثات المستقبلية.
 
-## Features
+## الميزات
 
-- **Accessible Design**: The app follows best practices for accessibility, ensuring compatibility with screen readers and keyboard navigation.
-- **Responsive Layout**: The app is responsive and adjusts to various screen sizes and devices.
+- **تصميم متوافق**: يتبع التطبيق أفضل الممارسات للولوجية، مما يضمن التوافق مع قارئات الشاشة والتنقّل عبر لوحة المفاتيح.
+- **تخطيط متجاوب**: التطبيق متجاوب ويتكيّف مع مختلف أحجام الشاشات والأجهزة.
 
-## User Journeys
+## رحلات المستخدم
 
-### 1. Access the Application
+### 1. الوصول إلى التطبيق
 
-1. **Open the App**: Navigate to the application URL in your web browser.
-2. **View the Title**: The main page displays the title "**Blind Accessibility Tools**" prominently.
+1. **افتح التطبيق**: انتقل إلى عنوان التطبيق في متصفح الويب الخاص بك.
+2. **عرض العنوان**: تعرض الصفحة الرئيسية العنوان البارز "**أدوات Blind Accessibility**".
 
-## Notes
+## ملاحظات
 
-- This is a starting point for a suite of tools to aid blind and visually impaired individuals.
-- Future updates will include more features and functionalities.
+- هذه نقطة بداية لمجموعة أدوات لمساعدة الأشخاص المكفوفين وضعاف البصر.
+- ستشمل التحديثات المستقبلية المزيد من الميزات والوظائف.

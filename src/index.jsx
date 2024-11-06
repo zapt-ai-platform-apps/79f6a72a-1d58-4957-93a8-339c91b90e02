@@ -2,19 +2,19 @@ import { render } from 'solid-js/web';
 import App from './App';
 import './index.css';
 
-// Add PWA support to the app (this will add a service worker and a manifest file, you don't need to do anything else)
+// إضافة دعم PWA للتطبيق (سيضيف هذا خدمة العامل وملف مانيفيست، لا تحتاج لفعل أي شيء آخر)
 window.progressierAppRuntimeSettings = {
   uid: import.meta.env.VITE_PUBLIC_APP_ID,
   icon512: "https://your.icon/url/here.png",
-  name: "Blind Accessibility Tools",
-  shortName: "Accessibility Tools"
+  name: "أدوات Blind Accessibility",
+  shortName: "أدوات الوصول"
 };
 let script = document.createElement('script');
 script.setAttribute('src', 'https://progressier.app/z8yY3IKmfpDIw3mSncPh/script.js');
 script.setAttribute('defer', 'true');
 document.querySelector('head').appendChild(script);
 
-// Initialize Sentry for error logging
+// تهيئة Sentry لتسجيل الأخطاء
 import * as Sentry from "@sentry/browser";
 
 Sentry.init({
