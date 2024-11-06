@@ -1,28 +1,22 @@
 {
-  "name": "solidjs-vite-tailwind-vercel",
+  "name": "blind-accessibility-tools",
   "version": "1.0.0",
-  "description": "SolidJS app with Vite, Tailwind, and Vercel serverless function",
+  "description": "An application providing accessibility tools for blind and visually impaired users.",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "drizzle-kit push --force --config=./drizzle.config.js && vite build",
+    "build": "vite build",
     "serve": "vite preview"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^0.9.5",
-    "@zapt/zapt-js": "^1.0.5",
-    "drizzle-orm": "^0.33.0",
     "solid-js": "^1.8.22",
-    "solid-markdown": "^2.0.13",
-    "@sentry/browser": "8.35.0",
-    "@sentry/node": "8.35.0"
+    "@sentry/browser": "8.35.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
     "vite": "^5.4.7",
-    "vite-plugin-solid": "^2.10.2",
-    "drizzle-kit": "^0.24.2"
+    "vite-plugin-solid": "^2.10.2"
   }
 }
