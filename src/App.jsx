@@ -1,10 +1,12 @@
 import { createSignal, Show } from 'solid-js';
 import Assistant from './components/Assistant';
 import SmartTextEditor from './components/SmartTextEditor';
+import ArabRadio from './components/ArabRadio';
 
 function App() {
   const [showAssistant, setShowAssistant] = createSignal(false);
   const [showEditor, setShowEditor] = createSignal(false);
+  const [showRadioPlayer, setShowRadioPlayer] = createSignal(false);
 
   return (
     <div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 flex flex-col items-center justify-center text-gray-800 p-4" dir="rtl">
@@ -26,12 +28,21 @@ function App() {
         >
           محرر النصوص الذكي
         </button>
+        <button
+          onClick={() => setShowRadioPlayer(true)}
+          class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          الراديو العربي
+        </button>
       </div>
       <Show when={showAssistant()}>
         <Assistant onClose={() => setShowAssistant(false)} />
       </Show>
       <Show when={showEditor()}>
         <SmartTextEditor onClose={() => setShowEditor(false)} />
+      </Show>
+      <Show when={showRadioPlayer()}>
+        <ArabRadio onClose={() => setShowRadioPlayer(false)} />
       </Show>
     </div>
   );
