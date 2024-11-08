@@ -1,11 +1,12 @@
-import { createSignal, onMount, Show, For } from 'solid-js';
+import { createSignal, onMount, Show } from 'solid-js';
 
 function ArabRadio(props) {
-  const [loading, setLoading] = createSignal(false);
+  const [loadingCountries, setLoadingCountries] = createSignal(false);
+  const [loadingStations, setLoadingStations] = createSignal(false);
   const [countries, setCountries] = createSignal([]);
-  const [selectedCountry, setSelectedCountry] = createSignal(null);
+  const [selectedCountry, setSelectedCountry] = createSignal('');
   const [stations, setStations] = createSignal([]);
-  const [selectedStation, setSelectedStation] = createSignal(null);
+  const [selectedStation, setSelectedStation] = createSignal('');
   const [playing, setPlaying] = createSignal(false);
 
   let audioRef;
@@ -36,7 +37,7 @@ function ArabRadio(props) {
   ];
 
   onMount(async () => {
-    setLoading(true);
+    setLoadingCountries(true);
     try {
       const response = await fetch('https://de1.api.radio-browser.info/json/countries');
       const data = await response.json();
@@ -50,13 +51,14 @@ function ArabRadio(props) {
       setCountries(mappedCountries);
     } catch (error) {
       console.error('Error fetching countries:', error);
+      alert('حدث خطأ أثناء جلب قائمة الدول.');
     } finally {
-      setLoading(false);
+      setLoadingCountries(false);
     }
   });
 
   const fetchStations = async (countryName) => {
-    setLoading(true);
+    setLoadingStations(true);
     try {
       const response = await fetch(`https://de1.api.radio-browser.info/json/stations/bycountry/${encodeURIComponent(countryName)}`);
       const data = await response.json();
@@ -74,22 +76,43 @@ function ArabRadio(props) {
       setStations(uniqueStations);
     } catch (error) {
       console.error('Error fetching stations:', error);
+      alert('حدث خطأ أثناء جلب قائمة المحطات.');
     } finally {
-      setLoading(false);
+      setLoadingStations(false);
     }
   };
 
-  const selectCountry = (country) => {
-    setSelectedCountry(country);
-    fetchStations(country.name);
+  const handleCountryChange = (e) => {
+    const selected = e.target.value;
+    setSelectedCountry(selected);
+    setSelectedStation('');
+    setStations([]);
+    if (selected) {
+      const countryEnglishName = arabCountries.find(country => country.ar === selected)?.en || selected;
+      fetchStations(countryEnglishName);
+    }
   };
 
-  const playStation = (station) => {
-    setSelectedStation(station);
-    setPlaying(true);
+  const handleStationChange = (e) => {
+    const selected = e.target.value;
+    setSelectedStation(selected);
+    setPlaying(false);
     if (audioRef) {
-      audioRef.src = station.url_resolved;
-      audioRef.play();
+      audioRef.pause();
+      audioRef.currentTime = 0;
+    }
+  };
+
+  const playStation = () => {
+    if (selectedStation()) {
+      const station = stations().find(s => s.name === selectedStation());
+      if (station) {
+        if (audioRef) {
+          audioRef.src = station.url_resolved;
+          audioRef.play();
+          setPlaying(true);
+        }
+      }
     }
   };
 
@@ -99,12 +122,11 @@ function ArabRadio(props) {
       audioRef.currentTime = 0;
     }
     setPlaying(false);
-    setSelectedStation(null);
   };
 
   return (
     <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 text-gray-800" dir="rtl">
-      <div class="w-full max-w-md md:max-w-lg lg:max-w-4xl bg-white p-6 rounded-lg shadow-md">
+      <div class="w-full max-w-md md:max-w-lg lg:max-w-2xl bg-white p-6 rounded-lg shadow-md">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-2xl font-bold text-purple-600">الراديو العربي</h2>
           <button
@@ -115,79 +137,73 @@ function ArabRadio(props) {
             ✖️
           </button>
         </div>
-        <Show when={!selectedCountry()}>
+        <div class="space-y-4">
           <div>
-            <h3 class="text-xl font-bold mb-2 text-purple-600">اختر دولة:</h3>
-            <Show when={loading()}>
-              <p>جاري التحميل...</p>
+            <label class="block text-lg font-semibold mb-2 text-gray-700">اختر دولة:</label>
+            <Show when={loadingCountries()}>
+              <p>جاري تحميل قائمة الدول...</p>
             </Show>
-            <Show when={!loading()}>
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-[60vh] overflow-y-auto pr-2">
+            <Show when={!loadingCountries()}>
+              <select
+                value={selectedCountry()}
+                onChange={handleCountryChange}
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer text-gray-800"
+              >
+                <option value="">-- اختر الدولة --</option>
                 <For each={countries()}>
                   {(country) => (
-                    <button
-                      onClick={() => selectCountry(country)}
-                      class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-                    >
-                      {country.arName}
-                    </button>
+                    <option value={country.arName}>{country.arName}</option>
                   )}
                 </For>
-              </div>
+              </select>
             </Show>
           </div>
-        </Show>
-        <Show when={selectedCountry()}>
-          <div>
-            <button
-              onClick={() => {
-                setSelectedCountry(null);
-                setStations([]);
-                setSelectedStation(null);
-              }}
-              class="mb-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-            >
-              العودة إلى قائمة الدول
-            </button>
-            <h3 class="text-xl font-bold mb-2 text-purple-600">اختر محطة من {selectedCountry().arName}:</h3>
-            <Show when={loading()}>
-              <p>جاري التحميل...</p>
-            </Show>
-            <Show when={!loading()}>
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto pr-2">
-                <For each={stations()}>
-                  {(station) => (
-                    <button
-                      onClick={() => playStation(station)}
-                      class="text-left px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-                    >
-                      {station.name}
-                    </button>
-                  )}
-                </For>
-              </div>
-            </Show>
-            <Show when={playing() && selectedStation()}>
-              <div class="mt-4">
-                <h4 class="text-lg font-bold text-purple-600">تشغيل: {selectedStation().name}</h4>
-                <audio
-                  ref={(el) => (audioRef = el)}
-                  controls
-                  autoplay
-                  src={selectedStation().url_resolved}
-                  class="w-full mt-2"
-                  onEnded={() => setPlaying(false)}
-                ></audio>
-                <button
-                  onClick={stopPlaying}
-                  class="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+          <Show when={selectedCountry()}>
+            <div>
+              <label class="block text-lg font-semibold mb-2 text-gray-700">اختر محطة:</label>
+              <Show when={loadingStations()}>
+                <p>جاري تحميل قائمة المحطات...</p>
+              </Show>
+              <Show when={!loadingStations()}>
+                <select
+                  value={selectedStation()}
+                  onChange={handleStationChange}
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer text-gray-800"
                 >
-                  إيقاف التشغيل
-                </button>
-              </div>
-            </Show>
-          </div>
-        </Show>
+                  <option value="">-- اختر المحطة --</option>
+                  <For each={stations()}>
+                    {(station) => (
+                      <option value={station.name}>{station.name}</option>
+                    )}
+                  </For>
+                </select>
+              </Show>
+            </div>
+          </Show>
+          <Show when={selectedStation()}>
+            <div class="flex items-center justify-center mt-4 space-x-4">
+              <button
+                onClick={playStation}
+                class={`px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${playing() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={playing()}
+              >
+                تشغيل
+              </button>
+              <button
+                onClick={stopPlaying}
+                class={`px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${!playing() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={!playing()}
+              >
+                إيقاف التشغيل
+              </button>
+            </div>
+            <audio
+              ref={(el) => (audioRef = el)}
+              class="hidden"
+              onEnded={() => setPlaying(false)}
+            ></audio>
+          </Show>
+        </div>
       </div>
     </div>
   );
