@@ -8,8 +8,10 @@ function Assistant(props) {
   const [loading, setLoading] = createSignal(false);
   const [audioUrl, setAudioUrl] = createSignal('');
   const [listening, setListening] = createSignal(false);
+  const [playing, setPlaying] = createSignal(false);
 
   let recognition;
+  let audioRef;
 
   onMount(() => {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -67,6 +69,18 @@ function Assistant(props) {
     }
   };
 
+  const togglePlay = () => {
+    if (audioRef) {
+      if (!playing()) {
+        audioRef.play();
+        setPlaying(true);
+      } else {
+        audioRef.pause();
+        setPlaying(false);
+      }
+    }
+  };
+
   return (
     <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
@@ -120,7 +134,23 @@ function Assistant(props) {
               <SolidMarkdown children={assistantResponse()} />
             </div>
             <Show when={audioUrl()}>
-              <audio controls src={audioUrl()} class="w-full mt-4"></audio>
+              <audio
+                src={audioUrl()}
+                ref={audioRefElement => audioRef = audioRefElement}
+                onEnded={() => setPlaying(false)}
+                class="hidden"
+              ></audio>
+              <button
+                onClick={togglePlay}
+                class="mt-4 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+              >
+                <Show when={!playing()} fallback={"إيقاف الاستماع"}>
+                  استماع
+                </Show>
+                <Show when={playing()}>
+                  إيقاف الاستماع
+                </Show>
+              </button>
             </Show>
           </div>
         </Show>
