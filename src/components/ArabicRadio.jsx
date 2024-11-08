@@ -32,7 +32,7 @@ function ArabicRadio() {
   const [selectedCountry, setSelectedCountry] = createSignal('');
   const [stations, setStations] = createSignal([]);
   const [isLoading, setIsLoading] = createSignal(false);
-  const [selectedStation, setSelectedStation] = createSignal(null);
+  const [selectedStation, setSelectedStation] = createSignal('');
   const [audio, setAudio] = createSignal(null);
   const [isPlaying, setIsPlaying] = createSignal(false);
 
@@ -58,22 +58,25 @@ function ArabicRadio() {
       fetchStations(selectedCountry());
     } else {
       setStations([]);
+      setSelectedStation('');
     }
   });
 
-  const handlePlay = (station) => {
+  const handlePlay = () => {
     if (audio()) {
       audio().pause();
     }
-    const newAudio = new Audio(station.url_resolved);
-    newAudio.play();
-    setAudio(newAudio);
-    setSelectedStation(station);
-    setIsPlaying(true);
+    const station = stations().find(s => s.stationuuid === selectedStation());
+    if (station) {
+      const newAudio = new Audio(station.url_resolved);
+      newAudio.play();
+      setAudio(newAudio);
+      setIsPlaying(true);
 
-    newAudio.onended = () => {
-      setIsPlaying(false);
-    };
+      newAudio.onended = () => {
+        setIsPlaying(false);
+      };
+    }
   };
 
   const handleStop = () => {
@@ -117,33 +120,34 @@ function ArabicRadio() {
           <p class="text-center text-gray-700">جاري تحميل المحطات...</p>
         </Show>
 
-        <Show when={stations().length > 0}>
-          <h3 class="text-xl font-bold text-purple-600">محطات {selectedCountry()}</h3>
-          <div class="space-y-2 max-h-[400px] overflow-y-auto pr-2">
+        <Show when={stations().length > 0 && !isLoading()}>
+          <select
+            value={selectedStation()}
+            onInput={(e) => setSelectedStation(e.target.value)}
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+          >
+            <option value="">اختر محطة</option>
             <For each={stations()}>
               {(station) => (
-                <div
-                  class="p-3 bg-white rounded-lg shadow-md flex justify-between items-center"
-                >
-                  <p class="text-gray-700">{station.name}</p>
-                  <button
-                    onClick={() => handlePlay(station)}
-                    class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-                  >
-                    تشغيل
-                  </button>
-                </div>
+                <option value={station.stationuuid}>{station.name}</option>
               )}
             </For>
-          </div>
+          </select>
         </Show>
 
-        <Show when={isPlaying()}>
-          <div class="mt-4 p-4 bg-white rounded-lg shadow-md flex items-center justify-between">
-            <p class="text-gray-700">تشغيل الآن: {selectedStation().name}</p>
+        <Show when={selectedStation()}>
+          <div class="flex flex-wrap gap-4 mt-4">
+            <button
+              onClick={handlePlay}
+              class={`flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isPlaying() ? 'opacity-50 cursor-not-allowed' : ''}`}
+              disabled={isPlaying()}
+            >
+              تشغيل
+            </button>
             <button
               onClick={handleStop}
-              class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+              class={`flex-1 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${!isPlaying() ? 'opacity-50 cursor-not-allowed' : ''}`}
+              disabled={!isPlaying()}
             >
               إيقاف
             </button>
