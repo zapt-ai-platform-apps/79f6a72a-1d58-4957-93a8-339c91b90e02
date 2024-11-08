@@ -1,4 +1,4 @@
-import { createSignal, Show } from 'solid-js';
+import { createSignal, Show, onCleanup } from 'solid-js';
 import { createEvent } from '../supabaseClient';
 import { SolidMarkdown } from "solid-markdown";
 
@@ -8,6 +8,8 @@ function Assistant(props) {
   const [loading, setLoading] = createSignal(false);
   const [audioUrl, setAudioUrl] = createSignal('');
   const [playing, setPlaying] = createSignal(false);
+  const [recording, setRecording] = createSignal(false);
+  const [recognition, setRecognition] = createSignal(null);
 
   let audioRef;
 
@@ -46,11 +48,58 @@ function Assistant(props) {
     }
   };
 
+  const startRecording = () => {
+    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+      alert('متصفحك لا يدعم التعرف على الكلام.');
+      return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recog = new SpeechRecognition();
+    recog.lang = 'ar-SA';
+    recog.continuous = false;
+    recog.interimResults = false;
+
+    recog.onstart = () => {
+      setRecording(true);
+    };
+
+    recog.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setAssistantQuery(transcript);
+    };
+
+    recog.onerror = (event) => {
+      console.error('Speech recognition error:', event.error);
+    };
+
+    recog.onend = () => {
+      setRecording(false);
+    };
+
+    recog.start();
+    setRecognition(recog);
+  };
+
+  const stopRecording = () => {
+    if (recognition()) {
+      recognition().stop();
+      setRecognition(null);
+      setRecording(false);
+    }
+  };
+
+  onCleanup(() => {
+    if (recognition()) {
+      recognition().abort();
+    }
+  });
+
   return (
     <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 text-gray-800">
       <div class="w-full max-w-md md:max-w-lg lg:max-w-xl bg-white p-6 rounded-lg shadow-md">
         <div class="flex justify-between items-center mb-4">
-          <h2 class="text-2xl font-bold text-purple-600">المساعد الذكي</h2>
+          <h2 class="text-2xl font-bold text-purple-600">المساعد الصوتي</h2>
           <button
             onClick={props.onClose}
             class="text-gray-500 hover:text-gray-700 transition duration-200 ease-in-out cursor-pointer"
@@ -61,21 +110,28 @@ function Assistant(props) {
         </div>
         <form onSubmit={handleAssistantQuery} class="space-y-4">
           <textarea
-            placeholder="اكتب سؤالك هنا..."
+            placeholder="اكتب سؤالك هنا أو استخدم الميكروفون..."
             value={assistantQuery()}
             onInput={(e) => setAssistantQuery(e.target.value)}
             class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent resize-none box-border text-gray-800"
             rows="4"
           ></textarea>
-          <div class="flex items-center">
+          <div class="flex items-center justify-between">
             <button
               type="submit"
-              class={`flex-1 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${loading() ? 'opacity-50 cursor-not-allowed' : ''}`}
+              class={`flex-1 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer mr-2 ${loading() ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={loading()}
             >
               <Show when={!loading()} fallback={"جاري التحميل..."}>
                 إرسال
               </Show>
+            </button>
+            <button
+              type="button"
+              onClick={recording() ? stopRecording : startRecording}
+              class={`flex-1 px-6 py-3 ${recording() ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'} text-white rounded-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ml-2`}
+            >
+              {recording() ? 'إيقاف التحدث' : 'ابدأ التحدث'}
             </button>
           </div>
         </form>
@@ -94,7 +150,7 @@ function Assistant(props) {
               ></audio>
               <button
                 onClick={togglePlay}
-                class="mt-4 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                class="mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
               >
                 <Show when={!playing()} fallback={"إيقاف الاستماع"}>
                   استماع
