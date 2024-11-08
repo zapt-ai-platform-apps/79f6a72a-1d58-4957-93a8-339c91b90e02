@@ -2,6 +2,7 @@ import { Routes, Route } from '@solidjs/router';
 import Home from './pages/Home';
 import Assistant from './components/Assistant';
 import SmartTextEditor from './components/SmartTextEditor';
+import ArabicRadio from './components/ArabicRadio';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Route path="/" component={Home} />
         <Route path="/assistant" component={Assistant} />
         <Route path="/editor" component={SmartTextEditor} />
+        <Route path="/radio" component={ArabicRadio} />
       </Routes>
     </div>
   );

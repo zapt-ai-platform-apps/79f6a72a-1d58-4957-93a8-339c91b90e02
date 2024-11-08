@@ -22,6 +22,12 @@ function Home() {
         >
           محرر النصوص الذكي
         </button>
+        <button
+          onClick={() => navigate('/radio')}
+          class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          الراديو العربي
+        </button>
       </div>
     </div>
   );
