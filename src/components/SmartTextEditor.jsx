@@ -1,4 +1,4 @@
-import { createSignal, Show } from 'solid-js';
+import { createSignal, Show, createEffect } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { createEvent } from '../supabaseClient';
 
@@ -8,7 +8,19 @@ function SmartTextEditor() {
   const [processedText, setProcessedText] = createSignal('');
   const [isLoading, setIsLoading] = createSignal(false);
   const [isSpeaking, setIsSpeaking] = createSignal(false);
+  const [selectedLanguage, setSelectedLanguage] = createSignal('en');
+  const [showLanguageSelect, setShowLanguageSelect] = createSignal(false);
   let audio;
+
+  const languages = [
+    { code: 'en', name: 'الإنجليزية' },
+    { code: 'fr', name: 'الفرنسية' },
+    { code: 'es', name: 'الإسبانية' },
+    { code: 'de', name: 'الألمانية' },
+    { code: 'zh', name: 'الصينية' },
+    { code: 'ja', name: 'اليابانية' },
+    // يمكنك إضافة المزيد من اللغات هنا
+  ];
 
   const handleProcessText = async (action) => {
     if (!text()) return;
@@ -26,7 +38,8 @@ function SmartTextEditor() {
           prompt = 'حسّن النص التالي: ' + text();
           break;
         case 'translate':
-          prompt = 'ترجم النص التالي إلى اللغة الإنجليزية: ' + text();
+          const languageName = languages.find(lang => lang.code === selectedLanguage())?.name || 'الإنجليزية';
+          prompt = `ترجم النص التالي إلى اللغة ${languageName}: ${text()}`;
           break;
         default:
           break;
@@ -68,6 +81,11 @@ function SmartTextEditor() {
       setIsSpeaking(false);
     }
   };
+
+  createEffect(() => {
+    // إظهار أو إخفاء اختيار اللغة بناءً على الإجراء
+    setShowLanguageSelect(isLoading() ? false : false);
+  });
 
   return (
     <div class="flex flex-col items-center p-4 h-full text-gray-800">
@@ -111,13 +129,38 @@ function SmartTextEditor() {
             تحسين النص
           </button>
           <button
-            onClick={() => handleProcessText('translate')}
+            onClick={() => {
+              setShowLanguageSelect(true);
+            }}
             class={`flex-1 px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={isLoading()}
           >
             ترجمة النص
           </button>
         </div>
+
+        <Show when={showLanguageSelect()}>
+          <div class="flex flex-col md:flex-row items-center mt-4 gap-4">
+            <select
+              value={selectedLanguage()}
+              onInput={(e) => setSelectedLanguage(e.target.value)}
+              class="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border cursor-pointer"
+            >
+              <For each={languages}>
+                {(lang) => (
+                  <option value={lang.code}>{lang.name}</option>
+                )}
+              </For>
+            </select>
+            <button
+              onClick={() => handleProcessText('translate')}
+              class={`flex-1 px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() ? 'opacity-50 cursor-not-allowed' : ''}`}
+              disabled={isLoading()}
+            >
+              تأكيد الترجمة
+            </button>
+          </div>
+        </Show>
 
         <Show when={processedText()}>
           <div class="mt-4 p-4 bg-white rounded-lg shadow-md">
