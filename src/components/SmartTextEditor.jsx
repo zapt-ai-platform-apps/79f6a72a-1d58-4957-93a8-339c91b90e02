@@ -7,10 +7,8 @@ function SmartTextEditor() {
   const [text, setText] = createSignal('');
   const [processedText, setProcessedText] = createSignal('');
   const [isLoading, setIsLoading] = createSignal(false);
-  const [isSpeaking, setIsSpeaking] = createSignal(false);
   const [selectedLanguage, setSelectedLanguage] = createSignal('en');
   const [showLanguageSelect, setShowLanguageSelect] = createSignal(false);
-  let audio;
 
   const languages = [
     { code: 'en', name: 'الإنجليزية' },
@@ -56,35 +54,19 @@ function SmartTextEditor() {
     }
   };
 
-  const startSpeaking = async () => {
-    if (processedText()) {
-      setIsSpeaking(true);
-      try {
-        const audioUrl = await createEvent('text_to_speech', {
-          text: processedText(),
-        });
-        audio = new Audio(audioUrl);
-        audio.play();
-        audio.onended = () => {
-          setIsSpeaking(false);
-        };
-      } catch (error) {
-        console.error('Error with text to speech:', error);
-        setIsSpeaking(false);
-      }
-    }
-  };
-
-  const stopSpeaking = () => {
-    if (audio) {
-      audio.pause();
-      setIsSpeaking(false);
-    }
+  const copyText = () => {
+    navigator.clipboard.writeText(processedText())
+      .then(() => {
+        alert('تم نسخ النص إلى الحافظة');
+      })
+      .catch(err => {
+        console.error('Error copying text:', err);
+      });
   };
 
   createEffect(() => {
-    // إظهار أو إخفاء اختيار اللغة بناءً على الإجراء
-    setShowLanguageSelect(isLoading() ? false : false);
+    // إظهار أو إخفاء اختيار اللغة
+    setShowLanguageSelect(false);
   });
 
   return (
@@ -168,20 +150,11 @@ function SmartTextEditor() {
           </div>
           <div class="mt-2 flex flex-wrap gap-4">
             <button
-              onClick={startSpeaking}
-              class={`flex-1 px-6 py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isSpeaking() ? 'opacity-50 cursor-not-allowed' : ''}`}
-              disabled={isSpeaking()}
+              onClick={copyText}
+              class="flex-1 px-6 py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
             >
-              {isSpeaking() ? 'جاري الاستماع...' : 'تحويل النص إلى كلام'}
+              نسخ النص
             </button>
-            <Show when={isSpeaking()}>
-              <button
-                onClick={stopSpeaking}
-                class="flex-1 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-              >
-                إيقاف الاستماع
-              </button>
-            </Show>
           </div>
         </Show>
       </div>
