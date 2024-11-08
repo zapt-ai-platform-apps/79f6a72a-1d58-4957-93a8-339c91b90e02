@@ -62,27 +62,29 @@ function ArabicRadio() {
     }
   });
 
-  const handlePlay = () => {
-    if (audio()) {
-      audio().pause();
-    }
-    const station = stations().find(s => s.stationuuid === selectedStation());
-    if (station) {
-      const newAudio = new Audio(station.url_resolved);
-      newAudio.play();
-      setAudio(newAudio);
-      setIsPlaying(true);
-
-      newAudio.onended = () => {
+  const handleTogglePlay = () => {
+    if (isPlaying()) {
+      // Stop the audio
+      if (audio()) {
+        audio().pause();
         setIsPlaying(false);
-      };
-    }
-  };
+      }
+    } else {
+      // Play the audio
+      if (audio()) {
+        audio().pause();
+      }
+      const station = stations().find(s => s.stationuuid === selectedStation());
+      if (station) {
+        const newAudio = new Audio(station.url_resolved);
+        newAudio.play();
+        setAudio(newAudio);
+        setIsPlaying(true);
 
-  const handleStop = () => {
-    if (audio()) {
-      audio().pause();
-      setIsPlaying(false);
+        newAudio.onended = () => {
+          setIsPlaying(false);
+        };
+      }
     }
   };
 
@@ -138,18 +140,14 @@ function ArabicRadio() {
         <Show when={selectedStation()}>
           <div class="flex flex-wrap gap-4 mt-4">
             <button
-              onClick={handlePlay}
-              class={`flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isPlaying() ? 'opacity-50 cursor-not-allowed' : ''}`}
-              disabled={isPlaying()}
+              onClick={handleTogglePlay}
+              class={`flex-1 px-6 py-3 rounded-lg text-white transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
+              classList={{
+                'bg-green-500 hover:bg-green-600': !isPlaying(),
+                'bg-red-500 hover:bg-red-600': isPlaying(),
+              }}
             >
-              تشغيل
-            </button>
-            <button
-              onClick={handleStop}
-              class={`flex-1 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${!isPlaying() ? 'opacity-50 cursor-not-allowed' : ''}`}
-              disabled={!isPlaying()}
-            >
-              إيقاف
+              {isPlaying() ? 'إيقاف' : 'تشغيل'}
             </button>
           </div>
         </Show>
