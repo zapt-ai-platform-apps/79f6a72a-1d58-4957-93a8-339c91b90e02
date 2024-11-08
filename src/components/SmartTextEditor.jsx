@@ -17,13 +17,13 @@ function SmartTextEditor() {
       let prompt = '';
       switch (action) {
         case 'correct':
-          prompt = `صحح النص التالي: ${text()}`;
+          prompt = 'صحح النص التالي: ' + text();
           break;
         case 'tashkeel':
-          prompt = `قم بتشكيل النص التالي: ${text()}`;
+          prompt = 'قم بتشكيل النص التالي: ' + text();
           break;
         case 'improve':
-          prompt = `حسّن النص التالي: ${text()}`;
+          prompt = 'حسّن النص التالي: ' + text();
           break;
         default:
           break;
