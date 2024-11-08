@@ -31,6 +31,7 @@ function Assistant(props) {
       setAudioUrl(audioResult);
     } catch (error) {
       console.error('Error fetching assistant response:', error);
+      alert('حدث خطأ أثناء جلب الرد. يرجى المحاولة مرة أخرى.');
     } finally {
       setLoading(false);
     }
@@ -71,6 +72,7 @@ function Assistant(props) {
 
     recog.onerror = (event) => {
       console.error('Speech recognition error:', event.error);
+      alert('حدث خطأ في التعرف على الكلام. يرجى المحاولة مرة أخرى.');
     };
 
     recog.onend = () => {

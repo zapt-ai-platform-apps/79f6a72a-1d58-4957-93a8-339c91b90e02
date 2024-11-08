@@ -20,6 +20,7 @@ function SmartTextEditor(props) {
       setEditorText(result);
     } catch (error) {
       console.error('Error improving text:', error);
+      alert('حدث خطأ أثناء تحسين النص. يرجى المحاولة مرة أخرى.');
     } finally {
       setLoading(false);
     }
@@ -36,6 +37,7 @@ function SmartTextEditor(props) {
       setEditorText(result);
     } catch (error) {
       console.error('Error correcting text:', error);
+      alert('حدث خطأ أثناء تصحيح النص. يرجى المحاولة مرة أخرى.');
     } finally {
       setLoading(false);
     }
@@ -52,6 +54,7 @@ function SmartTextEditor(props) {
       setEditorText(result);
     } catch (error) {
       console.error('Error diacritizing text:', error);
+      alert('حدث خطأ أثناء تشكيل النص. يرجى المحاولة مرة أخرى.');
     } finally {
       setLoading(false);
     }
@@ -67,6 +70,7 @@ function SmartTextEditor(props) {
       setAudioUrl(audioResult);
     } catch (error) {
       console.error('Error generating audio:', error);
+      alert('حدث خطأ أثناء تحويل النص إلى كلام. يرجى المحاولة مرة أخرى.');
     } finally {
       setLoading(false);
     }
