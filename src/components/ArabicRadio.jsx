@@ -32,7 +32,7 @@ function ArabicRadio() {
   const [selectedCountry, setSelectedCountry] = createSignal('');
   const [stations, setStations] = createSignal([]);
   const [isLoading, setIsLoading] = createSignal(false);
-  const [selectedStation, setSelectedStation] = createSignal('');
+  const [currentStationIndex, setCurrentStationIndex] = createSignal(-1);
   const [audio, setAudio] = createSignal(null);
   const [isPlaying, setIsPlaying] = createSignal(false);
 
@@ -58,13 +58,45 @@ function ArabicRadio() {
       fetchStations(selectedCountry());
     } else {
       setStations([]);
-      setSelectedStation('');
+      setCurrentStationIndex(-1);
     }
   });
 
+  const selectedStation = () => {
+    if (currentStationIndex() >= 0 && currentStationIndex() < stations().length) {
+      return stations()[currentStationIndex()];
+    }
+    return null;
+  };
+
+  const handleStationSelect = (stationUuid) => {
+    const index = stations().findIndex(s => s.stationuuid === stationUuid);
+    if (index !== -1) {
+      setCurrentStationIndex(index);
+      stopAudio();
+      playAudio();
+    }
+  };
+
+  const handlePreviousStation = () => {
+    if (currentStationIndex() > 0) {
+      setCurrentStationIndex(currentStationIndex() - 1);
+      stopAudio();
+      playAudio();
+    }
+  };
+
+  const handleNextStation = () => {
+    if (currentStationIndex() < stations().length - 1) {
+      setCurrentStationIndex(currentStationIndex() + 1);
+      stopAudio();
+      playAudio();
+    }
+  };
+
   const handleTogglePlay = () => {
     if (isPlaying()) {
-      // Stop the audio
+      // Pause the audio
       if (audio()) {
         audio().pause();
         setIsPlaying(false);
@@ -72,19 +104,41 @@ function ArabicRadio() {
     } else {
       // Play the audio
       if (audio()) {
-        audio().pause();
-      }
-      const station = stations().find(s => s.stationuuid === selectedStation());
-      if (station) {
-        const newAudio = new Audio(station.url_resolved);
-        newAudio.play();
-        setAudio(newAudio);
+        audio().play();
         setIsPlaying(true);
-
-        newAudio.onended = () => {
-          setIsPlaying(false);
-        };
+      } else {
+        playAudio();
       }
+    }
+  };
+
+  const playAudio = () => {
+    const station = selectedStation();
+    if (station) {
+      const newAudio = new Audio(station.url_resolved);
+      newAudio.play();
+      setAudio(newAudio);
+      setIsPlaying(true);
+
+      newAudio.onended = () => {
+        setIsPlaying(false);
+      };
+
+      newAudio.onpause = () => {
+        setIsPlaying(false);
+      };
+
+      newAudio.onplay = () => {
+        setIsPlaying(true);
+      };
+    }
+  };
+
+  const stopAudio = () => {
+    if (audio()) {
+      audio().pause();
+      setAudio(null);
+      setIsPlaying(false);
     }
   };
 
@@ -124,8 +178,8 @@ function ArabicRadio() {
 
         <Show when={stations().length > 0 && !isLoading()}>
           <select
-            value={selectedStation()}
-            onInput={(e) => setSelectedStation(e.target.value)}
+            value={selectedStation() ? selectedStation().stationuuid : ''}
+            onInput={(e) => handleStationSelect(e.target.value)}
             class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
           >
             <option value="">اختر محطة</option>
@@ -140,6 +194,13 @@ function ArabicRadio() {
         <Show when={selectedStation()}>
           <div class="flex flex-wrap gap-4 mt-4">
             <button
+              onClick={handlePreviousStation}
+              class="flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+              disabled={currentStationIndex() <= 0}
+            >
+              المحطة السابقة
+            </button>
+            <button
               onClick={handleTogglePlay}
               class={`flex-1 px-6 py-3 rounded-lg text-white transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
               classList={{
@@ -148,6 +209,13 @@ function ArabicRadio() {
               }}
             >
               {isPlaying() ? 'إيقاف' : 'تشغيل'}
+            </button>
+            <button
+              onClick={handleNextStation}
+              class="flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+              disabled={currentStationIndex() >= stations().length - 1}
+            >
+              المحطة التالية
             </button>
           </div>
         </Show>
