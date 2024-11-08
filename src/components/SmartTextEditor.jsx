@@ -25,6 +25,9 @@ function SmartTextEditor() {
         case 'improve':
           prompt = 'حسّن النص التالي: ' + text();
           break;
+        case 'translate':
+          prompt = 'ترجم النص التالي إلى اللغة الإنجليزية: ' + text();
+          break;
         default:
           break;
       }
@@ -107,6 +110,13 @@ function SmartTextEditor() {
           >
             تحسين النص
           </button>
+          <button
+            onClick={() => handleProcessText('translate')}
+            class={`flex-1 px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={isLoading()}
+          >
+            ترجمة النص
+          </button>
         </div>
 
         <Show when={processedText()}>
@@ -116,7 +126,7 @@ function SmartTextEditor() {
           <div class="mt-2 flex flex-wrap gap-4">
             <button
               onClick={startSpeaking}
-              class={`flex-1 px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isSpeaking() ? 'opacity-50 cursor-not-allowed' : ''}`}
+              class={`flex-1 px-6 py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isSpeaking() ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={isSpeaking()}
             >
               {isSpeaking() ? 'جاري الاستماع...' : 'تحويل النص إلى كلام'}
