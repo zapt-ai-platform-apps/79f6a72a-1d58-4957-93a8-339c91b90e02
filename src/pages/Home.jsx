@@ -5,7 +5,7 @@ function Home() {
 
   return (
     <div class="flex flex-col items-center justify-center h-full p-4 text-gray-800" dir="rtl">
-      <img src="https://images.unsplash.com/photo-1585282263861-f55e341878f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2NjQ4Nzh8MHwxfHNlYXJjaHw0fHxBcHAlMjBpY29uJTIwcmVwcmVzZW50aW5nJTIwYWNjZXNzaWJpbGl0eSUyMGZvciUyMHRoZSUyMGJsaW5kfGVufDB8fHx8MTczMTAyOTM4N3ww&ixlib=rb-4.0.3&q=80&w=1080"  alt="Blind Accessibility Icon" data-image-request="App icon representing accessibility for the blind" class="w-24 h-24 mb-4" />
+      <img src="PLACEHOLDER" alt="أيقونة أدوات Blind Accessibility" data-image-request="رمز يمثل تطبيق أدوات الوصول للمكفوفين" class="w-24 h-24 mb-4" />
       <h1 class="text-4xl font-bold text-purple-600 mb-4">أدوات Blind Accessibility</h1>
       <p class="text-xl text-gray-700 text-center max-w-2xl mb-8">
         نوفر مجموعة شاملة من الأدوات والموارد لتعزيز الوصول الرقمي للأشخاص المكفوفين وضعاف البصر.
