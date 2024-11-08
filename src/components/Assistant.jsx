@@ -103,7 +103,7 @@ function Assistant() {
   };
 
   return (
-    <div class="flex flex-col items-center p-4 h-full">
+    <div class="flex flex-col items-center p-4 h-full text-gray-800">
       <button
         onClick={() => navigate('/')}
         class="self-start mb-4 text-2xl cursor-pointer"
