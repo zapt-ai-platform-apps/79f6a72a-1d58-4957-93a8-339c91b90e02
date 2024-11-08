@@ -103,25 +103,25 @@ function ArabRadio(props) {
     }
   };
 
-  const playStation = () => {
-    if (selectedStation()) {
-      const station = stations().find(s => s.name === selectedStation());
-      if (station) {
-        if (audioRef) {
-          audioRef.src = station.url_resolved;
-          audioRef.play();
-          setPlaying(true);
+  const togglePlay = () => {
+    if (playing()) {
+      if (audioRef) {
+        audioRef.pause();
+        audioRef.currentTime = 0;
+      }
+      setPlaying(false);
+    } else {
+      if (selectedStation()) {
+        const station = stations().find(s => s.name === selectedStation());
+        if (station) {
+          if (audioRef) {
+            audioRef.src = station.url_resolved;
+            audioRef.play();
+            setPlaying(true);
+          }
         }
       }
     }
-  };
-
-  const stopPlaying = () => {
-    if (audioRef) {
-      audioRef.pause();
-      audioRef.currentTime = 0;
-    }
-    setPlaying(false);
   };
 
   return (
@@ -181,27 +181,19 @@ function ArabRadio(props) {
             </div>
           </Show>
           <Show when={selectedStation()}>
-            <div class="flex items-center justify-center mt-4 space-x-4">
+            <div class="flex items-center justify-center mt-4">
               <button
-                onClick={playStation}
-                class={`px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${playing() ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={playing()}
+                onClick={togglePlay}
+                class={`px-6 py-3 ${playing() ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'} text-white rounded-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
               >
-                تشغيل
+                {playing() ? 'إيقاف التشغيل' : 'تشغيل'}
               </button>
-              <button
-                onClick={stopPlaying}
-                class={`px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${!playing() ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={!playing()}
-              >
-                إيقاف التشغيل
-              </button>
+              <audio
+                ref={(el) => (audioRef = el)}
+                class="hidden"
+                onEnded={() => setPlaying(false)}
+              ></audio>
             </div>
-            <audio
-              ref={(el) => (audioRef = el)}
-              class="hidden"
-              onEnded={() => setPlaying(false)}
-            ></audio>
           </Show>
         </div>
       </div>
