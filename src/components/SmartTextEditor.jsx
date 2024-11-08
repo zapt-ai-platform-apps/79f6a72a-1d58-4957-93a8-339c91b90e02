@@ -1,48 +1,13 @@
-import { createSignal, onMount, Show } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 import { createEvent } from '../supabaseClient';
 
 function SmartTextEditor(props) {
   const [editorText, setEditorText] = createSignal('');
   const [loading, setLoading] = createSignal(false);
-  const [listening, setListening] = createSignal(false);
   const [audioUrl, setAudioUrl] = createSignal('');
   const [playing, setPlaying] = createSignal(false);
 
-  let recognition;
   let audioRef;
-
-  onMount(() => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognition = new SpeechRecognition();
-      recognition.lang = 'ar-SA';
-
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        setEditorText(editorText() + ' ' + transcript);
-      };
-
-      recognition.onend = () => {
-        setListening(false);
-      };
-    } else {
-      console.warn('متصفحك لا يدعم التعرف على الكلام.');
-    }
-  });
-
-  const startListening = () => {
-    if (recognition) {
-      recognition.start();
-      setListening(true);
-    }
-  };
-
-  const stopListening = () => {
-    if (recognition) {
-      recognition.stop();
-      setListening(false);
-    }
-  };
 
   const improveText = async () => {
     if (!editorText()) return;
@@ -91,7 +56,7 @@ function SmartTextEditor(props) {
     <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" dir="rtl">
       <div class="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
         <div class="flex justify-between items-center mb-4">
-          <h2 class="text-2xl font-bold text-purple-600">أداة محرر النصوص الذكي</h2>
+          <h2 class="text-2xl font-bold text-purple-600">محرر النصوص الذكي</h2>
           <button
             onClick={props.onClose}
             class="text-gray-500 hover:text-gray-700 transition duration-200 ease-in-out cursor-pointer"
@@ -117,19 +82,6 @@ function SmartTextEditor(props) {
             >
               <Show when={!loading()} fallback={"جاري التحميل..."}>
                 تحسين النص
-              </Show>
-            </button>
-            <button
-              type="button"
-              onClick={() => (listening() ? stopListening() : startListening())}
-              class="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-              aria-label={listening() ? "إيقاف التسجيل" : "بدء التسجيل"}
-            >
-              <Show when={!listening()}>
-                🎤
-              </Show>
-              <Show when={listening()}>
-                ⏹
               </Show>
             </button>
           </div>
