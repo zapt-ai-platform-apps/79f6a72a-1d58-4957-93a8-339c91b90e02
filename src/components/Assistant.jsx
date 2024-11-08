@@ -1,8 +1,9 @@
 import { createSignal, Show, onCleanup } from 'solid-js';
 import { createEvent } from '../supabaseClient';
 import { SolidMarkdown } from "solid-markdown";
+import { useNavigate } from '@solidjs/router';
 
-function Assistant(props) {
+function Assistant() {
   const [assistantQuery, setAssistantQuery] = createSignal('');
   const [assistantResponse, setAssistantResponse] = createSignal('');
   const [loading, setLoading] = createSignal(false);
@@ -11,6 +12,7 @@ function Assistant(props) {
   const [recording, setRecording] = createSignal(false);
   const [recognition, setRecognition] = createSignal(null);
 
+  const navigate = useNavigate();
   let audioRef;
 
   const handleAssistantQuery = async (e) => {
@@ -98,16 +100,16 @@ function Assistant(props) {
   });
 
   return (
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 text-gray-800">
+    <div class="flex flex-col items-center justify-center min-h-screen p-4 text-gray-800" dir="rtl">
       <div class="w-full max-w-md md:max-w-lg lg:max-w-xl bg-white p-6 rounded-lg shadow-md">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-2xl font-bold text-purple-600">المساعد الصوتي</h2>
           <button
-            onClick={props.onClose}
+            onClick={() => navigate(-1)}
             class="text-gray-500 hover:text-gray-700 transition duration-200 ease-in-out cursor-pointer"
-            aria-label="إغلاق"
+            aria-label="العودة"
           >
-            ✖️
+            🔙
           </button>
         </div>
         <form onSubmit={handleAssistantQuery} class="space-y-4">

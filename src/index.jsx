@@ -2,6 +2,8 @@ import { render } from 'solid-js/web';
 import App from './App';
 import './index.css';
 
+import { Router } from '@solidjs/router';
+
 // إضافة دعم PWA للتطبيق (سيضيف هذا خدمة العامل وملف مانيفيست، لا تحتاج لفعل أي شيء آخر)
 window.progressierAppRuntimeSettings = {
   uid: import.meta.env.VITE_PUBLIC_APP_ID,
@@ -28,4 +30,8 @@ Sentry.init({
   }
 });
 
-render(() => <App />, document.getElementById('root'));
+render(() => (
+  <Router>
+    <App />
+  </Router>
+), document.getElementById('root'));
