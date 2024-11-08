@@ -1,4 +1,3 @@
-```jsx
 import { createSignal, createEffect, onMount, Show } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { createEvent } from '../supabaseClient';
@@ -157,4 +156,3 @@ function Assistant() {
 }
 
 export default Assistant;
-```
