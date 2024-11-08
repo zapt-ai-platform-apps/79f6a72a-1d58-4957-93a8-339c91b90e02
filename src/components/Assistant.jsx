@@ -47,8 +47,8 @@ function Assistant(props) {
   };
 
   return (
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 text-gray-800">
+      <div class="w-full max-w-md md:max-w-lg lg:max-w-xl bg-white p-6 rounded-lg shadow-md">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-2xl font-bold text-purple-600">المساعد الذكي</h2>
           <button
@@ -64,7 +64,7 @@ function Assistant(props) {
             placeholder="اكتب سؤالك هنا..."
             value={assistantQuery()}
             onInput={(e) => setAssistantQuery(e.target.value)}
-            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent resize-none box-border"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent resize-none box-border text-gray-800"
             rows="4"
           ></textarea>
           <div class="flex items-center">
@@ -88,7 +88,7 @@ function Assistant(props) {
             <Show when={audioUrl()}>
               <audio
                 src={audioUrl()}
-                ref={audioRefElement => audioRef = audioRefElement}
+                ref={el => audioRef = el}
                 onEnded={() => setPlaying(false)}
                 class="hidden"
               ></audio>
