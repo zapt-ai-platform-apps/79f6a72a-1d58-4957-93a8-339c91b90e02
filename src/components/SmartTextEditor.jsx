@@ -65,7 +65,6 @@ function SmartTextEditor() {
   };
 
   createEffect(() => {
-    // إظهار أو إخفاء اختيار اللغة
     setShowLanguageSelect(false);
   });
 

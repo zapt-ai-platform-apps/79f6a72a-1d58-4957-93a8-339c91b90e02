@@ -96,13 +96,11 @@ function ArabicRadio() {
 
   const handleTogglePlay = () => {
     if (isPlaying()) {
-      // Pause the audio
       if (audio()) {
         audio().pause();
         setIsPlaying(false);
       }
     } else {
-      // Play the audio
       if (audio()) {
         audio().play();
         setIsPlaying(true);
