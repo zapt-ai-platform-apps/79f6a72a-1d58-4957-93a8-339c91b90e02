@@ -6,7 +6,7 @@ import ArabicRadio from './components/ArabicRadio';
 
 function App() {
   return (
-    <div class="h-full bg-gradient-to-br from-purple-100 to-blue-100 text-gray-800" dir="rtl">
+    <div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 text-gray-800" dir="rtl">
       <Routes>
         <Route path="/" component={Home} />
         <Route path="/assistant" component={Assistant} />

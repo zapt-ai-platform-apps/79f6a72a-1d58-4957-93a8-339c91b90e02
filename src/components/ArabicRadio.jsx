@@ -162,7 +162,7 @@ function ArabicRadio() {
         <select
           value={selectedCountry()}
           onInput={(e) => setSelectedCountry(e.target.value)}
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border cursor-pointer"
         >
           <option value="">اختر دولة</option>
           <For each={arabCountries}>
@@ -180,7 +180,7 @@ function ArabicRadio() {
           <select
             value={selectedStation() ? selectedStation().stationuuid : ''}
             onInput={(e) => handleStationSelect(e.target.value)}
-            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border cursor-pointer"
           >
             <option value="">اختر محطة</option>
             <For each={stations()}>

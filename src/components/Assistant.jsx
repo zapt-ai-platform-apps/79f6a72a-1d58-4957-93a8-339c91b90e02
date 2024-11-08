@@ -15,8 +15,8 @@ function Assistant() {
 
   // Initialize speech recognition
   onMount(() => {
-    if ('webkitSpeechRecognition' in window) {
-      const SpeechRecognition = window.webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
       recognition = new SpeechRecognition();
       recognition.lang = 'ar-EG';
       recognition.continuous = false;
