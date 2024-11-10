@@ -116,7 +116,7 @@ function AIContentCreator() {
         <div class="flex flex-wrap gap-4">
           <button
             onClick={handleGenerateContent}
-            class={`flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            class={`flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() || !userPrompt() ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={isLoading() || !userPrompt()}
           >
             {isLoading() ? 'جاري التحميل...' : 'توليد المحتوى'}
@@ -132,10 +132,7 @@ function AIContentCreator() {
 
         <Show when={generatedContent()}>
           <div class="mt-4 p-4 bg-white rounded-lg shadow-md">
-            <SolidMarkdown
-              children={generatedContent()}
-              class="prose prose-lg"
-            />
+            <SolidMarkdown class="prose prose-lg text-gray-700" children={generatedContent()} />
           </div>
           <div class="mt-2 flex flex-wrap gap-4">
             <button

@@ -91,22 +91,22 @@ function SmartTextEditor() {
         <div class="flex flex-wrap gap-4">
           <button
             onClick={() => handleProcessText('correct')}
-            class={`flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() ? 'opacity-50 cursor-not-allowed' : ''}`}
-            disabled={isLoading()}
+            class={`flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() || !text() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={isLoading() || !text()}
           >
             تصحيح النص
           </button>
           <button
             onClick={() => handleProcessText('tashkeel')}
-            class={`flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() ? 'opacity-50 cursor-not-allowed' : ''}`}
-            disabled={isLoading()}
+            class={`flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() || !text() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={isLoading() || !text()}
           >
             تشكيل النص
           </button>
           <button
             onClick={() => handleProcessText('improve')}
-            class={`flex-1 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() ? 'opacity-50 cursor-not-allowed' : ''}`}
-            disabled={isLoading()}
+            class={`flex-1 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() || !text() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={isLoading() || !text()}
           >
             تحسين النص
           </button>
@@ -114,8 +114,8 @@ function SmartTextEditor() {
             onClick={() => {
               setShowLanguageSelect(true);
             }}
-            class={`flex-1 px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() ? 'opacity-50 cursor-not-allowed' : ''}`}
-            disabled={isLoading()}
+            class={`flex-1 px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() || !text() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={isLoading() || !text()}
           >
             ترجمة النص
           </button>
@@ -146,10 +146,7 @@ function SmartTextEditor() {
 
         <Show when={processedText()}>
           <div class="mt-4 p-4 bg-white rounded-lg shadow-md">
-            <SolidMarkdown
-              children={processedText()}
-              class="prose prose-lg"
-            />
+            <SolidMarkdown class="prose prose-lg text-gray-700" children={processedText()} />
           </div>
           <div class="mt-2 flex flex-wrap gap-4">
             <button
