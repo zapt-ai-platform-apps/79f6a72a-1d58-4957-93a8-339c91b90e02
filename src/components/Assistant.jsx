@@ -1,6 +1,7 @@
 import { createSignal, onMount, Show } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { createEvent } from '../supabaseClient';
+import { SolidMarkdown } from 'solid-markdown';
 
 function Assistant() {
   const navigate = useNavigate();
@@ -113,7 +114,10 @@ function Assistant() {
 
         <Show when={assistantResponse()}>
           <div class="mt-4 p-4 bg-white rounded-lg shadow-md">
-            <p class="text-gray-700">{assistantResponse()}</p>
+            <SolidMarkdown
+              children={assistantResponse()}
+              class="prose prose-lg"
+            />
           </div>
           <div class="mt-2 flex flex-wrap gap-4">
             <button

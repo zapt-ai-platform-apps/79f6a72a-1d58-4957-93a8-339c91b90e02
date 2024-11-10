@@ -1,6 +1,7 @@
 import { createSignal, onMount, Show, For } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { createEvent } from '../supabaseClient';
+import { SolidMarkdown } from 'solid-markdown';
 
 function AIContentCreator() {
   const navigate = useNavigate();
@@ -131,7 +132,10 @@ function AIContentCreator() {
 
         <Show when={generatedContent()}>
           <div class="mt-4 p-4 bg-white rounded-lg shadow-md">
-            <p class="text-gray-700 whitespace-pre-wrap">{generatedContent()}</p>
+            <SolidMarkdown
+              children={generatedContent()}
+              class="prose prose-lg"
+            />
           </div>
           <div class="mt-2 flex flex-wrap gap-4">
             <button

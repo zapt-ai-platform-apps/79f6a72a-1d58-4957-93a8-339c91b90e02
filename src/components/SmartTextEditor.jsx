@@ -1,6 +1,7 @@
 import { createSignal, Show, createEffect, For } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { createEvent } from '../supabaseClient';
+import { SolidMarkdown } from 'solid-markdown';
 
 function SmartTextEditor() {
   const navigate = useNavigate();
@@ -145,7 +146,10 @@ function SmartTextEditor() {
 
         <Show when={processedText()}>
           <div class="mt-4 p-4 bg-white rounded-lg shadow-md">
-            <p class="text-gray-700 whitespace-pre-wrap">{processedText()}</p>
+            <SolidMarkdown
+              children={processedText()}
+              class="prose prose-lg"
+            />
           </div>
           <div class="mt-2 flex flex-wrap gap-4">
             <button
