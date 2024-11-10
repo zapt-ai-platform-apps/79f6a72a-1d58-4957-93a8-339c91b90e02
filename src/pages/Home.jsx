@@ -28,6 +28,12 @@ function Home() {
         >
           الراديو العربي
         </button>
+        <button
+          onClick={() => navigate('/content-creator')}
+          class="px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          منشئ المحتوى
+        </button>
       </div>
     </div>
   );

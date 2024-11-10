@@ -3,6 +3,7 @@ import Home from './pages/Home';
 import Assistant from './components/Assistant';
 import SmartTextEditor from './components/SmartTextEditor';
 import ArabicRadio from './components/ArabicRadio';
+import AIContentCreator from './components/AIContentCreator';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/assistant" component={Assistant} />
         <Route path="/editor" component={SmartTextEditor} />
         <Route path="/radio" component={ArabicRadio} />
+        <Route path="/content-creator" component={AIContentCreator} />
       </Routes>
     </div>
   );
