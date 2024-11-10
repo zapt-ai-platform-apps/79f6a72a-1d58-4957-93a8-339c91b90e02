@@ -196,7 +196,7 @@ function ArabicRadio() {
       const favStation = favorites().find(fav => fav.stationuuid === stationUuid);
       if (favStation) {
         setStations([...stations(), favStation]);
-        setCurrentStationIndex(stations().length);
+        setCurrentStationIndex(stations().length - 1);
         stopAudio();
         playAudio();
       }

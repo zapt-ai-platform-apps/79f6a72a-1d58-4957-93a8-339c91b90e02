@@ -1,4 +1,4 @@
-import { createSignal, onMount, Show, For, createEffect } from 'solid-js';
+import { createSignal, onMount, Show, For } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { createEvent } from '../supabaseClient';
 
