@@ -35,6 +35,7 @@ function ArabicRadio() {
   const [currentStationIndex, setCurrentStationIndex] = createSignal(-1);
   const [audio, setAudio] = createSignal(null);
   const [isPlaying, setIsPlaying] = createSignal(false);
+  const [volume, setVolume] = createSignal(1); // القيمة الافتراضية للصوت
 
   const fetchStations = async (country) => {
     setIsLoading(true);
@@ -110,10 +111,19 @@ function ArabicRadio() {
     }
   };
 
+  const handleVolumeChange = (e) => {
+    const newVolume = e.target.value;
+    setVolume(newVolume);
+    if (audio()) {
+      audio().volume = newVolume;
+    }
+  };
+
   const playAudio = () => {
     const station = selectedStation();
     if (station) {
       const newAudio = new Audio(station.url_resolved);
+      newAudio.volume = volume();
       newAudio.play();
       setAudio(newAudio);
       setIsPlaying(true);
@@ -190,31 +200,46 @@ function ArabicRadio() {
         </Show>
 
         <Show when={selectedStation()}>
-          <div class="flex flex-wrap gap-4 mt-4">
-            <button
-              onClick={handlePreviousStation}
-              class="flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-              disabled={currentStationIndex() <= 0}
-            >
-              المحطة السابقة
-            </button>
-            <button
-              onClick={handleTogglePlay}
-              class={`flex-1 px-6 py-3 rounded-lg text-white transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
-              classList={{
-                'bg-green-500 hover:bg-green-600': !isPlaying(),
-                'bg-red-500 hover:bg-red-600': isPlaying(),
-              }}
-            >
-              {isPlaying() ? 'إيقاف' : 'تشغيل'}
-            </button>
-            <button
-              onClick={handleNextStation}
-              class="flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-              disabled={currentStationIndex() >= stations().length - 1}
-            >
-              المحطة التالية
-            </button>
+          <div class="flex flex-col space-y-4 mt-4 w-full">
+            <div class="flex flex-wrap gap-4">
+              <button
+                onClick={handlePreviousStation}
+                class="flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                disabled={currentStationIndex() <= 0}
+              >
+                المحطة السابقة
+              </button>
+              <button
+                onClick={handleTogglePlay}
+                class={`flex-1 px-6 py-3 rounded-lg text-white transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
+                classList={{
+                  'bg-green-500 hover:bg-green-600': !isPlaying(),
+                  'bg-red-500 hover:bg-red-600': isPlaying(),
+                }}
+              >
+                {isPlaying() ? 'إيقاف' : 'تشغيل'}
+              </button>
+              <button
+                onClick={handleNextStation}
+                class="flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                disabled={currentStationIndex() >= stations().length - 1}
+              >
+                المحطة التالية
+              </button>
+            </div>
+            <div class="w-full">
+              <label for="volume-slider" class="block text-gray-700 mb-2">درجة الصوت</label>
+              <input
+                id="volume-slider"
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={volume()}
+                onInput={handleVolumeChange}
+                class="w-full cursor-pointer"
+              />
+            </div>
           </div>
         </Show>
       </div>
