@@ -1,4 +1,4 @@
-import { createSignal, createEffect, onCleanup, Show, For } from 'solid-js';
+import { createSignal, createEffect, onMount, onCleanup, Show, For } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 
 function ArabicRadio() {
@@ -35,7 +35,18 @@ function ArabicRadio() {
   const [currentStationIndex, setCurrentStationIndex] = createSignal(-1);
   const [audio, setAudio] = createSignal(null);
   const [isPlaying, setIsPlaying] = createSignal(false);
-  const [volume, setVolume] = createSignal(1); // القيمة الافتراضية للصوت
+  const [volume, setVolume] = createSignal(1);
+
+  const [favorites, setFavorites] = createSignal([]);
+
+  onMount(() => {
+    const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    setFavorites(savedFavorites);
+  });
+
+  createEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(favorites()));
+  });
 
   const fetchStations = async (country) => {
     setIsLoading(true);
@@ -150,6 +161,44 @@ function ArabicRadio() {
     }
   };
 
+  const toggleFavorite = () => {
+    const station = selectedStation();
+    if (station) {
+      const currentFavorites = favorites();
+      const exists = currentFavorites.find(fav => fav.stationuuid === station.stationuuid);
+      if (exists) {
+        setFavorites(currentFavorites.filter(fav => fav.stationuuid !== station.stationuuid));
+      } else {
+        setFavorites([...currentFavorites, station]);
+      }
+    }
+  };
+
+  const isFavorite = () => {
+    const station = selectedStation();
+    if (station) {
+      return favorites().some(fav => fav.stationuuid === station.stationuuid);
+    }
+    return false;
+  };
+
+  const selectFavoriteStation = (stationUuid) => {
+    const index = stations().findIndex(s => s.stationuuid === stationUuid);
+    if (index !== -1) {
+      setCurrentStationIndex(index);
+      stopAudio();
+      playAudio();
+    } else {
+      const favStation = favorites().find(fav => fav.stationuuid === stationUuid);
+      if (favStation) {
+        setStations([...stations(), favStation]);
+        setCurrentStationIndex(stations().length);
+        stopAudio();
+        playAudio();
+      }
+    }
+  };
+
   onCleanup(() => {
     if (audio()) {
       audio().pause();
@@ -211,11 +260,7 @@ function ArabicRadio() {
               </button>
               <button
                 onClick={handleTogglePlay}
-                class={`flex-1 px-6 py-3 rounded-lg text-white transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
-                classList={{
-                  'bg-green-500 hover:bg-green-600': !isPlaying(),
-                  'bg-red-500 hover:bg-red-600': isPlaying(),
-                }}
+                class={`flex-1 px-6 py-3 rounded-lg text-white transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isPlaying() ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}`}
               >
                 {isPlaying() ? 'إيقاف' : 'تشغيل'}
               </button>
@@ -225,6 +270,14 @@ function ArabicRadio() {
                 disabled={currentStationIndex() >= stations().length - 1}
               >
                 المحطة التالية
+              </button>
+            </div>
+            <div class="flex flex-wrap gap-4">
+              <button
+                onClick={toggleFavorite}
+                class={`flex-1 px-6 py-3 rounded-lg text-white transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isFavorite() ? 'bg-red-500 hover:bg-red-600' : 'bg-yellow-500 hover:bg-yellow-600'}`}
+              >
+                {isFavorite() ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}
               </button>
             </div>
             <div class="w-full">
@@ -239,6 +292,27 @@ function ArabicRadio() {
                 onInput={handleVolumeChange}
                 class="w-full cursor-pointer"
               />
+            </div>
+          </div>
+        </Show>
+
+        <Show when={favorites().length > 0}>
+          <div class="mt-6">
+            <h3 class="text-xl font-bold mb-2 text-purple-600">المفضلة</h3>
+            <div class="space-y-2">
+              <For each={favorites()}>
+                {(favStation) => (
+                  <div class="flex items-center justify-between bg-white p-4 rounded-lg shadow-md">
+                    <span>{favStation.name}</span>
+                    <button
+                      onClick={() => selectFavoriteStation(favStation.stationuuid)}
+                      class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                    >
+                      تشغيل
+                    </button>
+                  </div>
+                )}
+              </For>
             </div>
           </div>
         </Show>
