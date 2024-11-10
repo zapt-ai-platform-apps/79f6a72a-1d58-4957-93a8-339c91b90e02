@@ -5,7 +5,7 @@ function Home() {
 
   return (
     <div class="flex flex-col items-center justify-center h-full p-4 text-gray-800" dir="rtl">
-      <h1 class="text-4xl font-bold text-purple-600 mb-4">الأدوات المساعدة لـ Blind Accessibility</h1>
+      <h1 class="text-4xl font-bold text-purple-600 mb-4">أدوات Blind Accessibility</h1>
       <p class="text-xl text-gray-700 text-center max-w-2xl mb-8">
         نوفر مجموعة شاملة من الأدوات والموارد لتعزيز الوصول الرقمي للأشخاص المكفوفين وضعاف البصر.
       </p>
