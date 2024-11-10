@@ -11,6 +11,12 @@ function Home() {
       </p>
       <div class="flex flex-wrap gap-4 justify-center">
         <button
+          onClick={() => navigate('/cv-generator')}
+          class="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          منشئ السيرة الذاتية
+        </button>
+        <button
           onClick={() => navigate('/assistant')}
           class="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
         >
