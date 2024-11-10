@@ -174,6 +174,10 @@ function ArabicRadio() {
     }
   };
 
+  const removeFavorite = (stationUuid) => {
+    setFavorites(favorites().filter(fav => fav.stationuuid !== stationUuid));
+  };
+
   const isFavorite = () => {
     const station = selectedStation();
     if (station) {
@@ -304,12 +308,20 @@ function ArabicRadio() {
                 {(favStation) => (
                   <div class="flex items-center justify-between bg-white p-4 rounded-lg shadow-md">
                     <span>{favStation.name}</span>
-                    <button
-                      onClick={() => selectFavoriteStation(favStation.stationuuid)}
-                      class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-                    >
-                      تشغيل
-                    </button>
+                    <div class="flex gap-2">
+                      <button
+                        onClick={() => selectFavoriteStation(favStation.stationuuid)}
+                        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                      >
+                        تشغيل
+                      </button>
+                      <button
+                        onClick={() => removeFavorite(favStation.stationuuid)}
+                        class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                      >
+                        إزالة من المفضلة
+                      </button>
+                    </div>
                   </div>
                 )}
               </For>
