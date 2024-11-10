@@ -98,13 +98,14 @@ function Assistant() {
           <button
             onClick={handleSubmit}
             class={`flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() ? 'opacity-50 cursor-not-allowed' : ''}`}
-            disabled={isLoading()}
+            disabled={isLoading() || !userInput()}
           >
             {isLoading() ? 'جاري التحميل...' : 'إرسال'}
           </button>
           <button
             onClick={isListening() ? stopListening : startListening}
-            class="flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+            class={`flex-1 px-6 py-3 ${isListening() ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'} text-white rounded-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
+            disabled={isLoading()}
           >
             {isListening() ? 'إيقاف التحدث' : 'ابدأ التحدث'}
           </button>

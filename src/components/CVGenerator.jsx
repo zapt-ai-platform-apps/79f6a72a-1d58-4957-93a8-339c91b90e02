@@ -1,7 +1,8 @@
 import { createSignal, Show } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { createEvent } from '../supabaseClient';
-import { SolidMarkdown } from 'solid-markdown';
+import { Document, Packer, Paragraph, HeadingLevel, TextRun } from 'docx';
+import { saveAs } from 'file-saver';
 
 function CVGenerator() {
   const navigate = useNavigate();
@@ -13,32 +14,13 @@ function CVGenerator() {
   const [skills, setSkills] = createSignal('');
   const [languages, setLanguages] = createSignal('');
   const [loading, setLoading] = createSignal(false);
-  const [cvContent, setCvContent] = createSignal('');
-  const [downloadLink, setDownloadLink] = createSignal('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const prompt = `
-    قم بإنشاء سيرة ذاتية احترافية باللغة العربية باستخدام المعلومات التالية:
-    - الاسم: ${name()}
-    - معلومات الاتصال: ${contactInfo()}
-    - الهدف الوظيفي: ${objective()}
-    - التعليم: ${education()}
-    - الخبرات العملية: ${experience()}
-    - المهارات: ${skills()}
-    - اللغات: ${languages()}
-    قدم السيرة الذاتية بتنسيق Markdown.
-    `;
-
     try {
-      const response = await createEvent('chatgpt_request', {
-        prompt: prompt,
-        response_type: 'text',
-      });
-      setCvContent(response);
-      createDownloadLink(response);
+      await generateWordDocument();
     } catch (error) {
       console.error('Error generating CV:', error);
     } finally {
@@ -46,19 +28,51 @@ function CVGenerator() {
     }
   };
 
-  const createDownloadLink = (content) => {
-    const blob = new Blob([content], { type: 'text/markdown' });
-    const url = URL.createObjectURL(blob);
-    setDownloadLink(url);
-  };
+  const generateWordDocument = async () => {
+    const doc = new Document();
 
-  const downloadCV = () => {
-    const link = document.createElement('a');
-    link.href = downloadLink();
-    link.download = 'CV.md';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    doc.addSection({
+      children: [
+        new Paragraph({
+          text: name(),
+          heading: HeadingLevel.TITLE,
+          alignment: 'center',
+        }),
+        new Paragraph({
+          text: contactInfo(),
+          alignment: 'center',
+        }),
+        new Paragraph({ text: '' }),
+        new Paragraph({
+          text: 'الهدف الوظيفي',
+          heading: HeadingLevel.HEADING_1,
+        }),
+        new Paragraph(objective()),
+        new Paragraph({
+          text: 'التعليم',
+          heading: HeadingLevel.HEADING_1,
+        }),
+        new Paragraph(education()),
+        new Paragraph({
+          text: 'الخبرات العملية',
+          heading: HeadingLevel.HEADING_1,
+        }),
+        new Paragraph(experience()),
+        new Paragraph({
+          text: 'المهارات',
+          heading: HeadingLevel.HEADING_1,
+        }),
+        new Paragraph(skills()),
+        new Paragraph({
+          text: 'اللغات',
+          heading: HeadingLevel.HEADING_1,
+        }),
+        new Paragraph(languages()),
+      ],
+    });
+
+    const blob = await Packer.toBlob(doc);
+    saveAs(blob, 'CV.docx');
   };
 
   return (
@@ -134,23 +148,6 @@ function CVGenerator() {
           {loading() ? 'جاري الإنشاء...' : 'إنشاء السيرة الذاتية'}
         </button>
       </form>
-
-      <Show when={cvContent()}>
-        <div class="mt-6 w-full max-w-2xl">
-          <h3 class="text-2xl font-bold text-purple-600 mb-4">السيرة الذاتية المولدة</h3>
-          <div class="p-4 bg-white rounded-lg shadow-md">
-            <SolidMarkdown children={cvContent()} />
-          </div>
-          <div class="mt-4 flex flex-wrap gap-4">
-            <button
-              onClick={downloadCV}
-              class="flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-            >
-              تحميل السيرة الذاتية
-            </button>
-          </div>
-        </div>
-      </Show>
     </div>
   );
 }
