@@ -11,6 +11,32 @@ function ArabicRadio() {
   const [isPlaying, setIsPlaying] = createSignal(false);
   const [volume, setVolume] = createSignal(0.5);
   const [favorites, setFavorites] = createSignal(JSON.parse(localStorage.getItem('favorites')) || []);
+  const [loadingStations, setLoadingStations] = createSignal(false);
+
+  const arabCountries = [
+    { en: 'Algeria', ar: 'الجزائر' },
+    { en: 'Bahrain', ar: 'البحرين' },
+    { en: 'Comoros', ar: 'جزر القمر' },
+    { en: 'Djibouti', ar: 'جيبوتي' },
+    { en: 'Egypt', ar: 'مصر' },
+    { en: 'Iraq', ar: 'العراق' },
+    { en: 'Jordan', ar: 'الأردن' },
+    { en: 'Kuwait', ar: 'الكويت' },
+    { en: 'Lebanon', ar: 'لبنان' },
+    { en: 'Libya', ar: 'ليبيا' },
+    { en: 'Mauritania', ar: 'موريتانيا' },
+    { en: 'Morocco', ar: 'المغرب' },
+    { en: 'Oman', ar: 'عمان' },
+    { en: 'Palestine', ar: 'فلسطين' },
+    { en: 'Qatar', ar: 'قطر' },
+    { en: 'Saudi Arabia', ar: 'المملكة العربية السعودية' },
+    { en: 'Somalia', ar: 'الصومال' },
+    { en: 'Sudan', ar: 'السودان' },
+    { en: 'Syria', ar: 'سوريا' },
+    { en: 'Tunisia', ar: 'تونس' },
+    { en: 'United Arab Emirates', ar: 'الإمارات العربية المتحدة' },
+    { en: 'Yemen', ar: 'اليمن' },
+  ];
 
   onMount(async () => {
     await fetchCountries();
@@ -21,8 +47,17 @@ function ArabicRadio() {
     try {
       const response = await fetch('https://de1.api.radio-browser.info/json/countries');
       const data = await response.json();
-      const arabCountries = data.filter(country => arabCountryList.includes(country.name));
-      setCountries(arabCountries);
+      // Map data to include Arabic names
+      const mappedCountries = data
+        .filter(country => arabCountries.some(arabCountry => arabCountry.en === country.name))
+        .map(country => {
+          const arabCountry = arabCountries.find(arabCountry => arabCountry.en === country.name);
+          return {
+            ...country,
+            arName: arabCountry.ar
+          };
+        });
+      setCountries(mappedCountries);
     } catch (error) {
       console.error('Error fetching countries:', error);
     }
@@ -30,12 +65,15 @@ function ArabicRadio() {
 
   const fetchStations = async () => {
     if (!selectedCountry()) return;
+    setLoadingStations(true);
     try {
       const response = await fetch(`https://de1.api.radio-browser.info/json/stations/bycountry/${encodeURIComponent(selectedCountry())}`);
       const data = await response.json();
       setStations(data);
     } catch (error) {
       console.error('Error fetching stations:', error);
+    } finally {
+      setLoadingStations(false);
     }
   };
 
@@ -116,13 +154,6 @@ function ArabicRadio() {
     return currentIndex >= 0 && currentIndex < stations().length - 1;
   };
 
-  const arabCountryList = [
-    'Algeria', 'Bahrain', 'Comoros', 'Djibouti', 'Egypt', 'Iraq', 'Jordan',
-    'Kuwait', 'Lebanon', 'Libya', 'Mauritania', 'Morocco', 'Oman', 'Palestine',
-    'Qatar', 'Saudi Arabia', 'Somalia', 'Sudan', 'Syria', 'Tunisia',
-    'United Arab Emirates', 'Yemen'
-  ];
-
   return (
     <div class="flex flex-col items-center p-4 h-full text-gray-800">
       <button
@@ -146,12 +177,16 @@ function ArabicRadio() {
           <option value="">اختر الدولة</option>
           <For each={countries()}>
             {(country) => (
-              <option value={country.name}>{country.name}</option>
+              <option value={country.name}>{country.arName}</option>
             )}
           </For>
         </select>
 
-        <Show when={stations().length > 0}>
+        <Show when={loadingStations()}>
+          <p class="text-center text-gray-700">جاري تحميل المحطات...</p>
+        </Show>
+
+        <Show when={stations().length > 0 && !loadingStations()}>
           <label for="station-select" class="block text-gray-700">
             اختر المحطة:
           </label>
@@ -179,7 +214,7 @@ function ArabicRadio() {
             <div class="flex flex-row items-center mb-2 space-x-4 space-x-reverse">
               <button
                 onClick={handlePreviousStation}
-                class={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${!hasPreviousStation() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                class={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${!hasPreviousStation() ? 'opacity-50 cursor-not-allowed' : ''} cursor-pointer`}
                 disabled={!hasPreviousStation()}
               >
                 المحطة السابقة
@@ -194,7 +229,7 @@ function ArabicRadio() {
 
               <button
                 onClick={handleNextStation}
-                class={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${!hasNextStation() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                class={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${!hasNextStation() ? 'opacity-50 cursor-not-allowed' : ''} cursor-pointer`}
                 disabled={!hasNextStation()}
               >
                 المحطة التالية
