@@ -8,7 +8,6 @@ import ArabicRadio from './components/ArabicRadio';
 import AIContentCreator from './components/AIContentCreator';
 import GeneratedContent from './components/GeneratedContent';
 import Calculator from './components/Calculator';
-import ImageTextExtractor from './components/ImageTextExtractor';
 
 function App() {
   return (
@@ -23,7 +22,6 @@ function App() {
         <Route path="/content-creator" component={AIContentCreator} />
         <Route path="/generated-content" component={GeneratedContent} />
         <Route path="/calculator" component={Calculator} />
-        <Route path="/image-text-extractor" component={ImageTextExtractor} />
       </Routes>
     </div>
   );
