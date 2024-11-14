@@ -7,6 +7,7 @@ import ProcessedText from './components/ProcessedText';
 import ArabicRadio from './components/ArabicRadio';
 import AIContentCreator from './components/AIContentCreator';
 import GeneratedContent from './components/GeneratedContent';
+import Calculator from './components/Calculator';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/radio" component={ArabicRadio} />
         <Route path="/content-creator" component={AIContentCreator} />
         <Route path="/generated-content" component={GeneratedContent} />
+        <Route path="/calculator" component={Calculator} />
       </Routes>
     </div>
   );
