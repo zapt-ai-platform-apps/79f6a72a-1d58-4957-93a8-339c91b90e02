@@ -61,6 +61,7 @@ function Assistant() {
       setAssistantResponse(response);
     } catch (error) {
       console.error('Error fetching assistant response:', error);
+      alert('حدث خطأ أثناء الحصول على استجابة المساعد. يرجى المحاولة مرة أخرى.');
     } finally {
       setIsLoading(false);
     }
@@ -81,6 +82,7 @@ function Assistant() {
       <button
         onClick={() => navigate('/')}
         class="self-start mb-4 text-2xl cursor-pointer"
+        aria-label="العودة إلى الصفحة الرئيسية"
       >
         🔙
       </button>
@@ -91,6 +93,7 @@ function Assistant() {
           value={userInput()}
           onInput={(e) => setUserInput(e.target.value)}
           placeholder="اكتب سؤالك هنا..."
+          aria-label="أدخل سؤالك"
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
           rows="4"
         ></textarea>
@@ -99,6 +102,7 @@ function Assistant() {
           <button
             onClick={handleSubmit}
             class={`flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() || !userInput() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            aria-label="إرسال السؤال"
             disabled={isLoading() || !userInput()}
           >
             {isLoading() ? 'جاري التحميل...' : 'إرسال'}
@@ -106,6 +110,7 @@ function Assistant() {
           <button
             onClick={isListening() ? stopListening : startListening}
             class={`flex-1 px-6 py-3 ${isListening() ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'} text-white rounded-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
+            aria-label={isListening() ? 'إيقاف التحدث' : 'ابدأ التحدث'}
             disabled={isLoading()}
           >
             {isListening() ? 'إيقاف التحدث' : 'ابدأ التحدث'}
@@ -120,6 +125,7 @@ function Assistant() {
             <button
               onClick={copyText}
               class="flex-1 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+              aria-label="نسخ النص"
             >
               نسخ النص
             </button>
