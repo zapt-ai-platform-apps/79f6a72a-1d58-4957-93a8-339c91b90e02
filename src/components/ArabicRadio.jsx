@@ -1,3 +1,4 @@
+```jsx
 import { createSignal, onMount, For, Show } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 
@@ -176,12 +177,30 @@ function ArabicRadio() {
         <Show when={selectedStation()}>
           <div class="mt-4 flex flex-col items-center">
             <h3 class="text-xl text-gray-700 mb-2">{selectedStation().name}</h3>
-            <button
-              onClick={togglePlayPause}
-              class={`mb-2 px-6 py-3 ${isPlaying() ? 'bg-red-500' : 'bg-green-500'} text-white rounded-lg hover:bg-${isPlaying() ? 'red-600' : 'green-600'} transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
-            >
-              {isPlaying() ? 'إيقاف' : 'تشغيل'}
-            </button>
+            <div class="flex flex-row items-center mb-2 space-x-4 space-x-reverse">
+              <button
+                onClick={handlePreviousStation}
+                class={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${!hasPreviousStation() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={!hasPreviousStation()}
+              >
+                المحطة السابقة
+              </button>
+
+              <button
+                onClick={togglePlayPause}
+                class={`px-6 py-3 ${isPlaying() ? 'bg-red-500' : 'bg-green-500'} text-white rounded-lg hover:${isPlaying() ? 'bg-red-600' : 'bg-green-600'} transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
+              >
+                {isPlaying() ? 'إيقاف' : 'تشغيل'}
+              </button>
+
+              <button
+                onClick={handleNextStation}
+                class={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${!hasNextStation() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={!hasNextStation()}
+              >
+                المحطة التالية
+              </button>
+            </div>
             <div class="flex items-center mb-2">
               <label for="volume" class="mr-2 text-gray-700">درجة الصوت:</label>
               <input
@@ -194,22 +213,6 @@ function ArabicRadio() {
                 onInput={changeVolume}
                 class="cursor-pointer"
               />
-            </div>
-            <div class="flex flex-row items-center mb-2 space-x-4 space-x-reverse">
-              <button
-                onClick={handlePreviousStation}
-                class={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${!hasPreviousStation() ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={!hasPreviousStation()}
-              >
-                المحطة السابقة
-              </button>
-              <button
-                onClick={handleNextStation}
-                class={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${!hasNextStation() ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={!hasNextStation()}
-              >
-                المحطة التالية
-              </button>
             </div>
             <button
               onClick={() => isFavorite(selectedStation()) ? removeFromFavorites(selectedStation()) : addToFavorites(selectedStation())}
@@ -246,3 +249,4 @@ function ArabicRadio() {
 }
 
 export default ArabicRadio;
+```
