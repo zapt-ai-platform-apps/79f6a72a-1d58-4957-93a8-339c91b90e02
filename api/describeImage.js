@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     const buffer = Buffer.from(imageData, 'base64');
 
     // Call the external Image Description API
-    const response = await fetch(process.env.IMAGE_API_ENDPOINT, {
+    const response = await fetch(`${process.env.IMAGE_API_ENDPOINT}?language=ar&descriptionExclude=Color,Tags`, {
       method: 'POST',
       headers: {
         'Ocp-Apim-Subscription-Key': process.env.IMAGE_API_KEY,
@@ -42,12 +42,13 @@ export default async function handler(req, res) {
     if (!response.ok) {
       const errorData = await response.text();
       console.error('Error from Image API:', errorData);
+      Sentry.captureException(new Error(`Image API Error: ${errorData}`));
       res.status(500).json({ error: 'Error from Image API' });
       return;
     }
 
     const data = await response.json();
-    const description = data.description?.captions[0]?.text || 'No description available';
+    const description = data.description?.captions[0]?.text || 'لا يوجد وصف متاح للصورة.';
 
     res.status(200).json({ description });
   } catch (error) {
