@@ -90,6 +90,32 @@ function ArabicRadio() {
     setFavorites(savedFavorites);
   };
 
+  const handlePreviousStation = () => {
+    const currentIndex = stations().findIndex(s => s.stationuuid === selectedStation()?.stationuuid);
+    if (currentIndex > 0) {
+      const previousStation = stations()[currentIndex - 1];
+      playStation(previousStation);
+    }
+  };
+
+  const handleNextStation = () => {
+    const currentIndex = stations().findIndex(s => s.stationuuid === selectedStation()?.stationuuid);
+    if (currentIndex >= 0 && currentIndex < stations().length - 1) {
+      const nextStation = stations()[currentIndex + 1];
+      playStation(nextStation);
+    }
+  };
+
+  const hasPreviousStation = () => {
+    const currentIndex = stations().findIndex(s => s.stationuuid === selectedStation()?.stationuuid);
+    return currentIndex > 0;
+  };
+
+  const hasNextStation = () => {
+    const currentIndex = stations().findIndex(s => s.stationuuid === selectedStation()?.stationuuid);
+    return currentIndex >= 0 && currentIndex < stations().length -1;
+  };
+
   const arabCountryList = [
     'Algeria', 'Bahrain', 'Comoros', 'Djibouti', 'Egypt', 'Iraq', 'Jordan',
     'Kuwait', 'Lebanon', 'Libya', 'Mauritania', 'Morocco', 'Oman', 'Palestine',
@@ -169,9 +195,25 @@ function ArabicRadio() {
                 class="cursor-pointer"
               />
             </div>
+            <div class="flex flex-row items-center mb-2 space-x-4 space-x-reverse">
+              <button
+                onClick={handlePreviousStation}
+                class={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${!hasPreviousStation() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={!hasPreviousStation()}
+              >
+                المحطة السابقة
+              </button>
+              <button
+                onClick={handleNextStation}
+                class={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${!hasNextStation() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={!hasNextStation()}
+              >
+                المحطة التالية
+              </button>
+            </div>
             <button
               onClick={() => isFavorite(selectedStation()) ? removeFromFavorites(selectedStation()) : addToFavorites(selectedStation())}
-              class="px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+              class="mt-2 px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
             >
               {isFavorite(selectedStation()) ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}
             </button>
