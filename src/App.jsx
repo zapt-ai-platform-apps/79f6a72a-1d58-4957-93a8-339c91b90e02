@@ -10,10 +10,12 @@ import GeneratedContent from './components/GeneratedContent';
 import Calculator from './components/Calculator';
 import ResumeGenerator from './components/ResumeGenerator';
 import GeneratedResume from './components/GeneratedResume';
+import Service from './pages/Service';
+import BottomNavBar from './components/BottomNavBar';
 
 function App() {
   return (
-    <div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 text-gray-800" dir="rtl">
+    <div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 text-gray-800 relative" dir="rtl">
       <Routes>
         <Route path="/" component={Home} />
         <Route path="/assistant" component={Assistant} />
@@ -26,7 +28,9 @@ function App() {
         <Route path="/calculator" component={Calculator} />
         <Route path="/resume-generator" component={ResumeGenerator} />
         <Route path="/generated-resume" component={GeneratedResume} />
+        <Route path="/service" component={Service} />
       </Routes>
+      <BottomNavBar />
     </div>
   );
 }
