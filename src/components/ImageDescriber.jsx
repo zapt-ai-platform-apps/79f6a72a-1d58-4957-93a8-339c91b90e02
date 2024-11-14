@@ -44,11 +44,11 @@ function ImageDescriber() {
         } else {
           console.error('Error from describeImage API:', response.statusText);
         }
+        setIsLoading(false);
       };
       reader.readAsDataURL(imageFile());
     } catch (error) {
       console.error('Error describing image:', error);
-    } finally {
       setIsLoading(false);
     }
   };
@@ -90,8 +90,12 @@ function ImageDescriber() {
           class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() || !imageFile() ? 'opacity-50 cursor-not-allowed' : ''}`}
           disabled={isLoading() || !imageFile()}
         >
-          {isLoading() ? 'جاري التحميل...' : 'وصف الصورة'}
+          {isLoading() ? 'جاري تحميل الوصف' : 'وصف الصورة'}
         </button>
+
+        <Show when={isLoading()}>
+          <p class="text-center text-gray-600">جاري تحميل الوصف...</p>
+        </Show>
 
         <Show when={description()}>
           <div class="mt-4 p-4 bg-white rounded-lg shadow-md">
