@@ -26,42 +26,61 @@ function ResumeGenerator() {
     setIsLoading(true);
 
     try {
-      const prompt = `قم بإنشاء سيرة ذاتية احترافية باللغة العربية بناءً على المعلومات التالية:
-      الاسم: ${name()}
-      المسمى الوظيفي: ${jobTitle()}
-      البريد الإلكتروني: ${email()}
-      رقم الهاتف: ${phone()}
-      العنوان: ${address()}
-      الملخص المهني: ${summary()}
-      المهارات: ${skills()}
-      الخبرات العملية: ${workExperience()}
-      التعليم: ${education()}
-      الشهادات: ${certifications()}
-      اللغات: ${languages()}
-      الهوايات والاهتمامات: ${hobbies()}
-      `;
+      const prompt = `قم بإنشاء سيرة ذاتية احترافية باللغة العربية بتنسيق JSON باستخدام البيانات التالية. استخدم البنية التالية:
+{
+  "name": "الاسم الكامل",
+  "jobTitle": "المسمى الوظيفي",
+  "contactInfo": {
+    "email": "البريد الإلكتروني",
+    "phone": "رقم الهاتف",
+    "address": "العنوان"
+  },
+  "summary": "الملخص المهني",
+  "skills": ["مهارة1", "مهارة2", ...],
+  "workExperience": [
+    {
+      "jobTitle": "المسمى الوظيفي",
+      "company": "اسم الشركة",
+      "startDate": "تاريخ البدء",
+      "endDate": "تاريخ الانتهاء أو 'الحالي'",
+      "description": "وصف الوظيفة"
+    }
+  ],
+  "education": [
+    {
+      "degree": "الشهادة",
+      "institution": "المؤسسة التعليمية",
+      "startDate": "تاريخ البدء",
+      "endDate": "تاريخ الانتهاء أو 'الحالي'",
+      "description": "وصف"
+    }
+  ],
+  "certifications": ["شهادة1", "شهادة2"],
+  "languages": ["لغة1", "لغة2"],
+  "hobbies": ["هواية1", "هواية2"]
+}
+البيانات:
+الاسم: ${name()}
+المسمى الوظيفي: ${jobTitle()}
+البريد الإلكتروني: ${email()}
+رقم الهاتف: ${phone()}
+العنوان: ${address()}
+الملخص المهني: ${summary()}
+المهارات: ${skills()}
+الخبرات العملية: ${workExperience()}
+التعليم: ${education()}
+الشهادات: ${certifications()}
+اللغات: ${languages()}
+الهوايات والاهتمامات: ${hobbies()}
+`;
 
       const response = await createEvent('chatgpt_request', {
         prompt: prompt,
-        response_type: 'text',
+        response_type: 'json',
       });
 
       setState('generatedResume', response);
-      setState('name', name());
-      setState('jobTitle', jobTitle());
-      setState('email', email());
-      setState('phone', phone());
-      setState('address', address());
-      setState('summary', summary());
-      setState('skills', skills());
-      setState('workExperience', workExperience());
-      setState('education', education());
-      setState('certifications', certifications());
-      setState('languages', languages());
-      setState('hobbies', hobbies());
-
       navigate('/generated-resume');
-
     } catch (error) {
       console.error('Error generating resume:', error);
     } finally {
@@ -172,7 +191,11 @@ function ResumeGenerator() {
 
         <button
           onClick={handleGenerateResume}
-          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() || !name() || !jobTitle() || !email() || !phone() || !skills() ? 'opacity-50 cursor-not-allowed' : ''}`}
+          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
+            isLoading() || !name() || !jobTitle() || !email() || !phone() || !skills()
+              ? 'opacity-50 cursor-not-allowed'
+              : ''
+          }`}
           disabled={isLoading() || !name() || !jobTitle() || !email() || !phone() || !skills()}
         >
           {isLoading() ? 'جاري التحميل...' : 'توليد السيرة الذاتية'}

@@ -1,19 +1,24 @@
 import { useNavigate } from '@solidjs/router';
-import { state, setState } from '../store';
-import { SolidMarkdown } from 'solid-markdown';
+import { state } from '../store';
 import { createSignal, Show, createEffect } from 'solid-js';
-import { createEvent } from '../supabaseClient';
 
 function GeneratedResume() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = createSignal(false);
   const [audioUrl, setAudioUrl] = createSignal('');
   const [isPlaying, setIsPlaying] = createSignal(false);
+  const [resumeData, setResumeData] = createSignal(null);
 
   let audio;
 
+  createEffect(() => {
+    if (state.generatedResume) {
+      setResumeData(state.generatedResume);
+    }
+  });
+
   const copyContent = () => {
-    navigator.clipboard.writeText(state.generatedResume)
+    navigator.clipboard.writeText(JSON.stringify(resumeData(), null, 2))
       .then(() => {
         alert('تم نسخ السيرة الذاتية إلى الحافظة');
       })
@@ -25,8 +30,9 @@ function GeneratedResume() {
   const handleListen = async () => {
     setIsLoading(true);
     try {
+      const textContent = document.getElementById('resume-content').innerText;
       const result = await createEvent('text_to_speech', {
-        text: state.generatedResume,
+        text: textContent,
       });
       setAudioUrl(result);
     } catch (error) {
@@ -58,37 +64,8 @@ function GeneratedResume() {
     }
   };
 
-  const handleRecreate = async () => {
-    setIsLoading(true);
-    try {
-      const prompt = `قم بإنشاء سيرة ذاتية احترافية باللغة العربية بناءً على المعلومات التالية:
-      الاسم: ${state.name}
-      المسمى الوظيفي: ${state.jobTitle}
-      البريد الإلكتروني: ${state.email}
-      رقم الهاتف: ${state.phone}
-      العنوان: ${state.address}
-      الملخص المهني: ${state.summary}
-      المهارات: ${state.skills}
-      الخبرات العملية: ${state.workExperience}
-      التعليم: ${state.education}
-      الشهادات: ${state.certifications}
-      اللغات: ${state.languages}
-      الهوايات والاهتمامات: ${state.hobbies}
-      `;
-
-      const response = await createEvent('chatgpt_request', {
-        prompt: prompt,
-        response_type: 'text',
-      });
-
-      setState('generatedResume', response);
-      setAudioUrl('');
-
-    } catch (error) {
-      console.error('Error regenerating resume:', error);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleRecreate = () => {
+    navigate('/resume-generator');
   };
 
   return (
@@ -112,17 +89,21 @@ function GeneratedResume() {
           </button>
           <button
             onClick={handleListen}
-            class={`flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() || isPlaying() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            class={`flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
+              isLoading() || isPlaying() ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
             disabled={isLoading() || isPlaying()}
           >
             {isLoading() ? 'جاري التحميل...' : 'استماع'}
           </button>
           <button
             onClick={handleRecreate}
-            class={`flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            class={`flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
+              isLoading() ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
             disabled={isLoading()}
           >
-            {isLoading() ? 'جاري التحميل...' : 'إعادة الإنشاء'}
+            إعادة الإنشاء
           </button>
           <Show when={isPlaying()}>
             <button
@@ -133,9 +114,84 @@ function GeneratedResume() {
             </button>
           </Show>
         </div>
-        <div class="mt-4 p-4 bg-white rounded-lg shadow-md">
-          <SolidMarkdown class="prose prose-lg text-gray-700" children={state.generatedResume} />
-        </div>
+        <Show when={resumeData()}>
+          <div id="resume-content" class="mt-4 p-6 bg-white rounded-lg shadow-md">
+            <h1 class="text-4xl font-bold text-center">{resumeData().name}</h1>
+            <p class="text-center text-gray-600">{resumeData().jobTitle}</p>
+            <div class="text-center my-4">
+              <p>Email: {resumeData().contactInfo.email}</p>
+              <p>Phone: {resumeData().contactInfo.phone}</p>
+              <p>Address: {resumeData().contactInfo.address}</p>
+            </div>
+            <hr class="my-4"/>
+            <section>
+              <h2 class="text-2xl font-bold text-purple-600 mb-2">الملخص المهني</h2>
+              <p>{resumeData().summary}</p>
+            </section>
+            <section>
+              <h2 class="text-2xl font-bold text-purple-600 mb-2">المهارات</h2>
+              <ul class="list-disc list-inside">
+                <For each={resumeData().skills}>
+                  {(skill) => <li>{skill}</li>}
+                </For>
+              </ul>
+            </section>
+            <section>
+              <h2 class="text-2xl font-bold text-purple-600 mb-2">الخبرات العملية</h2>
+              <For each={resumeData().workExperience}>
+                {(work) => (
+                  <div class="mb-4">
+                    <h3 class="text-xl font-semibold">{work.jobTitle} at {work.company}</h3>
+                    <p class="text-gray-600">{work.startDate} - {work.endDate}</p>
+                    <p>{work.description}</p>
+                  </div>
+                )}
+              </For>
+            </section>
+            <section>
+              <h2 class="text-2xl font-bold text-purple-600 mb-2">التعليم</h2>
+              <For each={resumeData().education}>
+                {(edu) => (
+                  <div class="mb-4">
+                    <h3 class="text-xl font-semibold">{edu.degree} from {edu.institution}</h3>
+                    <p class="text-gray-600">{edu.startDate} - {edu.endDate}</p>
+                    <p>{edu.description}</p>
+                  </div>
+                )}
+              </For>
+            </section>
+            <Show when={resumeData().certifications && resumeData().certifications.length}>
+              <section>
+                <h2 class="text-2xl font-bold text-purple-600 mb-2">الشهادات</h2>
+                <ul class="list-disc list-inside">
+                  <For each={resumeData().certifications}>
+                    {(cert) => <li>{cert}</li>}
+                  </For>
+                </ul>
+              </section>
+            </Show>
+            <Show when={resumeData().languages && resumeData().languages.length}>
+              <section>
+                <h2 class="text-2xl font-bold text-purple-600 mb-2">اللغات</h2>
+                <ul class="list-disc list-inside">
+                  <For each={resumeData().languages}>
+                    {(lang) => <li>{lang}</li>}
+                  </For>
+                </ul>
+              </section>
+            </Show>
+            <Show when={resumeData().hobbies && resumeData().hobbies.length}>
+              <section>
+                <h2 class="text-2xl font-bold text-purple-600 mb-2">الهوايات والاهتمامات</h2>
+                <ul class="list-disc list-inside">
+                  <For each={resumeData().hobbies}>
+                    {(hobby) => <li>{hobby}</li>}
+                  </For>
+                </ul>
+              </section>
+            </Show>
+          </div>
+        </Show>
       </div>
     </div>
   );
