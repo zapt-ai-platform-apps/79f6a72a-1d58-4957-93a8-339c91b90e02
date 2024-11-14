@@ -1,13 +1,16 @@
 import { useNavigate } from '@solidjs/router';
 import { state, setState } from '../store';
 import { SolidMarkdown } from 'solid-markdown';
-import { createSignal, Show } from 'solid-js';
+import { createSignal, Show, createEffect } from 'solid-js';
 import { createEvent } from '../supabaseClient';
 
 function GeneratedContent() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = createSignal(false);
   const [audioUrl, setAudioUrl] = createSignal('');
+  const [isPlaying, setIsPlaying] = createSignal(false);
+
+  let audio;
 
   const copyContent = () => {
     navigator.clipboard.writeText(state.generatedContent)
@@ -30,6 +33,28 @@ function GeneratedContent() {
       console.error('Error converting text to speech:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  createEffect(() => {
+    if (audioUrl()) {
+      audio = new Audio(audioUrl());
+      audio.play();
+      setIsPlaying(true);
+
+      audio.addEventListener('ended', () => {
+        setIsPlaying(false);
+        setAudioUrl('');
+      });
+    }
+  });
+
+  const handleStopAudio = () => {
+    if (audio && isPlaying()) {
+      audio.pause();
+      audio.currentTime = 0;
+      setIsPlaying(false);
+      setAudioUrl('');
     }
   };
 
@@ -75,8 +100,8 @@ function GeneratedContent() {
           </button>
           <button
             onClick={handleListen}
-            class={`flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() ? 'opacity-50 cursor-not-allowed' : ''}`}
-            disabled={isLoading()}
+            class={`flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() || isPlaying() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={isLoading() || isPlaying()}
           >
             {isLoading() ? 'جاري التحميل...' : 'استماع'}
           </button>
@@ -87,12 +112,15 @@ function GeneratedContent() {
           >
             {isLoading() ? 'جاري التحميل...' : 'إعادة الإنشاء'}
           </button>
+          <Show when={isPlaying()}>
+            <button
+              onClick={handleStopAudio}
+              class="flex-1 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+            >
+              إيقاف الصوت
+            </button>
+          </Show>
         </div>
-        <Show when={audioUrl()}>
-          <div class="mt-4">
-            <audio controls src={audioUrl()} class="w-full" />
-          </div>
-        </Show>
       </div>
     </div>
   );
