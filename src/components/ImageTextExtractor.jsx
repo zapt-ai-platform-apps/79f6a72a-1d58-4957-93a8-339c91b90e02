@@ -1,5 +1,6 @@
 import { createSignal } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
+import { Show } from 'solid-js';
 
 function ImageTextExtractor() {
   const navigate = useNavigate();
@@ -16,30 +17,34 @@ function ImageTextExtractor() {
     if (!selectedImage()) return;
     setIsLoading(true);
     try {
-      const reader = new FileReader();
+      const base64Image = await getBase64(selectedImage());
+      const base64Data = base64Image.split(',')[1];
 
-      reader.onloadend = async () => {
-        const base64Image = reader.result.split(',')[1];
-
-        const response = await fetch('/api/extractTextFromImage', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ imageBase64: base64Image }),
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setExtractedText(data.text);
-        } else {
-          console.error('Error extracting text');
-        }
-        setIsLoading(false);
-      };
-
-      reader.readAsDataURL(selectedImage());
+      const response = await fetch('/api/extractTextFromImage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageBase64: base64Data }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setExtractedText(data.text);
+      } else {
+        console.error('Error extracting text');
+      }
     } catch (error) {
       console.error('Error extracting text:', error);
+    } finally {
       setIsLoading(false);
     }
+  };
+
+  const getBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
   };
 
   return (
@@ -65,11 +70,11 @@ function ImageTextExtractor() {
         >
           {isLoading() ? 'جاري استخراج النص...' : 'استخراج النص'}
         </button>
-        {extractedText() && (
+        <Show when={extractedText()}>
           <div class="mt-4 p-4 bg-white rounded-lg shadow-md">
             <p class="prose prose-lg text-gray-700 whitespace-pre-wrap">{extractedText()}</p>
           </div>
-        )}
+        </Show>
       </div>
     </div>
   );
