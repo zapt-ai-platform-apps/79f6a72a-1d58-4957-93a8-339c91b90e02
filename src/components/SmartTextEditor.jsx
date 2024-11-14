@@ -1,27 +1,29 @@
-import { createSignal, Show } from 'solid-js';
+import { createSignal, Show, For } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { createEvent } from '../supabaseClient';
+import { SolidMarkdown } from 'solid-markdown';
 
 function SmartTextEditor() {
   const navigate = useNavigate();
-  const [textInput, setTextInput] = createSignal('');
+  const [userText, setUserText] = createSignal('');
   const [processedText, setProcessedText] = createSignal('');
   const [isLoading, setIsLoading] = createSignal(false);
 
-  const actions = [
-    { name: 'تصحيح النص', prompt: 'صحح النص التالي لغويًا ونحويًا: ' },
-    { name: 'تشكيل النص', prompt: 'قم بتشكيل النص التالي: ' },
-    { name: 'تحسين النص', prompt: 'حسّن النص التالي: ' },
-    { name: 'ترجمة النص', prompt: 'ترجم النص التالي إلى الإنجليزية: ' },
+  const [selectedOption, setSelectedOption] = createSignal('');
+
+  const options = [
+    { label: 'تصحيح النص', prompt: 'قم بتصحيح النص التالي نحوياً وإملائياً دون تغيير معناه: ' },
+    { label: 'تشكيل النص', prompt: 'قم بتشكيل النص التالي بالحركات: ' },
+    { label: 'تحسين النص', prompt: 'قم بتحسين صياغة النص التالي وجعله أكثر احترافية: ' },
+    { label: 'ترجمة النص', prompt: 'قم بترجمة النص التالي إلى الإنجليزية: ' },
   ];
 
-  const [selectedAction, setSelectedAction] = createSignal(actions[0]);
-
   const handleProcessText = async () => {
-    if (!textInput()) return;
+    if (!userText() || !selectedOption()) return;
     setIsLoading(true);
     try {
-      const prompt = `${selectedAction().prompt}${textInput()}`;
+      const option = options.find(o => o.label === selectedOption());
+      const prompt = option.prompt + userText();
       const response = await createEvent('chatgpt_request', {
         prompt: prompt,
         response_type: 'text',
@@ -40,7 +42,7 @@ function SmartTextEditor() {
         alert('تم نسخ النص إلى الحافظة');
       })
       .catch(err => {
-        console.error('Error copying content:', err);
+        console.error('Error copying text:', err);
       });
   };
 
@@ -56,38 +58,44 @@ function SmartTextEditor() {
 
       <div class="w-full max-w-2xl space-y-4">
         <textarea
-          value={textInput()}
-          onInput={(e) => setTextInput(e.target.value)}
+          value={userText()}
+          onInput={(e) => setUserText(e.target.value)}
           placeholder="اكتب النص هنا..."
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
           rows="6"
         ></textarea>
 
-        <div class="flex flex-wrap gap-4">
-          <For each={actions}>
-            {(action) => (
-              <button
-                onClick={() => {
-                  setSelectedAction(action);
-                  handleProcessText();
-                }}
-                class={`flex-1 px-6 py-3 ${selectedAction().name === action.name ? 'bg-purple-500' : 'bg-blue-500'} text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
-                disabled={isLoading() || !textInput()}
-              >
-                {action.name}
-              </button>
+        <label for="option-select" class="block text-gray-700">
+          اختر العملية:
+        </label>
+        <select
+          id="option-select"
+          value={selectedOption()}
+          onInput={(e) => setSelectedOption(e.target.value)}
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border cursor-pointer"
+        >
+          <option value="">اختر العملية</option>
+          <For each={options}>
+            {(option) => (
+              <option value={option.label}>{option.label}</option>
             )}
           </For>
-        </div>
+        </select>
+
+        <button
+          onClick={handleProcessText}
+          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() || !userText() || !selectedOption() ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={isLoading() || !userText() || !selectedOption()}
+        >
+          {isLoading() ? 'جاري المعالجة...' : 'تنفيذ'}
+        </button>
 
         <Show when={processedText()}>
           <div class="mt-4 p-4 bg-white rounded-lg shadow-md">
-            <p class="text-gray-700 whitespace-pre-wrap">{processedText()}</p>
-          </div>
-          <div class="mt-2">
+            <SolidMarkdown class="prose prose-lg text-gray-700" children={processedText()} />
             <button
               onClick={copyText}
-              class="w-full px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+              class="mt-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
             >
               نسخ النص
             </button>

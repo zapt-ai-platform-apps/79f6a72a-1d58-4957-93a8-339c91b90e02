@@ -2,33 +2,41 @@ import { useNavigate } from '@solidjs/router';
 
 function Home() {
   const navigate = useNavigate();
-
-  const tools = [
-    { name: 'المساعد الصوتي', path: '/assistant' },
-    { name: 'محرر النصوص الذكي', path: '/editor' },
-    { name: 'منشئ المحتوى', path: '/content-creator' },
-    { name: 'الراديو العربي', path: '/radio' },
-    { name: 'وصف الصور', path: '/image-describer' },
-  ];
-
   return (
-    <div class="flex flex-col items-center justify-center h-full p-4 text-gray-800">
-      <h1 class="text-5xl font-bold text-purple-600 mb-8">أدوات Blind Accessibility</h1>
-      <p class="text-xl mb-6 text-center max-w-2xl">
-        تطبيق لتعزيز الوصول الرقمي للأشخاص المكفوفين وضعاف البصر، يتضمن مجموعة من الأدوات المتقدمة لسهولة الاستخدام وتحسين الإنتاجية.
-      </p>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
-        <For each={tools}>
-          {(tool) => (
-            <button
-              onClick={() => navigate(tool.path)}
-              class="w-full px-6 py-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer text-xl font-semibold"
-            >
-              {tool.name}
-            </button>
-          )}
-        </For>
+    <div class="flex flex-col items-center p-4 h-full text-gray-800">
+      <h1 class="text-4xl font-bold text-purple-600 mb-6">أدوات Blind Accessibility</h1>
+      <p class="text-lg mb-4">تطبيق لتعزيز الوصول الرقمي للأشخاص المكفوفين وضعاف البصر.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-3xl">
+        <button
+          onClick={() => navigate('/assistant')}
+          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          المساعد الصوتي
+        </button>
+        <button
+          onClick={() => navigate('/editor')}
+          class="bg-green-500 text-white py-4 px-6 rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          محرر النصوص الذكي
+        </button>
+        <button
+          onClick={() => navigate('/content-creator')}
+          class="bg-purple-500 text-white py-4 px-6 rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          منشئ المحتوى
+        </button>
+        <button
+          onClick={() => navigate('/radio')}
+          class="bg-red-500 text-white py-4 px-6 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          الراديو العربي
+        </button>
+        <button
+          onClick={() => navigate('/image-describer')}
+          class="bg-yellow-500 text-white py-4 px-6 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          وصف الصور
+        </button>
       </div>
     </div>
   );

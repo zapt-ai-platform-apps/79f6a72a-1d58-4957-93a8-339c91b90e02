@@ -1,4 +1,4 @@
-import { createSignal, onMount, Show } from 'solid-js';
+import { createSignal, onMount, Show, For } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { createEvent } from '../supabaseClient';
 import { SolidMarkdown } from 'solid-markdown';
@@ -6,7 +6,7 @@ import { SolidMarkdown } from 'solid-markdown';
 function Assistant() {
   const navigate = useNavigate();
   const [userInput, setUserInput] = createSignal('');
-  const [assistantResponse, setAssistantResponse] = createSignal('');
+  const [conversation, setConversation] = createSignal([]);
   const [isListening, setIsListening] = createSignal(false);
   const [isLoading, setIsLoading] = createSignal(false);
 
@@ -53,26 +53,28 @@ function Assistant() {
   const handleSend = async () => {
     if (!userInput()) return;
     setIsLoading(true);
+    setConversation([...conversation(), { role: 'user', content: userInput() }]);
     try {
       const response = await createEvent('chatgpt_request', {
         prompt: userInput(),
         response_type: 'text',
       });
-      setAssistantResponse(response);
+      setConversation([...conversation(), { role: 'user', content: userInput() }, { role: 'assistant', content: response }]);
+      setUserInput('');
     } catch (error) {
-      console.error('Error communicating with assistant:', error);
+      console.error('Error in Assistant:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const copyResponse = () => {
-    navigator.clipboard.writeText(assistantResponse())
+  const copyText = (text) => {
+    navigator.clipboard.writeText(text)
       .then(() => {
         alert('تم نسخ النص إلى الحافظة');
       })
       .catch(err => {
-        console.error('Error copying content:', err);
+        console.error('Error copying text:', err);
       });
   };
 
@@ -87,22 +89,23 @@ function Assistant() {
       <h2 class="text-3xl font-bold text-purple-600 mb-6">المساعد الصوتي بالذكاء الاصطناعي</h2>
 
       <div class="w-full max-w-2xl space-y-4">
-        <textarea
-          value={userInput()}
-          onInput={(e) => setUserInput(e.target.value)}
-          placeholder="اكتب سؤالك هنا..."
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-          rows="4"
-        ></textarea>
-
-        <div class="flex flex-wrap gap-4">
+        <div class="flex">
+          <input
+            type="text"
+            value={userInput()}
+            onInput={(e) => setUserInput(e.target.value)}
+            placeholder="اكتب سؤالك هنا..."
+            class="flex-1 p-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+          />
           <button
             onClick={handleSend}
-            class={`flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() || !userInput() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            class={`px-6 py-3 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() || !userInput() ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={isLoading() || !userInput()}
           >
-            {isLoading() ? 'جاري التحميل...' : 'إرسال'}
+            {isLoading() ? 'جاري الإرسال...' : 'إرسال'}
           </button>
+        </div>
+        <div class="flex gap-4">
           <button
             onClick={isListening() ? stopListening : startListening}
             class={`flex-1 px-6 py-3 ${isListening() ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'} text-white rounded-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
@@ -111,20 +114,23 @@ function Assistant() {
             {isListening() ? 'إيقاف التحدث' : 'ابدأ التحدث'}
           </button>
         </div>
-
-        <Show when={assistantResponse()}>
-          <div class="mt-4 p-4 bg-white rounded-lg shadow-md">
-            <SolidMarkdown class="prose prose-lg text-gray-700" children={assistantResponse()} />
-          </div>
-          <div class="mt-2 flex flex-wrap gap-4">
-            <button
-              onClick={copyResponse}
-              class="flex-1 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-            >
-              نسخ النص
-            </button>
-          </div>
-        </Show>
+        <div class="mt-4 space-y-4">
+          <For each={conversation()}>
+            {(message) => (
+              <div class={`p-4 rounded-lg shadow-md ${message.role === 'assistant' ? 'bg-white' : 'bg-purple-100'} transition duration-300 ease-in-out transform hover:scale-105`}>
+                <SolidMarkdown class="prose prose-lg text-gray-700" children={message.content} />
+                {message.role === 'assistant' && (
+                  <button
+                    onClick={() => copyText(message.content)}
+                    class="mt-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                  >
+                    نسخ النص
+                  </button>
+                )}
+              </div>
+            )}
+          </For>
+        </div>
       </div>
     </div>
   );
