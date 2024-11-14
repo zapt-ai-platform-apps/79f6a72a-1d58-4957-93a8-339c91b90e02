@@ -8,4 +8,11 @@ export const [state, setState] = createStore({
   contentType: '',
   userText: '',
   selectedOption: '',
+  generatedResume: '',
+  name: '',
+  jobTitle: '',
+  summary: '',
+  skills: '',
+  workExperience: '',
+  education: '',
 });

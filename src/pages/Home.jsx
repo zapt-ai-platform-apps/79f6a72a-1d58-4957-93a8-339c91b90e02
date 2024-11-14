@@ -26,6 +26,12 @@ function Home() {
           منشئ المحتوى
         </button>
         <button
+          onClick={() => navigate('/resume-generator')}
+          class="bg-teal-500 text-white py-4 px-6 rounded-lg hover:bg-teal-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          منشئ السيرة الذاتية
+        </button>
+        <button
           onClick={() => navigate('/radio')}
           class="bg-red-500 text-white py-4 px-6 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
         >

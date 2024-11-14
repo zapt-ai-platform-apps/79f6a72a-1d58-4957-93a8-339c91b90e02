@@ -8,6 +8,8 @@ import ArabicRadio from './components/ArabicRadio';
 import AIContentCreator from './components/AIContentCreator';
 import GeneratedContent from './components/GeneratedContent';
 import Calculator from './components/Calculator';
+import ResumeGenerator from './components/ResumeGenerator';
+import GeneratedResume from './components/GeneratedResume';
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path="/content-creator" component={AIContentCreator} />
         <Route path="/generated-content" component={GeneratedContent} />
         <Route path="/calculator" component={Calculator} />
+        <Route path="/resume-generator" component={ResumeGenerator} />
+        <Route path="/generated-resume" component={GeneratedResume} />
       </Routes>
     </div>
   );
