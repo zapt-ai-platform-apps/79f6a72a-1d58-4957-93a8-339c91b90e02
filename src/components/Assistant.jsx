@@ -1,12 +1,11 @@
-import { createSignal, onMount, Show, For } from 'solid-js';
+import { createSignal, onMount } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { createEvent } from '../supabaseClient';
-import { SolidMarkdown } from 'solid-markdown';
+import { state, setState } from '../store';
 
 function Assistant() {
   const navigate = useNavigate();
   const [userInput, setUserInput] = createSignal('');
-  const [conversation, setConversation] = createSignal([]);
   const [isListening, setIsListening] = createSignal(false);
   const [isLoading, setIsLoading] = createSignal(false);
 
@@ -53,29 +52,29 @@ function Assistant() {
   const handleSend = async () => {
     if (!userInput()) return;
     setIsLoading(true);
-    setConversation([...conversation(), { role: 'user', content: userInput() }]);
+
+    let conversation = [...(state.assistantConversation || [])];
+    conversation.push({ role: 'user', content: userInput() });
+
     try {
       const response = await createEvent('chatgpt_request', {
         prompt: userInput(),
         response_type: 'text',
       });
-      setConversation([...conversation(), { role: 'user', content: userInput() }, { role: 'assistant', content: response }]);
+
+      conversation.push({ role: 'assistant', content: response });
+
+      setState('assistantConversation', conversation);
+
       setUserInput('');
+
+      navigate('/assistant-conversation');
+
     } catch (error) {
       console.error('Error in Assistant:', error);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const copyText = (text) => {
-    navigator.clipboard.writeText(text)
-      .then(() => {
-        alert('تم نسخ النص إلى الحافظة');
-      })
-      .catch(err => {
-        console.error('Error copying text:', err);
-      });
   };
 
   return (
@@ -113,23 +112,6 @@ function Assistant() {
           >
             {isListening() ? 'إيقاف التحدث' : 'ابدأ التحدث'}
           </button>
-        </div>
-        <div class="mt-4 space-y-4">
-          <For each={conversation()}>
-            {(message) => (
-              <div class={`p-4 rounded-lg shadow-md ${message.role === 'assistant' ? 'bg-white' : 'bg-purple-100'} transition duration-300 ease-in-out transform hover:scale-105`}>
-                <SolidMarkdown class="prose prose-lg text-gray-700" children={message.content} />
-                {message.role === 'assistant' && (
-                  <button
-                    onClick={() => copyText(message.content)}
-                    class="mt-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-                  >
-                    نسخ النص
-                  </button>
-                )}
-              </div>
-            )}
-          </For>
         </div>
       </div>
     </div>

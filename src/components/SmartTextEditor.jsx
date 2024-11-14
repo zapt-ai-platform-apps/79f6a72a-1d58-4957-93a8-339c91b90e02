@@ -1,14 +1,12 @@
-import { createSignal, Show, For } from 'solid-js';
+import { createSignal, For } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { createEvent } from '../supabaseClient';
-import { SolidMarkdown } from 'solid-markdown';
+import { setState } from '../store';
 
 function SmartTextEditor() {
   const navigate = useNavigate();
   const [userText, setUserText] = createSignal('');
-  const [processedText, setProcessedText] = createSignal('');
   const [isLoading, setIsLoading] = createSignal(false);
-
   const [selectedOption, setSelectedOption] = createSignal('');
 
   const options = [
@@ -28,22 +26,13 @@ function SmartTextEditor() {
         prompt: prompt,
         response_type: 'text',
       });
-      setProcessedText(response);
+      setState('processedText', response);
+      navigate('/processed-text');
     } catch (error) {
       console.error('Error processing text:', error);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const copyText = () => {
-    navigator.clipboard.writeText(processedText())
-      .then(() => {
-        alert('تم نسخ النص إلى الحافظة');
-      })
-      .catch(err => {
-        console.error('Error copying text:', err);
-      });
   };
 
   return (
@@ -89,18 +78,6 @@ function SmartTextEditor() {
         >
           {isLoading() ? 'جاري المعالجة...' : 'تنفيذ'}
         </button>
-
-        <Show when={processedText()}>
-          <div class="mt-4 p-4 bg-white rounded-lg shadow-md">
-            <SolidMarkdown class="prose prose-lg text-gray-700" children={processedText()} />
-            <button
-              onClick={copyText}
-              class="mt-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-            >
-              نسخ النص
-            </button>
-          </div>
-        </Show>
       </div>
     </div>
   );

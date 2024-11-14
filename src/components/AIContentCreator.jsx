@@ -1,12 +1,11 @@
 import { createSignal, onMount, Show, For } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { createEvent } from '../supabaseClient';
-import { SolidMarkdown } from 'solid-markdown';
+import { setState } from '../store';
 
 function AIContentCreator() {
   const navigate = useNavigate();
   const [userPrompt, setUserPrompt] = createSignal('');
-  const [generatedContent, setGeneratedContent] = createSignal('');
   const [isListening, setIsListening] = createSignal(false);
   const [isLoading, setIsLoading] = createSignal(false);
   const [contentType, setContentType] = createSignal('مقال');
@@ -62,22 +61,13 @@ function AIContentCreator() {
         prompt: prompt,
         response_type: 'text',
       });
-      setGeneratedContent(response);
+      setState('generatedContent', response);
+      navigate('/generated-content');
     } catch (error) {
       console.error('Error generating content:', error);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const copyContent = () => {
-    navigator.clipboard.writeText(generatedContent())
-      .then(() => {
-        alert('تم نسخ المحتوى إلى الحافظة');
-      })
-      .catch(err => {
-        console.error('Error copying content:', err);
-      });
   };
 
   return (
@@ -129,20 +119,6 @@ function AIContentCreator() {
             {isListening() ? 'إيقاف التحدث' : 'ابدأ التحدث'}
           </button>
         </div>
-
-        <Show when={generatedContent()}>
-          <div class="mt-4 p-4 bg-white rounded-lg shadow-md">
-            <SolidMarkdown class="prose prose-lg text-gray-700" children={generatedContent()} />
-          </div>
-          <div class="mt-2 flex flex-wrap gap-4">
-            <button
-              onClick={copyContent}
-              class="flex-1 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-            >
-              نسخ المحتوى
-            </button>
-          </div>
-        </Show>
       </div>
     </div>
   );

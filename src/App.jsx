@@ -1,9 +1,12 @@
 import { Routes, Route } from '@solidjs/router';
 import Home from './pages/Home';
 import Assistant from './components/Assistant';
+import AssistantConversation from './components/AssistantConversation';
 import SmartTextEditor from './components/SmartTextEditor';
+import ProcessedText from './components/ProcessedText';
 import ArabicRadio from './components/ArabicRadio';
 import AIContentCreator from './components/AIContentCreator';
+import GeneratedContent from './components/GeneratedContent';
 
 function App() {
   return (
@@ -11,9 +14,12 @@ function App() {
       <Routes>
         <Route path="/" component={Home} />
         <Route path="/assistant" component={Assistant} />
+        <Route path="/assistant-conversation" component={AssistantConversation} />
         <Route path="/editor" component={SmartTextEditor} />
+        <Route path="/processed-text" component={ProcessedText} />
         <Route path="/radio" component={ArabicRadio} />
         <Route path="/content-creator" component={AIContentCreator} />
+        <Route path="/generated-content" component={GeneratedContent} />
       </Routes>
     </div>
   );
