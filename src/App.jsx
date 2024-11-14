@@ -1,5 +1,6 @@
 import { Routes, Route } from '@solidjs/router';
 import Home from './pages/Home';
+import MainPage from './pages/MainPage';
 import Assistant from './components/Assistant';
 import AssistantConversation from './components/AssistantConversation';
 import SmartTextEditor from './components/SmartTextEditor';
@@ -18,6 +19,7 @@ function App() {
     <div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 text-gray-800 relative" dir="rtl">
       <Routes>
         <Route path="/" component={Home} />
+        <Route path="/home" component={MainPage} />
         <Route path="/assistant" component={Assistant} />
         <Route path="/assistant-conversation" component={AssistantConversation} />
         <Route path="/editor" component={SmartTextEditor} />
