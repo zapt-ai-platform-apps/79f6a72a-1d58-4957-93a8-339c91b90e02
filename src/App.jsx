@@ -4,7 +4,6 @@ import Assistant from './components/Assistant';
 import SmartTextEditor from './components/SmartTextEditor';
 import ArabicRadio from './components/ArabicRadio';
 import AIContentCreator from './components/AIContentCreator';
-import ImageDescriber from './components/ImageDescriber';
 
 function App() {
   return (
@@ -15,7 +14,6 @@ function App() {
         <Route path="/editor" component={SmartTextEditor} />
         <Route path="/radio" component={ArabicRadio} />
         <Route path="/content-creator" component={AIContentCreator} />
-        <Route path="/image-describer" component={ImageDescriber} />
       </Routes>
     </div>
   );
