@@ -1,4 +1,3 @@
-```jsx
 import { createSignal, onMount, For, Show } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 
@@ -114,7 +113,7 @@ function ArabicRadio() {
 
   const hasNextStation = () => {
     const currentIndex = stations().findIndex(s => s.stationuuid === selectedStation()?.stationuuid);
-    return currentIndex >= 0 && currentIndex < stations().length -1;
+    return currentIndex >= 0 && currentIndex < stations().length - 1;
   };
 
   const arabCountryList = [
@@ -249,4 +248,3 @@ function ArabicRadio() {
 }
 
 export default ArabicRadio;
-```
