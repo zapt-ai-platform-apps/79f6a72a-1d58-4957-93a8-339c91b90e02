@@ -37,6 +37,12 @@ function Home() {
         >
           الآلة الحاسبة
         </button>
+        <button
+          onClick={() => navigate('/image-text-extractor')}
+          class="bg-teal-500 text-white py-4 px-6 rounded-lg hover:bg-teal-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          استخراج النص من الصورة
+        </button>
       </div>
     </div>
   );
