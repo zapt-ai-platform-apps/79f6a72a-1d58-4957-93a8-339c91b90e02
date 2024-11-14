@@ -62,6 +62,8 @@ function AIContentCreator() {
         response_type: 'text',
       });
       setState('generatedContent', response);
+      setState('userPrompt', userPrompt());
+      setState('contentType', contentType());
       navigate('/generated-content');
     } catch (error) {
       console.error('Error generating content:', error);

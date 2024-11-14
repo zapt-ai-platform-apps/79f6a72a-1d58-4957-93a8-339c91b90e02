@@ -27,6 +27,8 @@ function SmartTextEditor() {
         response_type: 'text',
       });
       setState('processedText', response);
+      setState('userText', userText());
+      setState('selectedOption', selectedOption());
       navigate('/processed-text');
     } catch (error) {
       console.error('Error processing text:', error);

@@ -4,4 +4,8 @@ export const [state, setState] = createStore({
   generatedContent: '',
   assistantConversation: [],
   processedText: '',
+  userPrompt: '',
+  contentType: '',
+  userText: '',
+  selectedOption: '',
 });

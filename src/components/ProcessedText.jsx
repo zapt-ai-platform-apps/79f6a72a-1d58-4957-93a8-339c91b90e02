@@ -1,9 +1,13 @@
 import { useNavigate } from '@solidjs/router';
-import { state } from '../store';
+import { state, setState } from '../store';
 import { SolidMarkdown } from 'solid-markdown';
+import { createSignal, Show } from 'solid-js';
+import { createEvent } from '../supabaseClient';
 
 function ProcessedText() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = createSignal(false);
+  const [audioUrl, setAudioUrl] = createSignal('');
 
   const copyText = () => {
     navigator.clipboard.writeText(state.processedText)
@@ -13,6 +17,44 @@ function ProcessedText() {
       .catch(err => {
         console.error('Error copying text:', err);
       });
+  };
+
+  const handleListen = async () => {
+    setIsLoading(true);
+    try {
+      const result = await createEvent('text_to_speech', {
+        text: state.processedText,
+      });
+      setAudioUrl(result);
+    } catch (error) {
+      console.error('Error converting text to speech:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRecreate = async () => {
+    if (!state.userText || !state.selectedOption) return;
+    setIsLoading(true);
+    try {
+      const options = {
+        'تصحيح النص': 'قم بتصحيح النص التالي نحوياً وإملائياً دون تغيير معناه: ',
+        'تشكيل النص': 'قم بتشكيل النص التالي بالحركات: ',
+        'تحسين النص': 'قم بتحسين صياغة النص التالي وجعله أكثر احترافية: ',
+        'ترجمة النص': 'قم بترجمة النص التالي إلى الإنجليزية: ',
+      };
+      const prompt = options[state.selectedOption] + state.userText;
+      const response = await createEvent('chatgpt_request', {
+        prompt: prompt,
+        response_type: 'text',
+      });
+      setState('processedText', response);
+      setAudioUrl('');
+    } catch (error) {
+      console.error('Error reprocessing text:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -37,7 +79,26 @@ function ProcessedText() {
           >
             نسخ النص
           </button>
+          <button
+            onClick={handleListen}
+            class={`flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={isLoading()}
+          >
+            {isLoading() ? 'جاري التحميل...' : 'استماع'}
+          </button>
+          <button
+            onClick={handleRecreate}
+            class={`flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={isLoading()}
+          >
+            {isLoading() ? 'جاري التحميل...' : 'إعادة الإنشاء'}
+          </button>
         </div>
+        <Show when={audioUrl()}>
+          <div class="mt-4">
+            <audio controls src={audioUrl()} class="w-full" />
+          </div>
+        </Show>
       </div>
     </div>
   );

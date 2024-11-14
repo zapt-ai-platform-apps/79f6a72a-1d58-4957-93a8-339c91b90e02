@@ -1,9 +1,13 @@
 import { useNavigate } from '@solidjs/router';
-import { state } from '../store';
+import { state, setState } from '../store';
 import { SolidMarkdown } from 'solid-markdown';
+import { createSignal, Show } from 'solid-js';
+import { createEvent } from '../supabaseClient';
 
 function GeneratedContent() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = createSignal(false);
+  const [audioUrl, setAudioUrl] = createSignal('');
 
   const copyContent = () => {
     navigator.clipboard.writeText(state.generatedContent)
@@ -13,6 +17,38 @@ function GeneratedContent() {
       .catch(err => {
         console.error('Error copying content:', err);
       });
+  };
+
+  const handleListen = async () => {
+    setIsLoading(true);
+    try {
+      const result = await createEvent('text_to_speech', {
+        text: state.generatedContent,
+      });
+      setAudioUrl(result);
+    } catch (error) {
+      console.error('Error converting text to speech:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRecreate = async () => {
+    if (!state.userPrompt || !state.contentType) return;
+    setIsLoading(true);
+    try {
+      const prompt = `اكتب ${state.contentType} حول الموضوع التالي: ${state.userPrompt}`;
+      const response = await createEvent('chatgpt_request', {
+        prompt: prompt,
+        response_type: 'text',
+      });
+      setState('generatedContent', response);
+      setAudioUrl('');
+    } catch (error) {
+      console.error('Error regenerating content:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -37,7 +73,26 @@ function GeneratedContent() {
           >
             نسخ المحتوى
           </button>
+          <button
+            onClick={handleListen}
+            class={`flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={isLoading()}
+          >
+            {isLoading() ? 'جاري التحميل...' : 'استماع'}
+          </button>
+          <button
+            onClick={handleRecreate}
+            class={`flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={isLoading()}
+          >
+            {isLoading() ? 'جاري التحميل...' : 'إعادة الإنشاء'}
+          </button>
         </div>
+        <Show when={audioUrl()}>
+          <div class="mt-4">
+            <audio controls src={audioUrl()} class="w-full" />
+          </div>
+        </Show>
       </div>
     </div>
   );
