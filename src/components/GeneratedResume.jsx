@@ -64,10 +64,16 @@ function GeneratedResume() {
       const prompt = `قم بإنشاء سيرة ذاتية احترافية باللغة العربية بناءً على المعلومات التالية:
       الاسم: ${state.name}
       المسمى الوظيفي: ${state.jobTitle}
+      البريد الإلكتروني: ${state.email}
+      رقم الهاتف: ${state.phone}
+      العنوان: ${state.address}
       الملخص المهني: ${state.summary}
       المهارات: ${state.skills}
       الخبرات العملية: ${state.workExperience}
       التعليم: ${state.education}
+      الشهادات: ${state.certifications}
+      اللغات: ${state.languages}
+      الهوايات والاهتمامات: ${state.hobbies}
       `;
 
       const response = await createEvent('chatgpt_request', {

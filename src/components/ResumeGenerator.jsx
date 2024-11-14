@@ -8,14 +8,20 @@ function ResumeGenerator() {
   const navigate = useNavigate();
   const [name, setName] = createSignal('');
   const [jobTitle, setJobTitle] = createSignal('');
+  const [email, setEmail] = createSignal('');
+  const [phone, setPhone] = createSignal('');
+  const [address, setAddress] = createSignal('');
   const [summary, setSummary] = createSignal('');
   const [skills, setSkills] = createSignal('');
   const [workExperience, setWorkExperience] = createSignal('');
   const [education, setEducation] = createSignal('');
+  const [certifications, setCertifications] = createSignal('');
+  const [languages, setLanguages] = createSignal('');
+  const [hobbies, setHobbies] = createSignal('');
   const [isLoading, setIsLoading] = createSignal(false);
 
   const handleGenerateResume = async () => {
-    if (!name() || !jobTitle() || !skills()) return;
+    if (!name() || !jobTitle() || !email() || !phone() || !skills()) return;
 
     setIsLoading(true);
 
@@ -23,10 +29,16 @@ function ResumeGenerator() {
       const prompt = `قم بإنشاء سيرة ذاتية احترافية باللغة العربية بناءً على المعلومات التالية:
       الاسم: ${name()}
       المسمى الوظيفي: ${jobTitle()}
+      البريد الإلكتروني: ${email()}
+      رقم الهاتف: ${phone()}
+      العنوان: ${address()}
       الملخص المهني: ${summary()}
       المهارات: ${skills()}
       الخبرات العملية: ${workExperience()}
       التعليم: ${education()}
+      الشهادات: ${certifications()}
+      اللغات: ${languages()}
+      الهوايات والاهتمامات: ${hobbies()}
       `;
 
       const response = await createEvent('chatgpt_request', {
@@ -37,10 +49,16 @@ function ResumeGenerator() {
       setState('generatedResume', response);
       setState('name', name());
       setState('jobTitle', jobTitle());
+      setState('email', email());
+      setState('phone', phone());
+      setState('address', address());
       setState('summary', summary());
       setState('skills', skills());
       setState('workExperience', workExperience());
       setState('education', education());
+      setState('certifications', certifications());
+      setState('languages', languages());
+      setState('hobbies', hobbies());
 
       navigate('/generated-resume');
 
@@ -52,7 +70,7 @@ function ResumeGenerator() {
   };
 
   return (
-    <div class="flex flex-col items-center p-4 h-full text-gray-800">
+    <div class="min-h-screen flex flex-col items-center p-4 text-gray-800">
       <button
         onClick={() => navigate('/')}
         class="self-start mb-4 text-2xl cursor-pointer"
@@ -66,7 +84,7 @@ function ResumeGenerator() {
           type="text"
           value={name()}
           onInput={(e) => setName(e.target.value)}
-          placeholder="الاسم الكامل"
+          placeholder="الاسم الكامل *"
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
           required
         />
@@ -74,21 +92,44 @@ function ResumeGenerator() {
           type="text"
           value={jobTitle()}
           onInput={(e) => setJobTitle(e.target.value)}
-          placeholder="المسمى الوظيفي"
+          placeholder="المسمى الوظيفي *"
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
           required
+        />
+        <input
+          type="email"
+          value={email()}
+          onInput={(e) => setEmail(e.target.value)}
+          placeholder="البريد الإلكتروني *"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+          required
+        />
+        <input
+          type="tel"
+          value={phone()}
+          onInput={(e) => setPhone(e.target.value)}
+          placeholder="رقم الهاتف *"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+          required
+        />
+        <input
+          type="text"
+          value={address()}
+          onInput={(e) => setAddress(e.target.value)}
+          placeholder="العنوان"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
         />
         <textarea
           value={summary()}
           onInput={(e) => setSummary(e.target.value)}
-          placeholder="الملخص المهني (اختياري)"
+          placeholder="الملخص المهني"
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
           rows="3"
         ></textarea>
         <textarea
           value={skills()}
           onInput={(e) => setSkills(e.target.value)}
-          placeholder="المهارات (افصل بين المهارات بفاصلة)"
+          placeholder="المهارات (افصل بين المهارات بفاصلة) *"
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
           rows="2"
           required
@@ -96,22 +137,43 @@ function ResumeGenerator() {
         <textarea
           value={workExperience()}
           onInput={(e) => setWorkExperience(e.target.value)}
-          placeholder="الخبرات العملية (اختياري)"
+          placeholder="الخبرات العملية"
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
           rows="4"
         ></textarea>
         <textarea
           value={education()}
           onInput={(e) => setEducation(e.target.value)}
-          placeholder="التعليم (اختياري)"
+          placeholder="التعليم"
           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
           rows="3"
+        ></textarea>
+        <textarea
+          value={certifications()}
+          onInput={(e) => setCertifications(e.target.value)}
+          placeholder="الشهادات"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+          rows="2"
+        ></textarea>
+        <textarea
+          value={languages()}
+          onInput={(e) => setLanguages(e.target.value)}
+          placeholder="اللغات (افصل بين اللغات بفاصلة)"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+          rows="2"
+        ></textarea>
+        <textarea
+          value={hobbies()}
+          onInput={(e) => setHobbies(e.target.value)}
+          placeholder="الهوايات والاهتمامات"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+          rows="2"
         ></textarea>
 
         <button
           onClick={handleGenerateResume}
-          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() || !name() || !jobTitle() || !skills() ? 'opacity-50 cursor-not-allowed' : ''}`}
-          disabled={isLoading() || !name() || !jobTitle() || !skills()}
+          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() || !name() || !jobTitle() || !email() || !phone() || !skills() ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={isLoading() || !name() || !jobTitle() || !email() || !phone() || !skills()}
         >
           {isLoading() ? 'جاري التحميل...' : 'توليد السيرة الذاتية'}
         </button>
