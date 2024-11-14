@@ -37,7 +37,7 @@ function ResumeGenerator() {
   return (
     <div class="flex flex-col items-center p-4 h-full text-gray-800 pb-16">
       <button
-        onClick={() => navigate('/')}
+        onClick={() => navigate('/tools')}
         class="self-start mb-4 text-2xl cursor-pointer"
       >
         🔙

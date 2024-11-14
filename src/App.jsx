@@ -18,8 +18,8 @@ function App() {
   return (
     <div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 text-gray-800 relative" dir="rtl">
       <Routes>
-        <Route path="/" component={Home} />
-        <Route path="/home" component={MainPage} />
+        <Route path="/" component={MainPage} />
+        <Route path="/tools" component={Home} />
         <Route path="/assistant" component={Assistant} />
         <Route path="/assistant-conversation" component={AssistantConversation} />
         <Route path="/editor" component={SmartTextEditor} />
