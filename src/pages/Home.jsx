@@ -34,6 +34,12 @@ function Home() {
         >
           منشئ المحتوى
         </button>
+        <button
+          onClick={() => navigate('/image-describer')}
+          class="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          وصف الصور
+        </button>
       </div>
     </div>
   );
