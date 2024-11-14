@@ -1,95 +1,56 @@
 import { createSignal } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
+import { evaluate } from 'mathjs';
 
 function Calculator() {
   const navigate = useNavigate();
-  const [displayValue, setDisplayValue] = createSignal('0');
-  const [operator, setOperator] = createSignal(null);
-  const [firstOperand, setFirstOperand] = createSignal(null);
-  const [waitingForSecondOperand, setWaitingForSecondOperand] = createSignal(false);
+  const [expression, setExpression] = createSignal('');
+  const [result, setResult] = createSignal('');
+  const [history, setHistory] = createSignal([]);
 
-  const inputDigit = (digit) => {
-    if (waitingForSecondOperand()) {
-      setDisplayValue(digit);
-      setWaitingForSecondOperand(false);
-    } else {
-      setDisplayValue(displayValue() === '0' ? digit : displayValue() + digit);
-    }
+  const handleButtonClick = (value) => {
+    setExpression(expression() + value);
   };
 
-  const inputDecimal = (dot) => {
-    if (waitingForSecondOperand()) {
-      setDisplayValue('0.');
-      setWaitingForSecondOperand(false);
-      return;
-    }
-    if (!displayValue().includes('.')) {
-      setDisplayValue(displayValue() + dot);
-    }
+  const handleClear = () => {
+    setExpression('');
+    setResult('');
   };
 
-  const handleOperator = (nextOperator) => {
-    const inputValue = parseFloat(displayValue());
-
-    if (operator() && waitingForSecondOperand()) {
-      setOperator(nextOperator);
-      return;
-    }
-
-    if (firstOperand() == null && !isNaN(inputValue)) {
-      setFirstOperand(inputValue);
-    } else if (operator()) {
-      const result = calculate(firstOperand(), inputValue, operator());
-      setDisplayValue(String(result));
-      setFirstOperand(result);
-    }
-
-    setWaitingForSecondOperand(true);
-    setOperator(nextOperator);
+  const handleDelete = () => {
+    setExpression(expression().slice(0, -1));
   };
 
-  const calculate = (firstOperand, secondOperand, operator) => {
-    if (operator === '+') {
-      return firstOperand + secondOperand;
-    } else if (operator === '-') {
-      return firstOperand - secondOperand;
-    } else if (operator === '*') {
-      return firstOperand * secondOperand;
-    } else if (operator === '/') {
-      return firstOperand / secondOperand;
+  const handleCalculate = () => {
+    try {
+      const evalResult = evaluate(expression());
+      setResult(evalResult.toString());
+      setHistory([...history(), { expression: expression(), result: evalResult.toString() }]);
+      setExpression('');
+    } catch (error) {
+      alert('خطأ في التعبير');
     }
-    return secondOperand;
-  };
-
-  const resetCalculator = () => {
-    setDisplayValue('0');
-    setFirstOperand(null);
-    setOperator(null);
-    setWaitingForSecondOperand(false);
   };
 
   const handleKeyDown = (event) => {
     const { key } = event;
-    if (/\d/.test(key)) {
-      inputDigit(key);
-    } else if (key === '.') {
-      inputDecimal(key);
-    } else if (key === '+' || key === '-' || key === '*' || key === '/') {
-      handleOperator(key);
-    } else if (key === 'Enter' || key === '=') {
-      handleOperator('=');
+    if ((/\d/).test(key) || '+-*/().^%'.includes(key)) {
+      setExpression(expression() + key);
+    } else if (key === 'Enter') {
+      handleCalculate();
     } else if (key === 'Backspace') {
-      setDisplayValue(displayValue().slice(0, -1) || '0');
+      handleDelete();
     } else if (key === 'Escape') {
-      resetCalculator();
+      handleClear();
     }
   };
 
   return (
-    <div class="h-full flex flex-col items-center p-4 text-gray-800" onKeyDown={handleKeyDown} tabindex="0">
+    <div class="min-h-screen flex flex-col items-center p-4 text-gray-800" onKeyDown={handleKeyDown} tabindex="0">
       <button
         onClick={() => navigate('/')}
         class="self-start mb-4 text-2xl cursor-pointer"
+        aria-label="عودة"
       >
         🔙
       </button>
@@ -99,131 +60,222 @@ function Calculator() {
           <input
             type="text"
             readOnly
-            value={displayValue()}
-            aria-label="شاشة الآلة الحاسبة"
+            value={expression()}
+            aria-label="شاشة الإدخال"
             class="w-full p-3 text-right border border-gray-300 rounded-lg focus:outline-none box-border"
           />
+          <input
+            type="text"
+            readOnly
+            value={result()}
+            aria-label="شاشة النتيجة"
+            class="w-full p-3 mt-2 text-right border border-gray-300 rounded-lg focus:outline-none box-border"
+          />
         </div>
+        {/* Buttons */}
         <div class="grid grid-cols-4 gap-2">
           <button
-            onClick={resetCalculator}
+            onClick={handleClear}
             class="col-span-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 cursor-pointer"
             aria-label="مسح"
           >
             مسح
           </button>
           <button
-            onClick={() => handleOperator('/')}
+            onClick={handleDelete}
+            class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 cursor-pointer"
+            aria-label="حذف"
+          >
+            حذف
+          </button>
+          <button
+            onClick={() => handleButtonClick('/')}
             class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 cursor-pointer"
             aria-label="قسمة"
           >
             ÷
           </button>
           <button
-            onClick={() => handleOperator('*')}
-            class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 cursor-pointer"
-            aria-label="ضرب"
+            onClick={() => handleButtonClick('sqrt(')}
+            class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 cursor-pointer"
+            aria-label="الجذر التربيعي"
           >
-            ×
+            √
           </button>
           <button
-            onClick={() => inputDigit('7')}
+            onClick={() => handleButtonClick('7')}
             class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 cursor-pointer"
             aria-label="7"
           >
             7
           </button>
           <button
-            onClick={() => inputDigit('8')}
+            onClick={() => handleButtonClick('8')}
             class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 cursor-pointer"
             aria-label="8"
           >
             8
           </button>
           <button
-            onClick={() => inputDigit('9')}
+            onClick={() => handleButtonClick('9')}
             class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 cursor-pointer"
             aria-label="9"
           >
             9
           </button>
           <button
-            onClick={() => handleOperator('-')}
+            onClick={() => handleButtonClick('*')}
+            class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 cursor-pointer"
+            aria-label="ضرب"
+          >
+            ×
+          </button>
+          <button
+            onClick={() => handleButtonClick('sin(')}
+            class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 cursor-pointer"
+            aria-label="جيب"
+          >
+            sin
+          </button>
+          <button
+            onClick={() => handleButtonClick('cos(')}
+            class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 cursor-pointer"
+            aria-label="جيب التمام"
+          >
+            cos
+          </button>
+          <button
+            onClick={() => handleButtonClick('tan(')}
+            class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 cursor-pointer"
+            aria-label="ظل"
+          >
+            tan
+          </button>
+          <button
+            onClick={() => handleButtonClick('-')}
             class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 cursor-pointer"
             aria-label="طرح"
           >
             -
           </button>
           <button
-            onClick={() => inputDigit('4')}
+            onClick={() => handleButtonClick('4')}
             class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 cursor-pointer"
             aria-label="4"
           >
             4
           </button>
           <button
-            onClick={() => inputDigit('5')}
+            onClick={() => handleButtonClick('5')}
             class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 cursor-pointer"
             aria-label="5"
           >
             5
           </button>
           <button
-            onClick={() => inputDigit('6')}
+            onClick={() => handleButtonClick('6')}
             class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 cursor-pointer"
             aria-label="6"
           >
             6
           </button>
           <button
-            onClick={() => handleOperator('+')}
+            onClick={() => handleButtonClick('+')}
             class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 cursor-pointer"
             aria-label="جمع"
           >
             +
           </button>
           <button
-            onClick={() => inputDigit('1')}
-            class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 cursor-pointer"
-            aria-label="1"
+            onClick={() => handleButtonClick('log(')}
+            class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 cursor-pointer"
+            aria-label="لوغاريتم"
           >
-            1
+            log
           </button>
           <button
-            onClick={() => inputDigit('2')}
+            onClick={() => handleButtonClick('(')}
             class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 cursor-pointer"
-            aria-label="2"
+            aria-label="فتح قوس"
           >
-            2
+            (
           </button>
           <button
-            onClick={() => inputDigit('3')}
+            onClick={() => handleButtonClick(')')}
             class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 cursor-pointer"
-            aria-label="3"
+            aria-label="إغلاق قوس"
           >
-            3
+            )
           </button>
           <button
-            onClick={() => handleOperator('=')}
+            onClick={handleCalculate}
             class="row-span-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 cursor-pointer"
             aria-label="يساوي"
           >
             =
           </button>
           <button
-            onClick={() => inputDecimal('.')}
+            onClick={() => handleButtonClick('1')}
+            class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 cursor-pointer"
+            aria-label="1"
+          >
+            1
+          </button>
+          <button
+            onClick={() => handleButtonClick('2')}
+            class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 cursor-pointer"
+            aria-label="2"
+          >
+            2
+          </button>
+          <button
+            onClick={() => handleButtonClick('3')}
+            class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 cursor-pointer"
+            aria-label="3"
+          >
+            3
+          </button>
+          <button
+            onClick={() => handleButtonClick('^')}
+            class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 cursor-pointer"
+            aria-label="أس"
+          >
+            ^
+          </button>
+          <button
+            onClick={() => handleButtonClick('.')}
             class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 cursor-pointer"
             aria-label="فاصلة عشرية"
           >
             .
           </button>
           <button
-            onClick={() => inputDigit('0')}
+            onClick={() => handleButtonClick('0')}
             class="col-span-2 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 cursor-pointer"
             aria-label="0"
           >
             0
           </button>
+          <button
+            onClick={() => handleButtonClick('%')}
+            class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 cursor-pointer"
+            aria-label="نسبة مئوية"
+          >
+            %
+          </button>
+        </div>
+        {/* History */}
+        <div class="mt-6">
+          <h3 class="text-xl font-bold text-purple-600 mb-2">التاريخ</h3>
+          <ul class="space-y-1 max-h-32 overflow-y-auto">
+            <For each={history()}>
+              {(item) => (
+                <li class="flex justify-between items-center bg-white p-2 rounded-lg shadow-sm">
+                  <span>{item.expression} = {item.result}</span>
+                </li>
+              )}
+            </For>
+          </ul>
         </div>
       </div>
     </div>
