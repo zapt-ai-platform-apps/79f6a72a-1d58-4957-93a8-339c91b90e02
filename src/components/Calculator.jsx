@@ -6,9 +6,11 @@ function Calculator() {
   const [expression, setExpression] = createSignal('');
   const [result, setResult] = createSignal('');
   const [history, setHistory] = createSignal([]);
+  const [isLoading, setIsLoading] = createSignal(false);
   const navigate = useNavigate();
 
   const calculate = () => {
+    setIsLoading(true);
     try {
       const evalResult = evaluate(expression());
       setResult(evalResult);
@@ -16,6 +18,8 @@ function Calculator() {
       setExpression('');
     } catch (error) {
       alert('خطأ في التعبير الرياضي');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -39,10 +43,10 @@ function Calculator() {
         />
         <button
           onClick={calculate}
-          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${!expression() ? 'opacity-50 cursor-not-allowed' : ''}`}
-          disabled={!expression()}
+          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${(isLoading() || !expression()) ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={isLoading() || !expression()}
         >
-          احسب
+          {isLoading() ? 'جاري الحساب...' : 'احسب'}
         </button>
         <div class="bg-white p-4 rounded-lg shadow-md">
           <h3 class="text-xl font-semibold mb-2">النتيجة: {result()}</h3>

@@ -15,7 +15,7 @@ import BottomNavBar from './components/BottomNavBar';
 
 function App() {
   return (
-    <div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 text-gray-800 relative" dir="rtl">
+    <div class="h-full bg-gradient-to-br from-purple-100 to-blue-100 text-gray-800 relative" dir="rtl">
       <Routes>
         <Route path="/" component={MainPage} />
         <Route path="/tools" component={Home} />

@@ -1,4 +1,4 @@
-import { createSignal, onMount } from 'solid-js';
+import { createSignal, onMount, Show } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { createEvent } from '../supabaseClient';
 import { state, setState } from '../store';
@@ -8,6 +8,7 @@ function Assistant() {
   const [userInput, setUserInput] = createSignal('');
   const [isListening, setIsListening] = createSignal(false);
   const [isLoading, setIsLoading] = createSignal(false);
+  const [error, setError] = createSignal('');
 
   let recognition;
 
@@ -28,9 +29,10 @@ function Assistant() {
       recognition.onerror = (event) => {
         console.error('Speech recognition error:', event.error);
         stopListening();
+        setError('حدث خطأ أثناء التعرف على الصوت.');
       };
     } else {
-      alert('متصفحك لا يدعم التعرف على الصوت.');
+      setError('متصفحك لا يدعم التعرف على الصوت.');
     }
   });
 
@@ -71,6 +73,7 @@ function Assistant() {
 
     } catch (error) {
       console.error('Error in Assistant:', error);
+      setError('حدث خطأ أثناء معالجة طلبك.');
     } finally {
       setIsLoading(false);
     }
@@ -86,6 +89,10 @@ function Assistant() {
       </button>
       <h2 class="text-3xl font-bold text-purple-600 mb-6">المساعد الصوتي بالذكاء الاصطناعي</h2>
 
+      <Show when={error()}>
+        <div class="text-red-500 mb-4">{error()}</div>
+      </Show>
+
       <div class="w-full max-w-2xl space-y-4">
         <div class="flex">
           <input
@@ -97,7 +104,7 @@ function Assistant() {
           />
           <button
             onClick={handleSend}
-            class={`px-6 py-3 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${isLoading() || !userInput() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            class={`px-6 py-3 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${(isLoading() || !userInput()) ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={isLoading() || !userInput()}
           >
             {isLoading() ? 'جاري الإرسال...' : 'إرسال'}
