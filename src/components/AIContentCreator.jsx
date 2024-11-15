@@ -13,6 +13,19 @@ function AIContentCreator() {
     navigate('/generated-content');
   };
 
+  const contentTypes = [
+    'مقال',
+    'قصة',
+    'قصيدة',
+    'تقرير',
+    'خطاب',
+    'مراجعة',
+    'مدونة',
+    'بحث',
+    'إعلان',
+    'نص توعوي'
+  ];
+
   return (
     <div class="flex flex-col items-center p-4 h-full text-gray-800 pb-16">
       <button
@@ -24,13 +37,18 @@ function AIContentCreator() {
       <h2 class="text-3xl font-bold text-purple-600 mb-6">منشئ المحتوى بالذكاء الاصطناعي</h2>
 
       <div class="w-full max-w-2xl space-y-4">
-        <input
-          type="text"
+        <select
           value={contentType()}
           onInput={(e) => setContentType(e.target.value)}
-          placeholder="أدخل نوع المحتوى (مقال، قصة، إلخ)"
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-        />
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border cursor-pointer"
+        >
+          <option value="" disabled selected>
+            اختر نوع المحتوى
+          </option>
+          {contentTypes.map((type) => (
+            <option value={type}>{type}</option>
+          ))}
+        </select>
         <textarea
           value={userPrompt()}
           onInput={(e) => setUserPrompt(e.target.value)}
