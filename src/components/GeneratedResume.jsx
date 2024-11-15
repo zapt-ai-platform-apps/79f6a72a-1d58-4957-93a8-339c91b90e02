@@ -29,7 +29,7 @@ function GeneratedResume() {
         prompt: prompt,
         response_type: 'text',
       });
-      setState('generatedResume', result);
+      state.generatedResume = result;
     } catch (error) {
       console.error('Error generating resume:', error);
     } finally {
@@ -81,7 +81,7 @@ function GeneratedResume() {
         prompt: prompt,
         response_type: 'text',
       });
-      setState('generatedResume', result);
+      state.generatedResume = result;
     } catch (error) {
       console.error('Error regenerating resume:', error);
     } finally {
@@ -103,7 +103,7 @@ function GeneratedResume() {
         <>
           <h2 class="text-3xl font-bold text-purple-600 mb-6">السيرة الذاتية المولدة</h2>
           <div class="prose prose-lg text-gray-700 bg-white p-6 rounded-lg shadow-md max-w-2xl w-full">
-            <SolidMarkdown children={state.generatedResume} />
+            <SolidMarkdown>{state.generatedResume}</SolidMarkdown>
           </div>
           <div class="flex gap-4 mt-4">
             <button

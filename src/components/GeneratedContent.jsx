@@ -14,7 +14,7 @@ function GeneratedContent() {
         prompt: `اكتب ${state.contentType} عن ${state.userPrompt} باللغة العربية.`,
         response_type: 'text',
       });
-      setState('generatedContent', result);
+      state.generatedContent = result;
     } catch (error) {
       console.error('Error generating content:', error);
     } finally {
@@ -51,7 +51,7 @@ function GeneratedContent() {
         prompt: `اكتب ${state.contentType} آخر عن ${state.userPrompt} باللغة العربية.`,
         response_type: 'text',
       });
-      setState('generatedContent', result);
+      state.generatedContent = result;
     } catch (error) {
       console.error('Error regenerating content:', error);
     } finally {
@@ -73,7 +73,7 @@ function GeneratedContent() {
         <>
           <h2 class="text-3xl font-bold text-purple-600 mb-6">المحتوى المولد</h2>
           <div class="prose prose-lg text-gray-700 bg-white p-6 rounded-lg shadow-md max-w-2xl w-full">
-            <SolidMarkdown children={state.generatedContent} />
+            <SolidMarkdown>{state.generatedContent}</SolidMarkdown>
           </div>
           <div class="flex gap-4 mt-4">
             <button
