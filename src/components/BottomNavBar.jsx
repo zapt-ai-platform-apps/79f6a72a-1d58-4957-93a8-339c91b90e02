@@ -13,14 +13,6 @@ function BottomNavBar() {
           <span>الرئيسية</span>
         </NavLink>
         <NavLink
-          href="/tools"
-          class="flex flex-col items-center py-2 cursor-pointer"
-          activeClass="text-purple-600"
-        >
-          <span class="text-xl">🛠️</span>
-          <span>أدوات</span>
-        </NavLink>
-        <NavLink
           href="/service"
           class="flex flex-col items-center py-2 cursor-pointer"
           activeClass="text-purple-600"
