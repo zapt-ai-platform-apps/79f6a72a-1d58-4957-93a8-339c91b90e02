@@ -6,6 +6,8 @@ const MainPage = lazy(() => import('./pages/MainPage'));
 const Blog = lazy(() => import('./pages/Blog'));
 const Store = lazy(() => import('./pages/Store'));
 const Forum = lazy(() => import('./pages/Forum'));
+const Services = lazy(() => import('./pages/Services'));
+const Tools = lazy(() => import('./pages/Tools'));
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
           <Route path="/blog" component={Blog} />
           <Route path="/store" component={Store} />
           <Route path="/forum" component={Forum} />
+          <Route path="/services" component={Services} />
+          <Route path="/tools" component={Tools} />
         </Routes>
       </Suspense>
       <BottomNavBar />
