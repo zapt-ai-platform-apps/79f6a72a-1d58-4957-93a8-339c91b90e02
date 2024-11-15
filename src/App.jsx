@@ -3,7 +3,6 @@ import { lazy, Suspense } from 'solid-js';
 import BottomNavBar from './components/BottomNavBar';
 
 const MainPage = lazy(() => import('./pages/MainPage'));
-const Service = lazy(() => import('./pages/Service'));
 const Blog = lazy(() => import('./pages/Blog'));
 const Store = lazy(() => import('./pages/Store'));
 const Forum = lazy(() => import('./pages/Forum'));
@@ -14,7 +13,6 @@ function App() {
       <Suspense fallback={<div>جاري التحميل...</div>}>
         <Routes>
           <Route path="/" component={MainPage} />
-          <Route path="/service" component={Service} />
           <Route path="/blog" component={Blog} />
           <Route path="/store" component={Store} />
           <Route path="/forum" component={Forum} />

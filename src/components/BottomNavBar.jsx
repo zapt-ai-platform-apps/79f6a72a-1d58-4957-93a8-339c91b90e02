@@ -12,14 +12,6 @@ function BottomNavBar() {
           <span class="text-xl">🏠</span>
           <span>الرئيسية</span>
         </NavLink>
-        <NavLink
-          href="/service"
-          class="flex flex-col items-center py-2 cursor-pointer"
-          activeClass="text-purple-600"
-        >
-          <span class="text-xl">💼</span>
-          <span>خدمات</span>
-        </NavLink>
       </div>
     </nav>
   );
