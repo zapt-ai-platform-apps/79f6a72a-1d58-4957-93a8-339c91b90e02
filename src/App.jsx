@@ -14,6 +14,9 @@ const Calculator = lazy(() => import('./components/Calculator'));
 const ResumeGenerator = lazy(() => import('./components/ResumeGenerator'));
 const GeneratedResume = lazy(() => import('./components/GeneratedResume'));
 const Service = lazy(() => import('./pages/Service'));
+const Blog = lazy(() => import('./pages/Blog'));
+const Store = lazy(() => import('./pages/Store'));
+const Forum = lazy(() => import('./pages/Forum'));
 
 function App() {
   return (
@@ -32,6 +35,9 @@ function App() {
           <Route path="/resume-generator" component={ResumeGenerator} />
           <Route path="/generated-resume" component={GeneratedResume} />
           <Route path="/service" component={Service} />
+          <Route path="/blog" component={Blog} />
+          <Route path="/store" component={Store} />
+          <Route path="/forum" component={Forum} />
         </Routes>
       </Suspense>
       <BottomNavBar />

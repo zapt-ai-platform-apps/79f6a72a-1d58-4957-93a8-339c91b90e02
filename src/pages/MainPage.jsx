@@ -9,6 +9,28 @@ function MainPage() {
         تطبيق شامل يقدم مجموعة متنوعة من الأدوات الذكية لزيادة إمكانية الوصول وتحسين الإنتاجية للأشخاص ذوي الاحتياجات الخاصة، وخاصة المكفوفين.
       </p>
 
+      {/* New buttons section */}
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-3xl mb-8">
+        <button
+          onClick={() => navigate('/blog')}
+          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          المدونة
+        </button>
+        <button
+          onClick={() => navigate('/store')}
+          class="bg-green-500 text-white py-4 px-6 rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          المتجر
+        </button>
+        <button
+          onClick={() => navigate('/forum')}
+          class="bg-purple-500 text-white py-4 px-6 rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          المنتدى
+        </button>
+      </div>
+
       {/* تابعونا section */}
       <div class="mt-8">
         <h2 class="text-2xl font-bold text-purple-600 mb-4">تابعونا</h2>
