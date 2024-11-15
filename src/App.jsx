@@ -1,35 +1,39 @@
 import { Routes, Route } from '@solidjs/router';
-import Home from './pages/Home';
-import MainPage from './pages/MainPage';
-import Assistant from './components/Assistant';
-import AssistantConversation from './components/AssistantConversation';
-import SmartTextEditor from './components/SmartTextEditor';
-import ProcessedText from './components/ProcessedText';
-import AIContentCreator from './components/AIContentCreator';
-import GeneratedContent from './components/GeneratedContent';
-import Calculator from './components/Calculator';
-import ResumeGenerator from './components/ResumeGenerator';
-import GeneratedResume from './components/GeneratedResume';
-import Service from './pages/Service';
+import { lazy, Suspense } from 'solid-js';
 import BottomNavBar from './components/BottomNavBar';
+
+const Home = lazy(() => import('./pages/Home'));
+const MainPage = lazy(() => import('./pages/MainPage'));
+const Assistant = lazy(() => import('./components/Assistant'));
+const AssistantConversation = lazy(() => import('./components/AssistantConversation'));
+const SmartTextEditor = lazy(() => import('./components/SmartTextEditor'));
+const ProcessedText = lazy(() => import('./components/ProcessedText'));
+const AIContentCreator = lazy(() => import('./components/AIContentCreator'));
+const GeneratedContent = lazy(() => import('./components/GeneratedContent'));
+const Calculator = lazy(() => import('./components/Calculator'));
+const ResumeGenerator = lazy(() => import('./components/ResumeGenerator'));
+const GeneratedResume = lazy(() => import('./components/GeneratedResume'));
+const Service = lazy(() => import('./pages/Service'));
 
 function App() {
   return (
     <div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 text-gray-800 relative" dir="rtl">
-      <Routes>
-        <Route path="/" component={MainPage} />
-        <Route path="/tools" component={Home} />
-        <Route path="/assistant" component={Assistant} />
-        <Route path="/assistant-conversation" component={AssistantConversation} />
-        <Route path="/editor" component={SmartTextEditor} />
-        <Route path="/processed-text" component={ProcessedText} />
-        <Route path="/content-creator" component={AIContentCreator} />
-        <Route path="/generated-content" component={GeneratedContent} />
-        <Route path="/calculator" component={Calculator} />
-        <Route path="/resume-generator" component={ResumeGenerator} />
-        <Route path="/generated-resume" component={GeneratedResume} />
-        <Route path="/service" component={Service} />
-      </Routes>
+      <Suspense fallback={<div>جاري التحميل...</div>}>
+        <Routes>
+          <Route path="/" component={MainPage} />
+          <Route path="/tools" component={Home} />
+          <Route path="/assistant" component={Assistant} />
+          <Route path="/assistant-conversation" component={AssistantConversation} />
+          <Route path="/editor" component={SmartTextEditor} />
+          <Route path="/processed-text" component={ProcessedText} />
+          <Route path="/content-creator" component={AIContentCreator} />
+          <Route path="/generated-content" component={GeneratedContent} />
+          <Route path="/calculator" component={Calculator} />
+          <Route path="/resume-generator" component={ResumeGenerator} />
+          <Route path="/generated-resume" component={GeneratedResume} />
+          <Route path="/service" component={Service} />
+        </Routes>
+      </Suspense>
       <BottomNavBar />
     </div>
   );
