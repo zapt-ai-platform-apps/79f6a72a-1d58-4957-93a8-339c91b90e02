@@ -1,7 +1,7 @@
 {
-  "name": "blind-accessibility",
+  "name": "tools",
   "version": "1.0.0",
-  "description": "تطبيق لتعزيز الوصول الرقمي للأشخاص المكفوفين وضعاف البصر.",
+  "description": "تطبيق يشمل مجموعة من الأدوات الذكية لتحسين الإنتاجية.",
   "type": "module",
   "scripts": {
     "dev": "vite",
