@@ -4,8 +4,8 @@ function Home() {
   const navigate = useNavigate();
   return (
     <div class="flex flex-col items-center p-4 h-full text-gray-800 pb-16">
-      <h1 class="text-4xl font-bold text-purple-600 mb-6">tools</h1>
-      <p class="text-lg mb-4">تطبيق يشمل مجموعة من الأدوات الذكية لتحسين الإنتاجية.</p>
+      <h1 class="text-4xl font-bold text-purple-600 mb-6">Blind accessibility</h1>
+      <p class="text-lg mb-4">تطبيق يشمل مجموعة من الأدوات الذكية لزيادة إمكانية الوصول.</p>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-3xl">
         <button
           onClick={() => navigate('/assistant')}

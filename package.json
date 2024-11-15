@@ -1,7 +1,7 @@
 {
-  "name": "tools",
+  "name": "blind-accessibility",
   "version": "1.0.0",
-  "description": "تطبيق يشمل مجموعة من الأدوات الذكية لتحسين الإنتاجية.",
+  "description": "تطبيق يشمل مجموعة من الأدوات الذكية لزيادة إمكانية الوصول.",
   "type": "module",
   "scripts": {
     "dev": "vite",
