@@ -41,6 +41,12 @@ function Tools() {
         >
           منشئ المحتوى
         </button>
+        <button
+          onClick={() => navigate('/text-editor')}
+          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          محرر النصوص
+        </button>
       </div>
     </div>
   );
