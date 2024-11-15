@@ -4,7 +4,7 @@ function Tools() {
   const navigate = useNavigate();
 
   return (
-    <div class="flex flex-col items-center p-4 h-full text-gray-800 pt-8 pb-16">
+    <div class="flex flex-col items-center p-4 min-h-screen text-gray-800 pt-8 pb-16">
       <button
         onClick={() => navigate(-1)}
         class="self-start mb-4 text-2xl cursor-pointer"
@@ -28,6 +28,12 @@ function Tools() {
           class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
         >
           المساعد الصوتي
+        </button>
+        <button
+          onClick={() => navigate('/resume-builder')}
+          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          منشئ السيرة الذاتية
         </button>
       </div>
     </div>

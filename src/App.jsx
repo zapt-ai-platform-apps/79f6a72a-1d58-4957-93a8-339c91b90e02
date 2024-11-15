@@ -10,6 +10,7 @@ const Services = lazy(() => import('./pages/Services'));
 const Tools = lazy(() => import('./pages/Tools'));
 const Assistant = lazy(() => import('./pages/Assistant'));
 const VoiceAssistant = lazy(() => import('./pages/VoiceAssistant'));
+const ResumeBuilder = lazy(() => import('./pages/ResumeBuilder'));
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/tools" component={Tools} />
           <Route path="/assistant" component={Assistant} />
           <Route path="/voice-assistant" component={VoiceAssistant} />
+          <Route path="/resume-builder" component={ResumeBuilder} />
         </Routes>
       </Suspense>
       <BottomNavBar />
