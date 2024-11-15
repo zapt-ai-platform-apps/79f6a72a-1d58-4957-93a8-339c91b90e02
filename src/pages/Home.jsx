@@ -32,12 +32,6 @@ function Home() {
           منشئ السيرة الذاتية
         </button>
         <button
-          onClick={() => navigate('/radio')}
-          class="bg-red-500 text-white py-4 px-6 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-        >
-          الراديو العربي
-        </button>
-        <button
           onClick={() => navigate('/calculator')}
           class="bg-yellow-500 text-white py-4 px-6 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
         >
