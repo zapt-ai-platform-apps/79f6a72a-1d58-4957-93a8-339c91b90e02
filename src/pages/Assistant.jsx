@@ -11,10 +11,12 @@ function Assistant() {
 
   const handleAssistantRequest = async () => {
     if (inputText().trim() === '') return;
+    const userInput = inputText(); // حفظ النص المدخل قبل إعادة التعيين
+    setInputText(''); // مسح محتوى مربع النص
     setLoading(true);
     try {
       const result = await createEvent('chatgpt_request', {
-        prompt: inputText(),
+        prompt: userInput,
         response_type: 'text'
       });
       setAssistantResponse(result || 'لا يوجد رد.');
