@@ -8,16 +8,15 @@ function Assistant() {
   const [inputText, setInputText] = createSignal('');
   const [assistantResponse, setAssistantResponse] = createSignal('');
   const [loading, setLoading] = createSignal(false);
+  const [loadingAudio, setLoadingAudio] = createSignal(false);
 
   const handleAssistantRequest = async () => {
     if (inputText().trim() === '') return;
-    const userInput = inputText(); // حفظ النص المدخل قبل إعادة التعيين
-    setInputText(''); // مسح محتوى مربع النص
     setLoading(true);
     try {
       const result = await createEvent('chatgpt_request', {
-        prompt: userInput,
-        response_type: 'text'
+        prompt: inputText(),
+        response_type: 'text',
       });
       setAssistantResponse(result || 'لا يوجد رد.');
     } catch (error) {
@@ -25,6 +24,39 @@ function Assistant() {
       setAssistantResponse('حدث خطأ أثناء الحصول على الرد.');
     } finally {
       setLoading(false);
+      setInputText('');
+    }
+  };
+
+  const handleCopyResponse = () => {
+    if (assistantResponse()) {
+      navigator.clipboard
+        .writeText(assistantResponse())
+        .then(() => {
+          // يمكن إضافة إشعار بنجاح النسخ
+        })
+        .catch((error) => {
+          console.error('فشل النسخ:', error);
+          // يمكن إعلام المستخدم بفشل النسخ
+        });
+    }
+  };
+
+  const handleListenResponse = async () => {
+    if (!assistantResponse()) return;
+    setLoadingAudio(true);
+    try {
+      const result = await createEvent('text_to_speech', {
+        text: assistantResponse(),
+      });
+      // تشغيل الصوت دون عرض عناصر التحكم
+      const audio = new Audio(result);
+      audio.play();
+    } catch (error) {
+      console.error('خطأ في تحويل النص إلى كلام:', error);
+      // يمكن إعلام المستخدم بالخطأ
+    } finally {
+      setLoadingAudio(false);
     }
   };
 
@@ -48,7 +80,9 @@ function Assistant() {
         />
         <button
           onClick={handleAssistantRequest}
-          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${loading() ? 'opacity-50 cursor-not-allowed' : ''}`}
+          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
+            loading() ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
           disabled={loading()}
         >
           <Show when={!loading()} fallback="جاري المعالجة...">
@@ -60,7 +94,26 @@ function Assistant() {
       <Show when={assistantResponse()}>
         <div class="w-full max-w-md mt-6 p-4 bg-white rounded-lg shadow-md">
           <h3 class="text-xl font-bold mb-2 text-purple-600">رد المساعد</h3>
-          <p class="text-gray-700 whitespace-pre-wrap">{assistantResponse()}</p>
+          <p class="text-gray-700 whitespace-pre-wrap mb-4">{assistantResponse()}</p>
+          <div class="flex space-x-4 justify-center">
+            <button
+              onClick={handleCopyResponse}
+              class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+            >
+              نسخ
+            </button>
+            <button
+              onClick={handleListenResponse}
+              class={`px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
+                loadingAudio() ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              disabled={loadingAudio()}
+            >
+              <Show when={!loadingAudio()} fallback="جاري التحميل...">
+                استماع
+              </Show>
+            </button>
+          </div>
         </div>
       </Show>
     </div>
