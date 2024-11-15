@@ -20,7 +20,7 @@ const Forum = lazy(() => import('./pages/Forum'));
 
 function App() {
   return (
-    <div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 text-gray-800 relative" dir="rtl">
+    <div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 text-gray-800 min-h-screen" dir="rtl">
       <Suspense fallback={<div>جاري التحميل...</div>}>
         <Routes>
           <Route path="/" component={MainPage} />
