@@ -40,6 +40,7 @@ function Assistant() {
     if (recognition) {
       setIsListening(true);
       recognition.start();
+      setError('');
     }
   };
 
@@ -53,6 +54,7 @@ function Assistant() {
   const handleSend = async () => {
     if (!userInput()) return;
     setIsLoading(true);
+    setError('');
 
     let conversation = [...(state.assistantConversation || [])];
     conversation.push({ role: 'user', content: userInput() });
@@ -101,6 +103,7 @@ function Assistant() {
             onInput={(e) => setUserInput(e.target.value)}
             placeholder="اكتب سؤالك هنا..."
             class="flex-1 p-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+            disabled={isLoading()}
           />
           <button
             onClick={handleSend}
