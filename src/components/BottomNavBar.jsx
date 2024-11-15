@@ -3,7 +3,7 @@ import { NavLink } from '@solidjs/router';
 function BottomNavBar() {
   return (
     <nav class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-300 text-gray-800">
-      <div class="flex justify-around">
+      <div class="flex justify-center">
         <NavLink
           href="/"
           class="flex flex-col items-center py-2 cursor-pointer"
