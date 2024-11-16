@@ -6,26 +6,26 @@ function BottomNavBar() {
       <div class="flex justify-around">
         <NavLink
           href="/"
-          class="flex flex-col items-center py-2 cursor-pointer"
-          activeClass="text-purple-600"
+          class="flex flex-col items-center py-2 cursor-pointer hover:text-primary"
+          activeClass="text-primary"
         >
-          <span class="text-xl">🏠</span>
+          <span class="text-2xl">🏠</span>
           <span>الرئيسية</span>
         </NavLink>
         <NavLink
           href="/services"
-          class="flex flex-col items-center py-2 cursor-pointer"
-          activeClass="text-purple-600"
+          class="flex flex-col items-center py-2 cursor-pointer hover:text-primary"
+          activeClass="text-primary"
         >
-          <span class="text-xl">🔧</span>
+          <span class="text-2xl">🔧</span>
           <span>خدمات</span>
         </NavLink>
         <NavLink
           href="/tools"
-          class="flex flex-col items-center py-2 cursor-pointer"
-          activeClass="text-purple-600"
+          class="flex flex-col items-center py-2 cursor-pointer hover:text-primary"
+          activeClass="text-primary"
         >
-          <span class="text-xl">🛠️</span>
+          <span class="text-2xl">🛠️</span>
           <span>أدوات</span>
         </NavLink>
       </div>

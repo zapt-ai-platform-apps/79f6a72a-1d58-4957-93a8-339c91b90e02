@@ -1,10 +1,8 @@
-import { Show } from 'solid-js';
-
 function Loader(props) {
   return (
-    <Show when={props.loading}>
+    <div class="flex items-center justify-center">
       <svg
-        class="animate-spin h-5 w-5 text-white mx-auto"
+        class="animate-spin h-8 w-8 text-primary mx-auto"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -23,7 +21,7 @@ function Loader(props) {
           d="M4 12a8 8 0 018-8v8z"
         ></path>
       </svg>
-    </Show>
+    </div>
   );
 }
 
