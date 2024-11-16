@@ -68,7 +68,7 @@ function ContentGenerator() {
   };
 
   return (
-    <div class="flex flex-col items-center p-4 min-h-screen text-gray-800 pt-8 pb-16">
+    <div class="flex flex-col items-center p-4 h-full text-gray-800 pt-8 pb-16">
       <NotificationComponent />
       <button
         onClick={() => navigate(-1)}
@@ -118,9 +118,11 @@ function ContentGenerator() {
       </div>
 
       <Show when={generatedContent()}>
-        <div class="w-full max-w-md mt-6 p-4 bg-white rounded-lg shadow-md">
-          <h3 class="text-xl font-bold mb-2 text-purple-600">المحتوى المولد:</h3>
-          <p class="text-gray-700 whitespace-pre-wrap mb-4">{generatedContent()}</p>
+        <div class="w-full max-w-md mt-6 p-6 bg-white rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+          <h3 class="text-xl font-bold mb-4 text-purple-600">المحتوى المولد:</h3>
+          <div class="prose prose-lg text-gray-700 mb-4">
+            {generatedContent()}
+          </div>
           <button
             onClick={handleCopyContent}
             class="w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"

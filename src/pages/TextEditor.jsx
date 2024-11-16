@@ -121,8 +121,8 @@ function TextEditor() {
 
         <button
           onClick={handleProcessText}
-          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
-            loading() ? 'opacity-50 cursor-not-allowed' : ''
+          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${
+            loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
           }`}
           disabled={loading()}
         >
@@ -150,8 +150,8 @@ function TextEditor() {
 
           <button
             onClick={handleProcessText}
-            class={`w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
-              loading() || selectedLanguage() === '' ? 'opacity-50 cursor-not-allowed' : ''
+            class={`w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 ${
+              loading() || selectedLanguage() === '' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
             }`}
             disabled={loading() || selectedLanguage() === ''}
           >
@@ -164,9 +164,11 @@ function TextEditor() {
       </div>
 
       <Show when={outputText()}>
-        <div class="w-full max-w-md mt-6 p-4 bg-white rounded-lg shadow-md">
-          <h3 class="text-xl font-bold mb-2 text-purple-600">النتيجة:</h3>
-          <p class="text-gray-700 whitespace-pre-wrap mb-4">{outputText()}</p>
+        <div class="w-full max-w-md mt-6 p-6 bg-white rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+          <h3 class="text-xl font-bold mb-4 text-purple-600">النتيجة:</h3>
+          <div class="prose prose-lg text-gray-700 mb-4 whitespace-pre-wrap">
+            {outputText()}
+          </div>
           <button
             onClick={handleCopyOutput}
             class="w-full px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"

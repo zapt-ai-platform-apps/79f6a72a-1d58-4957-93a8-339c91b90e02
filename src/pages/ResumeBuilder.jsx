@@ -206,7 +206,7 @@ function ResumeBuilder() {
   };
 
   return (
-    <div class="flex flex-col items-center p-4 min-h-screen text-gray-800 pt-8 pb-16">
+    <div class="flex flex-col items-center p-4 h-full text-gray-800 pt-8 pb-16">
       <button
         onClick={() => navigate(-1)}
         class="self-start mb-4 text-2xl cursor-pointer"
@@ -503,8 +503,8 @@ function ResumeBuilder() {
 
         <button
           type="submit"
-          class={`w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
-            loading() ? 'opacity-50 cursor-not-allowed' : ''
+          class={`w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 ${
+            loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
           }`}
           disabled={loading()}
         >
@@ -515,9 +515,11 @@ function ResumeBuilder() {
       </form>
 
       <Show when={resumeContent()}>
-        <div class="w-full max-w-lg mt-8 p-4 bg-white rounded-lg shadow-md">
-          <h3 class="text-xl font-bold mb-2 text-purple-600">السيرة الذاتية:</h3>
-          <p class="text-gray-700 whitespace-pre-wrap">{resumeContent()}</p>
+        <div class="w-full max-w-lg mt-8 p-6 bg-white rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+          <h3 class="text-xl font-bold mb-4 text-purple-600">السيرة الذاتية:</h3>
+          <div class="prose prose-lg text-gray-700 whitespace-pre-wrap">
+            {resumeContent()}
+          </div>
           <button
             onClick={handleDownload}
             class="mt-4 w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"

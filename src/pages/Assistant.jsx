@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router';
-import { createSignal, Show, onCleanup } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 import { createEvent } from '../supabaseClient';
 import { createNotification } from '../components/Notification';
 import Loader from '../components/Loader';
@@ -85,8 +85,8 @@ function Assistant() {
         />
         <button
           onClick={handleAssistantRequest}
-          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
-            loading() ? 'opacity-50 cursor-not-allowed' : ''
+          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${
+            loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
           }`}
           disabled={loading()}
         >
@@ -97,9 +97,11 @@ function Assistant() {
       </div>
 
       <Show when={assistantResponse()}>
-        <div class="w-full max-w-md mt-6 p-4 bg-white rounded-lg shadow-md">
-          <h3 class="text-xl font-bold mb-2 text-purple-600">رد المساعد</h3>
-          <p class="text-gray-700 whitespace-pre-wrap mb-4">{assistantResponse()}</p>
+        <div class="w-full max-w-md mt-6 p-6 bg-white rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+          <h3 class="text-xl font-bold mb-4 text-purple-600">رد المساعد</h3>
+          <div class="prose prose-lg text-gray-700 mb-4">
+            {assistantResponse()}
+          </div>
           <div class="flex space-x-4 justify-center">
             <button
               onClick={handleCopyResponse}
@@ -109,8 +111,8 @@ function Assistant() {
             </button>
             <button
               onClick={handleListenResponse}
-              class={`px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
-                loadingAudio() ? 'opacity-50 cursor-not-allowed' : ''
+              class={`px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 ${
+                loadingAudio() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
               }`}
               disabled={loadingAudio()}
             >
