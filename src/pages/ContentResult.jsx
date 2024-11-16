@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from '@solidjs/router';
 import { createSignal } from 'solid-js';
 import { createNotification } from '../components/Notification';
+import { SolidMarkdown } from 'solid-markdown';
 
 function ContentResult() {
   const navigate = useNavigate();
@@ -37,9 +38,7 @@ function ContentResult() {
       </button>
       <h1 class="text-4xl font-bold text-purple-600 mb-6">المحتوى المولد</h1>
       <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
-        <div class="prose prose-lg text-gray-700 mb-4">
-          {generatedContent()}
-        </div>
+        <SolidMarkdown class="prose prose-lg text-gray-700 mb-4" children={generatedContent()} />
         <button
           onClick={handleCopyContent}
           class="w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"

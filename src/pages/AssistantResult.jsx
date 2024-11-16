@@ -3,6 +3,7 @@ import { createSignal, Show } from 'solid-js';
 import { createEvent } from '../supabaseClient';
 import { createNotification } from '../components/Notification';
 import Loader from '../components/Loader';
+import { SolidMarkdown } from 'solid-markdown';
 
 function AssistantResult() {
   const navigate = useNavigate();
@@ -58,9 +59,7 @@ function AssistantResult() {
       <h1 class="text-4xl font-bold text-purple-600 mb-6">رد المساعد الذكي</h1>
 
       <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
-        <div class="prose prose-lg text-gray-700 mb-4">
-          {assistantResponse()}
-        </div>
+        <SolidMarkdown class="prose prose-lg text-gray-700 mb-4" children={assistantResponse()} />
         <div class="flex space-x-4 justify-center">
           <button
             onClick={handleCopyResponse}

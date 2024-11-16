@@ -1,7 +1,8 @@
 import { useNavigate, useLocation } from '@solidjs/router';
-import { createSignal, Show } from 'solid-js';
+import { createSignal } from 'solid-js';
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
+import { SolidMarkdown } from 'solid-markdown';
 
 function ResumeResult() {
   const navigate = useNavigate();
@@ -19,9 +20,11 @@ function ResumeResult() {
       sections: [
         {
           properties: {},
-          children: [new Paragraph({
-            children: [new TextRun(resumeContent())],
-          })],
+          children: [
+            new Paragraph({
+              children: [new TextRun(resumeContent())],
+            }),
+          ],
         },
       ],
     });
@@ -40,9 +43,7 @@ function ResumeResult() {
       </button>
       <h1 class="text-4xl font-bold text-purple-600 mb-6">السيرة الذاتية</h1>
       <div class="w-full max-w-lg p-6 bg-white rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
-        <div class="prose prose-lg text-gray-700 whitespace-pre-wrap">
-          {resumeContent()}
-        </div>
+        <SolidMarkdown class="prose prose-lg text-gray-700 mb-4" children={resumeContent()} />
         <button
           onClick={handleDownload}
           class="mt-4 w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
