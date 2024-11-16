@@ -6,7 +6,6 @@ function TextEditor() {
   const navigate = useNavigate();
 
   const [inputText, setInputText] = createSignal('');
-  const [outputText, setOutputText] = createSignal('');
   const [loading, setLoading] = createSignal(false);
   const [selectedOption, setSelectedOption] = createSignal('');
   const [selectedLanguage, setSelectedLanguage] = createSignal('');
@@ -53,26 +52,20 @@ function TextEditor() {
         prompt: prompt,
         response_type: 'text',
       });
-      setOutputText(result || 'لم يتم الحصول على نتيجة.');
+      navigate('/text-result', {
+        state: {
+          outputText: result || 'لم يتم الحصول على نتيجة.',
+        },
+      });
     } catch (error) {
       console.error('Error:', error);
-      setOutputText('حدث خطأ أثناء معالجة النص.');
+      navigate('/text-result', {
+        state: {
+          outputText: 'حدث خطأ أثناء معالجة النص.',
+        },
+      });
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleCopyOutput = () => {
-    if (outputText()) {
-      navigator.clipboard
-        .writeText(outputText())
-        .then(() => {
-          // يمكن إضافة إشعار بنجاح النسخ
-        })
-        .catch((error) => {
-          console.error('فشل النسخ:', error);
-          // يمكن إعلام المستخدم بفشل النسخ
-        });
     }
   };
 
@@ -146,21 +139,6 @@ function TextEditor() {
           </Show>
         </button>
       </div>
-
-      <Show when={outputText()}>
-        <div class="w-full max-w-md mt-6 p-6 bg-white rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
-          <h3 class="text-xl font-bold mb-4 text-purple-600">النتيجة:</h3>
-          <div class="prose prose-lg text-gray-700 mb-4 whitespace-pre-wrap">
-            {outputText()}
-          </div>
-          <button
-            onClick={handleCopyOutput}
-            class="w-full px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-          >
-            نسخ النص
-          </button>
-        </div>
-      </Show>
     </div>
   );
 }

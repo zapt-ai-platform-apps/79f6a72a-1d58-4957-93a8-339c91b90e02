@@ -10,10 +10,15 @@ const Forum = lazy(() => import('./pages/Forum'));
 const Services = lazy(() => import('./pages/Services'));
 const Tools = lazy(() => import('./pages/Tools'));
 const Assistant = lazy(() => import('./pages/Assistant'));
+const AssistantResult = lazy(() => import('./pages/AssistantResult'));
 const VoiceAssistant = lazy(() => import('./pages/VoiceAssistant'));
+const VoiceAssistantResult = lazy(() => import('./pages/VoiceAssistantResult'));
 const ResumeBuilder = lazy(() => import('./pages/ResumeBuilder'));
+const ResumeResult = lazy(() => import('./pages/ResumeResult'));
 const ContentGenerator = lazy(() => import('./pages/ContentGenerator'));
+const ContentResult = lazy(() => import('./pages/ContentResult'));
 const TextEditor = lazy(() => import('./pages/TextEditor'));
+const TextResult = lazy(() => import('./pages/TextResult'));
 const JoinUs = lazy(() => import('./pages/JoinUs'));
 
 function App() {
@@ -28,10 +33,15 @@ function App() {
           <Route path="/services" component={Services} />
           <Route path="/tools" component={Tools} />
           <Route path="/assistant" component={Assistant} />
+          <Route path="/assistant-result" component={AssistantResult} />
           <Route path="/voice-assistant" component={VoiceAssistant} />
+          <Route path="/voice-assistant-result" component={VoiceAssistantResult} />
           <Route path="/resume-builder" component={ResumeBuilder} />
+          <Route path="/resume-result" component={ResumeResult} />
           <Route path="/content-generator" component={ContentGenerator} />
+          <Route path="/content-result" component={ContentResult} />
           <Route path="/text-editor" component={TextEditor} />
+          <Route path="/text-result" component={TextResult} />
           <Route path="/join-us" component={JoinUs} />
         </Routes>
       </Suspense>

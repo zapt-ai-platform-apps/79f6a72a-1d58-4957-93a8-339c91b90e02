@@ -8,9 +8,7 @@ function Assistant() {
   const navigate = useNavigate();
 
   const [inputText, setInputText] = createSignal('');
-  const [assistantResponse, setAssistantResponse] = createSignal('');
   const [loading, setLoading] = createSignal(false);
-  const [loadingAudio, setLoadingAudio] = createSignal(false);
 
   const { NotificationComponent, showNotification } = createNotification();
 
@@ -22,45 +20,13 @@ function Assistant() {
         prompt: inputText(),
         response_type: 'text',
       });
-      setAssistantResponse(result || 'لا يوجد رد.');
+      navigate('/assistant-result', { state: { assistantResponse: result || 'لا يوجد رد.' } });
     } catch (error) {
       console.error('Error:', error);
-      setAssistantResponse('حدث خطأ أثناء الحصول على الرد.');
       showNotification('حدث خطأ أثناء الحصول على الرد.', 'error');
     } finally {
       setLoading(false);
       setInputText('');
-    }
-  };
-
-  const handleCopyResponse = () => {
-    if (assistantResponse()) {
-      navigator.clipboard
-        .writeText(assistantResponse())
-        .then(() => {
-          showNotification('تم نسخ الرد إلى الحافظة', 'success');
-        })
-        .catch((error) => {
-          console.error('فشل النسخ:', error);
-          showNotification('فشل نسخ الرد', 'error');
-        });
-    }
-  };
-
-  const handleListenResponse = async () => {
-    if (!assistantResponse()) return;
-    setLoadingAudio(true);
-    try {
-      const result = await createEvent('text_to_speech', {
-        text: assistantResponse(),
-      });
-      const audio = new Audio(result);
-      audio.play();
-    } catch (error) {
-      console.error('خطأ في تحويل النص إلى كلام:', error);
-      showNotification('حدث خطأ أثناء تشغيل الصوت.', 'error');
-    } finally {
-      setLoadingAudio(false);
     }
   };
 
@@ -95,34 +61,6 @@ function Assistant() {
           </Show>
         </button>
       </div>
-
-      <Show when={assistantResponse()}>
-        <div class="w-full max-w-md mt-6 p-6 bg-white rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
-          <h3 class="text-xl font-bold mb-4 text-purple-600">رد المساعد</h3>
-          <div class="prose prose-lg text-gray-700 mb-4">
-            {assistantResponse()}
-          </div>
-          <div class="flex space-x-4 justify-center">
-            <button
-              onClick={handleCopyResponse}
-              class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-            >
-              نسخ
-            </button>
-            <button
-              onClick={handleListenResponse}
-              class={`px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 ${
-                loadingAudio() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-              }`}
-              disabled={loadingAudio()}
-            >
-              <Show when={!loadingAudio()} fallback={<Loader loading={loadingAudio()} />}>
-                استماع
-              </Show>
-            </button>
-          </div>
-        </div>
-      </Show>
     </div>
   );
 }

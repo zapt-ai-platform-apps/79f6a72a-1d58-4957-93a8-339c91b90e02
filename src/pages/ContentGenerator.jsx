@@ -24,10 +24,14 @@ function ContentGenerator() {
 
   const [inputText, setInputText] = createSignal('');
   const [selectedContentType, setSelectedContentType] = createSignal('');
-  const [generatedContent, setGeneratedContent] = createSignal('');
   const [loading, setLoading] = createSignal(false);
 
   const { NotificationComponent, showNotification } = createNotification();
+
+  const getContentTypeLabel = (value) => {
+    const type = contentTypes.find((type) => type.value === value);
+    return type ? type.label : '';
+  };
 
   const handleGenerateContent = async () => {
     if (inputText().trim() === '' || selectedContentType() === '') return;
@@ -38,32 +42,16 @@ function ContentGenerator() {
         prompt: prompt,
         response_type: 'text',
       });
-      setGeneratedContent(result || 'لم يتم توليد المحتوى.');
+      navigate('/content-result', {
+        state: {
+          generatedContent: result || 'لم يتم توليد المحتوى.',
+        },
+      });
     } catch (error) {
       console.error('Error:', error);
-      setGeneratedContent('حدث خطأ أثناء توليد المحتوى.');
       showNotification('حدث خطأ أثناء توليد المحتوى.', 'error');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const getContentTypeLabel = (value) => {
-    const type = contentTypes.find((type) => type.value === value);
-    return type ? type.label : '';
-  };
-
-  const handleCopyContent = () => {
-    if (generatedContent()) {
-      navigator.clipboard
-        .writeText(generatedContent())
-        .then(() => {
-          showNotification('تم نسخ المحتوى إلى الحافظة', 'success');
-        })
-        .catch((error) => {
-          console.error('فشل النسخ:', error);
-          showNotification('فشل نسخ المحتوى', 'error');
-        });
     }
   };
 
@@ -116,21 +104,6 @@ function ContentGenerator() {
           </Show>
         </button>
       </div>
-
-      <Show when={generatedContent()}>
-        <div class="w-full max-w-md mt-6 p-6 bg-white rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
-          <h3 class="text-xl font-bold mb-4 text-purple-600">المحتوى المولد:</h3>
-          <div class="prose prose-lg text-gray-700 mb-4">
-            {generatedContent()}
-          </div>
-          <button
-            onClick={handleCopyContent}
-            class="w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-          >
-            نسخ المحتوى
-          </button>
-        </div>
-      </Show>
     </div>
   );
 }
