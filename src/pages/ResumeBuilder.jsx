@@ -18,7 +18,7 @@ function ResumeBuilder() {
   const [experiences, setExperiences] = createSignal([]);
   const [selectedSkills, setSelectedSkills] = createSignal([]);
   const [languages, setLanguages] = createSignal([]);
-  const [hobbies, setHobbies] = createSignal('');
+  const [selectedHobbies, setSelectedHobbies] = createSignal([]);
   const [loading, setLoading] = createSignal(false);
   const [resumeContent, setResumeContent] = createSignal('');
 
@@ -29,7 +29,7 @@ function ResumeBuilder() {
 
   const degreeLevels = ['بكالوريوس', 'ماجستير', 'دكتوراه', 'دبلوم', 'ثانوية'];
   const fieldsOfStudy = ['هندسة', 'علوم الحاسوب', 'إدارة الأعمال', 'الطب', 'الصيدلة', 'الحقوق', 'التسويق', 'التصميم', 'تعليم', 'أخرى'];
-  
+
   const commonSkills = [
     'العمل الجماعي',
     'الاتصال',
@@ -42,10 +42,23 @@ function ResumeBuilder() {
     'البرمجة',
     'إدارة المشاريع',
     'التسويق',
-    'المبيعات'
+    'المبيعات',
   ];
 
   const proficiencyLevels = ['مبتدئ', 'متوسط', 'متقدم', 'طليق', 'اللغة الأم'];
+
+  const commonHobbies = [
+    'القراءة',
+    'الكتابة',
+    'الرياضة',
+    'السفر',
+    'الرسم',
+    'التصوير',
+    'الموسيقى',
+    'الطبخ',
+    'المسرح',
+    'التطوع',
+  ];
 
   const addEducation = () => {
     setEducations([...educations(), { degreeLevel: '', fieldOfStudy: '', institution: '', graduationYear: '' }]);
@@ -97,6 +110,14 @@ function ResumeBuilder() {
     }
   };
 
+  const toggleHobby = (hobby) => {
+    if (selectedHobbies().includes(hobby)) {
+      setSelectedHobbies(selectedHobbies().filter(h => h !== hobby));
+    } else {
+      setSelectedHobbies([...selectedHobbies(), hobby]);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -125,7 +146,7 @@ function ResumeBuilder() {
 
     const skillsText = selectedSkills().join(', ');
 
-    const hobbiesText = hobbies();
+    const hobbiesText = selectedHobbies().join(', ');
 
     const prompt = `
       أود منك إنشاء سيرة ذاتية احترافية باللغة العربية بناءً على المعلومات التالية:
@@ -399,7 +420,7 @@ function ResumeBuilder() {
                     onChange={() => toggleSkill(skill)}
                     class="cursor-pointer"
                   />
-                  <span class="ml-2"> {skill}</span>
+                  <span class="ml-2">{skill}</span>
                 </label>
               )}
             </For>
@@ -463,12 +484,21 @@ function ResumeBuilder() {
         {/* قسم الهوايات */}
         <div>
           <label class="block mb-1 font-semibold">الهوايات</label>
-          <textarea
-            class="w-full p-3 h-24 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-            placeholder="أدخل هواياتك واهتماماتك هنا..."
-            value={hobbies()}
-            onInput={(e) => setHobbies(e.target.value)}
-          ></textarea>
+          <div class="grid grid-cols-2 gap-2">
+            <For each={commonHobbies}>
+              {(hobby) => (
+                <label class="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={selectedHobbies().includes(hobby)}
+                    onChange={() => toggleHobby(hobby)}
+                    class="cursor-pointer"
+                  />
+                  <span class="ml-2">{hobby}</span>
+                </label>
+              )}
+            </For>
+          </div>
         </div>
 
         <button
