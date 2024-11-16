@@ -1,5 +1,4 @@
 import { useNavigate } from '@solidjs/router';
-import SocialMediaLinks from '../components/SocialMediaLinks';
 
 function MainPage() {
   const navigate = useNavigate();
@@ -45,7 +44,27 @@ function MainPage() {
         </button>
       </div>
 
-      <SocialMediaLinks />
+      <div class="mt-8 text-center">
+        <h2 class="text-2xl font-bold text-primary mb-4">تابعونا على شبكات التواصل الاجتماعي</h2>
+        <div class="flex flex-wrap justify-center gap-6">
+          <a href="FACEBOOK_URL" target="_blank" rel="noopener noreferrer" class="cursor-pointer flex flex-col items-center">
+            <img src="https://images.unsplash.com/photo-1611605698323-b1e99cfd37ea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2NjQ4Nzh8MHwxfHNlYXJjaHwxfHxGYWNlYm9vayUyMGxvZ28lMjBpY29ufGVufDB8fHx8MTczMTc4ODI2NXww&ixlib=rb-4.0.3&q=80&w=1080"  alt="فيسبوك" class="w-12 h-12 mb-2 transition-transform duration-300 hover:scale-110" data-image-request="Facebook logo icon" />
+            <span class="text-sm text-gray-700">فيسبوك</span>
+          </a>
+          <a href="YOUTUBE_URL" target="_blank" rel="noopener noreferrer" class="cursor-pointer flex flex-col items-center">
+            <img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2NjQ4Nzh8MHwxfHNlYXJjaHw1fHxZb3VUdWJlJTIwbG9nbyUyMGljb258ZW58MHx8fHwxNzMxNzg4MjY1fDA&ixlib=rb-4.0.3&q=80&w=1080"  alt="يوتيوب" class="w-12 h-12 mb-2 transition-transform duration-300 hover:scale-110" data-image-request="YouTube logo icon" />
+            <span class="text-sm text-gray-700">يوتيوب</span>
+          </a>
+          <a href="https://t.me/Blindaccessibilitybot" target="_blank" rel="noopener noreferrer" class="cursor-pointer flex flex-col items-center">
+            <img src="https://images.unsplash.com/photo-1521931961826-fe48677230a5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2NjQ4Nzh8MHwxfHNlYXJjaHwzfHxUZWxlZ3JhbSUyMGxvZ28lMjBpY29ufGVufDB8fHx8MTczMTc4ODI2Nnww&ixlib=rb-4.0.3&q=80&w=1080"  alt="تيليجرام" class="w-12 h-12 mb-2 transition-transform duration-300 hover:scale-110" data-image-request="Telegram logo icon" />
+            <span class="text-sm text-gray-700">تيليجرام</span>
+          </a>
+          <a href="https://chat.whatsapp.com/CVW8aHib2SKIXlTroXMxYH" target="_blank" rel="noopener noreferrer" class="cursor-pointer flex flex-col items-center">
+            <img src="https://images.unsplash.com/photo-1611262588024-d12430b98920?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2NjQ4Nzh8MHwxfHNlYXJjaHw3fHxXaGF0c0FwcCUyMGxvZ28lMjBpY29ufGVufDB8fHx8MTczMTc4ODI2Nnww&ixlib=rb-4.0.3&q=80&w=1080"  alt="واتساب" class="w-12 h-12 mb-2 transition-transform duration-300 hover:scale-110" data-image-request="WhatsApp logo icon" />
+            <span class="text-sm text-gray-700">واتساب</span>
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
