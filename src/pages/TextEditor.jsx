@@ -20,7 +20,6 @@ function TextEditor() {
     { value: 'it', label: 'الإيطالية' },
     { value: 'tr', label: 'التركية' },
     { value: 'ru', label: 'الروسية' },
-    // يمكنك إضافة المزيد من اللغات هنا
   ];
 
   const handleProcessText = async () => {
@@ -85,7 +84,7 @@ function TextEditor() {
   };
 
   return (
-    <div class="flex flex-col items-center p-4 min-h-screen text-gray-800 pt-8 pb-16">
+    <div class="h-full flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
       <button
         onClick={() => navigate(-1)}
         class="self-start mb-4 text-2xl cursor-pointer"
@@ -108,8 +107,8 @@ function TextEditor() {
             value={selectedOption()}
             onInput={(e) => {
               setSelectedOption(e.target.value);
-              setSelectedLanguage(''); // إعادة تعيين اللغة المختارة عند تغيير العملية
-              setShowLanguageSelection(false); // إعادة تعيين عرض اختيار اللغة
+              setSelectedLanguage('');
+              setShowLanguageSelection(false);
             }}
           >
             <option value="">-- اختر العملية --</option>

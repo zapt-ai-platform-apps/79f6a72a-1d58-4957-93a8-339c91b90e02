@@ -18,7 +18,7 @@ const JoinUs = lazy(() => import('./pages/JoinUs'));
 
 function App() {
   return (
-    <div class="min-h-screen flex flex-col bg-background text-gray-800" dir="rtl">
+    <div class="h-full flex flex-col bg-background text-gray-800" dir="rtl">
       <Suspense fallback={<div class="flex-grow flex items-center justify-center"><Loader loading={true} /></div>}>
         <Routes>
           <Route path="/" component={MainPage} />
