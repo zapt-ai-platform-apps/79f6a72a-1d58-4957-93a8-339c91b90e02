@@ -9,6 +9,7 @@ function VoiceAssistant() {
   const [transcript, setTranscript] = createSignal('');
   const [assistantResponse, setAssistantResponse] = createSignal('');
   const [loading, setLoading] = createSignal(false);
+  const [loadingAudio, setLoadingAudio] = createSignal(false);
 
   let recognition;
 
@@ -54,7 +55,7 @@ function VoiceAssistant() {
         response_type: 'text',
       });
       setAssistantResponse(result || 'لم يتم الحصول على رد.');
-      handleSpeakResponse(result || 'لم يتم الحصول على رد.');
+      await handleSpeakResponse(result || 'لم يتم الحصول على رد.');
     } catch (error) {
       console.error('Error:', error);
       setAssistantResponse('حدث خطأ أثناء الحصول على الرد.');
@@ -63,19 +64,32 @@ function VoiceAssistant() {
     }
   };
 
-  const handleSpeakResponse = (text) => {
-    if (!('speechSynthesis' in window)) {
-      alert('متصفحك لا يدعم تحويل النص إلى كلام.');
-      return;
+  const handleSpeakResponse = async (text) => {
+    setLoadingAudio(true);
+    try {
+      const audioUrl = await createEvent('text_to_speech', {
+        text: text,
+      });
+      // تشغيل الصوت
+      const audio = new Audio(audioUrl);
+      await audio.play();
+    } catch (error) {
+      console.error('خطأ في تحويل النص إلى كلام:', error);
+      // في حالة الخطأ، يمكن استخدام تحويل النص إلى كلام في المتصفح
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ar-EG';
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert('متصفحك لا يدعم تحويل النص إلى كلام.');
+      }
+    } finally {
+      setLoadingAudio(false);
     }
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'ar-EG';
-    window.speechSynthesis.speak(utterance);
   };
 
   return (
-    <div class="flex flex-col items-center p-4 h-full text-gray-800 pt-8 pb-16">
+    <div class="flex flex-col items-center p-4 min-h-screen text-gray-800 pt-8 pb-16">
       <button
         onClick={() => navigate(-1)}
         class="self-start mb-4 text-2xl cursor-pointer"
@@ -86,13 +100,15 @@ function VoiceAssistant() {
 
       <button
         onClick={startListening}
-        class={`px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
-          listening() ? 'opacity-50 cursor-not-allowed' : ''
+        class={`px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${
+          listening() || loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
         }`}
-        disabled={listening()}
+        disabled={listening() || loading()}
       >
         <Show when={!listening()} fallback="استمع...">
-          اضغط للتحدث
+          <Show when={!loading()} fallback="جاري المعالجة...">
+            اضغط للتحدث
+          </Show>
         </Show>
       </button>
 
