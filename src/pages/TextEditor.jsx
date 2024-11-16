@@ -1,5 +1,6 @@
+```jsx
 import { useNavigate } from '@solidjs/router';
-import { createSignal, Show, For } from 'solid-js';
+import { createSignal, Show, For, createMemo } from 'solid-js';
 import { createEvent } from '../supabaseClient';
 
 function TextEditor() {
@@ -10,7 +11,8 @@ function TextEditor() {
   const [loading, setLoading] = createSignal(false);
   const [selectedOption, setSelectedOption] = createSignal('');
   const [selectedLanguage, setSelectedLanguage] = createSignal('');
-  const [showLanguageSelection, setShowLanguageSelection] = createSignal(false);
+
+  const showLanguageSelection = createMemo(() => selectedOption() === 'translation');
 
   const languages = [
     { value: 'en', label: 'الإنجليزية' },
@@ -23,18 +25,9 @@ function TextEditor() {
   ];
 
   const handleProcessText = async () => {
-    if (inputText().trim() === '') return;
-    if (selectedOption() === '') return;
-
-    if (selectedOption() === 'translation' && !showLanguageSelection()) {
-      setShowLanguageSelection(true);
-      return;
-    }
-
-    if (selectedOption() === 'translation' && selectedLanguage() === '') {
-      alert('يرجى اختيار اللغة المستهدفة.');
-      return;
-    }
+    if (inputText().trim() === '') return alert('يرجى إدخال النص.');
+    if (selectedOption() === '') return alert('يرجى اختيار العملية.');
+    if (showLanguageSelection() && selectedLanguage() === '') return alert('يرجى اختيار اللغة.');
 
     setLoading(true);
     let prompt = '';
@@ -108,7 +101,6 @@ function TextEditor() {
             onInput={(e) => {
               setSelectedOption(e.target.value);
               setSelectedLanguage('');
-              setShowLanguageSelection(false);
             }}
           >
             <option value="">-- اختر العملية --</option>
@@ -119,20 +111,8 @@ function TextEditor() {
           </select>
         </div>
 
-        <button
-          onClick={handleProcessText}
-          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${
-            loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-          }`}
-          disabled={loading()}
-        >
-          <Show when={!loading()} fallback="جاري المعالجة...">
-            معالجة النص
-          </Show>
-        </button>
-
-        <Show when={showLanguageSelection() && selectedOption() === 'translation'}>
-          <div class="mt-4 mb-4">
+        <Show when={showLanguageSelection()}>
+          <div class="mb-4">
             <label class="block mb-2 text-lg font-semibold text-gray-700">اختر اللغة:</label>
             <select
               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
@@ -147,20 +127,24 @@ function TextEditor() {
               </For>
             </select>
           </div>
-
-          <button
-            onClick={handleProcessText}
-            class={`w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 ${
-              loading() || selectedLanguage() === '' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-            }`}
-            disabled={loading() || selectedLanguage() === ''}
-          >
-            <Show when={!loading()} fallback="جاري الترجمة...">
-              ترجمة النص
-            </Show>
-          </button>
         </Show>
 
+        <button
+          onClick={handleProcessText}
+          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${
+            loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+          }`}
+          disabled={
+            loading() ||
+            inputText().trim() === '' ||
+            selectedOption() === '' ||
+            (showLanguageSelection() && selectedLanguage() === '')
+          }
+        >
+          <Show when={!loading()} fallback="جاري المعالجة...">
+            معالجة النص
+          </Show>
+        </button>
       </div>
 
       <Show when={outputText()}>
@@ -182,3 +166,4 @@ function TextEditor() {
 }
 
 export default TextEditor;
+```
