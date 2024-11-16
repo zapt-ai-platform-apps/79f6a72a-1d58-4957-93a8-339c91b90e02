@@ -16,8 +16,8 @@ function ResumeBuilder() {
 
   const [educations, setEducations] = createSignal([]);
   const [experiences, setExperiences] = createSignal([]);
-  const [skills, setSkills] = createSignal([]);
   const [selectedSkills, setSelectedSkills] = createSignal([]);
+  const [languages, setLanguages] = createSignal([]);
   const [loading, setLoading] = createSignal(false);
   const [resumeContent, setResumeContent] = createSignal('');
 
@@ -43,6 +43,8 @@ function ResumeBuilder() {
     'التسويق',
     'المبيعات'
   ];
+
+  const proficiencyLevels = ['مبتدئ', 'متوسط', 'متقدم', 'طليق', 'اللغة الأم'];
 
   const addEducation = () => {
     setEducations([...educations(), { degreeLevel: '', fieldOfStudy: '', institution: '', graduationYear: '' }]);
@@ -70,6 +72,20 @@ function ResumeBuilder() {
     const updated = [...experiences()];
     updated[index][field] = value;
     setExperiences(updated);
+  };
+
+  const addLanguage = () => {
+    setLanguages([...languages(), { language: '', proficiency: '' }]);
+  };
+
+  const removeLanguage = (index) => {
+    setLanguages(languages().filter((_, i) => i !== index));
+  };
+
+  const updateLanguage = (index, field, value) => {
+    const updated = [...languages()];
+    updated[index][field] = value;
+    setLanguages(updated);
   };
 
   const toggleSkill = (skill) => {
@@ -100,6 +116,12 @@ function ResumeBuilder() {
       الوصف: ${exp.description}
     `).join('\n');
 
+    const languagesText = languages().map((lang, index) => `
+      اللغة ${index + 1}:
+      اللغة: ${lang.language}
+      مستوى الإتقان: ${lang.proficiency}
+    `).join('\n');
+
     const skillsText = selectedSkills().join(', ');
 
     const prompt = `
@@ -113,6 +135,8 @@ function ResumeBuilder() {
       الخبرات:
       ${experienceText}
       المهارات: ${skillsText}
+      اللغات:
+      ${languagesText}
       الرجاء تنسيق السيرة الذاتية بشكل جيد ومناسب.
     `;
 
@@ -206,7 +230,7 @@ function ResumeBuilder() {
             required
           />
         </div>
-        
+
         {/* قسم التعليم */}
         <div>
           <label class="block mb-1 font-semibold">التعليم</label>
@@ -375,6 +399,60 @@ function ResumeBuilder() {
               )}
             </For>
           </div>
+        </div>
+
+        {/* قسم اللغات */}
+        <div>
+          <label class="block mb-1 font-semibold">اللغات</label>
+          <For each={languages()}>
+            {(lang, index) => (
+              <div class="border p-4 mb-4 rounded-lg">
+                <div class="flex justify-between items-center mb-2">
+                  <span class="font-semibold">لغة {index() + 1}</span>
+                  <button
+                    type="button"
+                    class="text-red-500 hover:text-red-600 cursor-pointer"
+                    onClick={() => removeLanguage(index())}
+                  >
+                    حذف
+                  </button>
+                </div>
+                <div class="mb-2">
+                  <label class="block mb-1">اللغة</label>
+                  <input
+                    type="text"
+                    class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+                    value={lang.language}
+                    onInput={(e) => updateLanguage(index(), 'language', e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label class="block mb-1">مستوى الإتقان</label>
+                  <select
+                    class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border cursor-pointer"
+                    value={lang.proficiency}
+                    onInput={(e) => updateLanguage(index(), 'proficiency', e.target.value)}
+                    required
+                  >
+                    <option value="">-- اختر مستوى الإتقان --</option>
+                    <For each={proficiencyLevels}>
+                      {(level) => (
+                        <option value={level}>{level}</option>
+                      )}
+                    </For>
+                  </select>
+                </div>
+              </div>
+            )}
+          </For>
+          <button
+            type="button"
+            class="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+            onClick={addLanguage}
+          >
+            إضافة لغة
+          </button>
         </div>
 
         <button
