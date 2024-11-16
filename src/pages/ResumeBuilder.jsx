@@ -18,6 +18,7 @@ function ResumeBuilder() {
   const [experiences, setExperiences] = createSignal([]);
   const [selectedSkills, setSelectedSkills] = createSignal([]);
   const [languages, setLanguages] = createSignal([]);
+  const [hobbies, setHobbies] = createSignal('');
   const [loading, setLoading] = createSignal(false);
   const [resumeContent, setResumeContent] = createSignal('');
 
@@ -124,6 +125,8 @@ function ResumeBuilder() {
 
     const skillsText = selectedSkills().join(', ');
 
+    const hobbiesText = hobbies();
+
     const prompt = `
       أود منك إنشاء سيرة ذاتية احترافية باللغة العربية بناءً على المعلومات التالية:
       الاسم: ${personalInfo().name}
@@ -137,6 +140,8 @@ function ResumeBuilder() {
       المهارات: ${skillsText}
       اللغات:
       ${languagesText}
+      الهوايات:
+      ${hobbiesText}
       الرجاء تنسيق السيرة الذاتية بشكل جيد ومناسب.
     `;
 
@@ -453,6 +458,17 @@ function ResumeBuilder() {
           >
             إضافة لغة
           </button>
+        </div>
+
+        {/* قسم الهوايات */}
+        <div>
+          <label class="block mb-1 font-semibold">الهوايات</label>
+          <textarea
+            class="w-full p-3 h-24 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+            placeholder="أدخل هواياتك واهتماماتك هنا..."
+            value={hobbies()}
+            onInput={(e) => setHobbies(e.target.value)}
+          ></textarea>
         </div>
 
         <button
