@@ -1,6 +1,8 @@
 import { useNavigate } from '@solidjs/router';
-import { createSignal, Show } from 'solid-js';
+import { createSignal, Show, onCleanup } from 'solid-js';
 import { createEvent } from '../supabaseClient';
+import { createNotification } from '../components/Notification';
+import Loader from '../components/Loader';
 
 function Assistant() {
   const navigate = useNavigate();
@@ -9,6 +11,8 @@ function Assistant() {
   const [assistantResponse, setAssistantResponse] = createSignal('');
   const [loading, setLoading] = createSignal(false);
   const [loadingAudio, setLoadingAudio] = createSignal(false);
+
+  const { NotificationComponent, showNotification } = createNotification();
 
   const handleAssistantRequest = async () => {
     if (inputText().trim() === '') return;
@@ -22,6 +26,7 @@ function Assistant() {
     } catch (error) {
       console.error('Error:', error);
       setAssistantResponse('حدث خطأ أثناء الحصول على الرد.');
+      showNotification('حدث خطأ أثناء الحصول على الرد.', 'error');
     } finally {
       setLoading(false);
       setInputText('');
@@ -33,11 +38,11 @@ function Assistant() {
       navigator.clipboard
         .writeText(assistantResponse())
         .then(() => {
-          // يمكن إضافة إشعار بنجاح النسخ
+          showNotification('تم نسخ الرد إلى الحافظة', 'success');
         })
         .catch((error) => {
           console.error('فشل النسخ:', error);
-          // يمكن إعلام المستخدم بفشل النسخ
+          showNotification('فشل نسخ الرد', 'error');
         });
     }
   };
@@ -49,12 +54,11 @@ function Assistant() {
       const result = await createEvent('text_to_speech', {
         text: assistantResponse(),
       });
-      // تشغيل الصوت دون عرض عناصر التحكم
       const audio = new Audio(result);
       audio.play();
     } catch (error) {
       console.error('خطأ في تحويل النص إلى كلام:', error);
-      // يمكن إعلام المستخدم بالخطأ
+      showNotification('حدث خطأ أثناء تشغيل الصوت.', 'error');
     } finally {
       setLoadingAudio(false);
     }
@@ -62,6 +66,7 @@ function Assistant() {
 
   return (
     <div class="flex flex-col items-center p-4 h-full text-gray-800 pt-8 pb-16">
+      <NotificationComponent />
       <button
         onClick={() => navigate(-1)}
         class="self-start mb-4 text-2xl cursor-pointer"
@@ -85,7 +90,7 @@ function Assistant() {
           }`}
           disabled={loading()}
         >
-          <Show when={!loading()} fallback="جاري المعالجة...">
+          <Show when={!loading()} fallback={<Loader loading={loading()} />}>
             أرسل
           </Show>
         </button>
@@ -109,7 +114,7 @@ function Assistant() {
               }`}
               disabled={loadingAudio()}
             >
-              <Show when={!loadingAudio()} fallback="جاري التحميل...">
+              <Show when={!loadingAudio()} fallback={<Loader loading={loadingAudio()} />}>
                 استماع
               </Show>
             </button>
