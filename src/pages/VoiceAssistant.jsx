@@ -1,6 +1,7 @@
 import { useNavigate } from '@solidjs/router';
 import { createSignal, Show } from 'solid-js';
 import { createEvent } from '../supabaseClient';
+import { createNotification } from '../components/Notification';
 
 function VoiceAssistant() {
   const navigate = useNavigate();
@@ -10,6 +11,8 @@ function VoiceAssistant() {
   const [assistantResponse, setAssistantResponse] = createSignal('');
   const [loading, setLoading] = createSignal(false);
   const [loadingAudio, setLoadingAudio] = createSignal(false);
+
+  const { NotificationComponent, showNotification } = createNotification();
 
   let recognition;
   let currentAudio = null; // متغير لتخزين الكائن الصوتي الحالي
@@ -72,6 +75,7 @@ function VoiceAssistant() {
     } catch (error) {
       console.error('Error:', error);
       setAssistantResponse('حدث خطأ أثناء الحصول على الرد.');
+      showNotification('حدث خطأ أثناء الحصول على الرد.', 'error');
     } finally {
       setLoading(false);
     }
@@ -109,8 +113,23 @@ function VoiceAssistant() {
     }
   };
 
+  const handleCopyResponse = () => {
+    if (assistantResponse()) {
+      navigator.clipboard
+        .writeText(assistantResponse())
+        .then(() => {
+          showNotification('تم نسخ الرد إلى الحافظة', 'success');
+        })
+        .catch((error) => {
+          console.error('فشل النسخ:', error);
+          showNotification('فشل نسخ الرد', 'error');
+        });
+    }
+  };
+
   return (
-    <div class="flex flex-col items-center p-4 min-h-screen text-gray-800 pt-8 pb-16">
+    <div class="flex flex-col items-center p-4 h-full text-gray-800 pt-8 pb-16">
+      <NotificationComponent />
       <button
         onClick={() => navigate(-1)}
         class="self-start mb-4 text-2xl cursor-pointer"
@@ -144,6 +163,12 @@ function VoiceAssistant() {
         <div class="w-full max-w-md mt-6 p-4 bg-white rounded-lg shadow-md">
           <h3 class="text-xl font-bold mb-2 text-purple-600">رد المساعد:</h3>
           <p class="text-gray-700 whitespace-pre-wrap mb-4">{assistantResponse()}</p>
+          <button
+            onClick={handleCopyResponse}
+            class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+          >
+            نسخ
+          </button>
         </div>
       </Show>
     </div>
