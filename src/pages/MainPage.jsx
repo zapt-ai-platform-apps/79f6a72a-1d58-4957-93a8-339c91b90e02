@@ -31,6 +31,20 @@ function MainPage() {
       </div>
 
       <div class="mt-8">
+        <h2 class="text-3xl font-bold text-purple-600 mb-4">انضم إلى فريقنا</h2>
+        <p class="text-lg text-center leading-relaxed max-w-2xl">
+          نحن نبحث عن أفراد موهوبين وشغوفين للانضمام إلى فريقنا والمساهمة في تحسين إمكانية الوصول للجميع.
+          إذا كنت ترغب في المشاركة والتميز، تواصل معنا الآن!
+        </p>
+        <button
+          onClick={() => navigate('/join-us')}
+          class="mt-4 bg-red-500 text-white py-3 px-6 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          انضم إلينا
+        </button>
+      </div>
+
+      <div class="mt-8">
         <h2 class="text-2xl font-bold text-purple-600 mb-4">تابعونا</h2>
         <div class="flex justify-center space-x-4">
           <a href="FACEBOOK_URL" target="_blank" rel="noopener noreferrer" class="cursor-pointer">

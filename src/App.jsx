@@ -12,7 +12,8 @@ const Assistant = lazy(() => import('./pages/Assistant'));
 const VoiceAssistant = lazy(() => import('./pages/VoiceAssistant'));
 const ResumeBuilder = lazy(() => import('./pages/ResumeBuilder'));
 const ContentGenerator = lazy(() => import('./pages/ContentGenerator'));
-const TextEditor = lazy(() => import('./pages/TextEditor')); // تم إضافة هذا السطر
+const TextEditor = lazy(() => import('./pages/TextEditor'));
+const JoinUs = lazy(() => import('./pages/JoinUs')); // تم إضافة هذا السطر
 
 function App() {
   return (
@@ -29,7 +30,8 @@ function App() {
           <Route path="/voice-assistant" component={VoiceAssistant} />
           <Route path="/resume-builder" component={ResumeBuilder} />
           <Route path="/content-generator" component={ContentGenerator} />
-          <Route path="/text-editor" component={TextEditor} /> {/* تم إضافة هذا السطر */}
+          <Route path="/text-editor" component={TextEditor} />
+          <Route path="/join-us" component={JoinUs} /> {/* تم إضافة هذا السطر */}
         </Routes>
       </Suspense>
       <BottomNavBar />
