@@ -1,4 +1,3 @@
-```jsx
 import { useNavigate } from '@solidjs/router';
 import { createSignal, Show, For, createMemo } from 'solid-js';
 import { createEvent } from '../supabaseClient';
@@ -41,10 +40,11 @@ function TextEditor() {
       case 'paraphrase':
         prompt = `الرجاء إعادة صياغة النص التالي بأسلوب مختلف مع الحفاظ على المعنى: ${inputText()}`;
         break;
-      case 'translation':
+      case 'translation': {
         const languageLabel = languages.find((lang) => lang.value === selectedLanguage())?.label || '';
         prompt = `الرجاء ترجمة النص التالي إلى ${languageLabel}: ${inputText()}`;
         break;
+      }
       default:
         break;
     }
@@ -166,4 +166,3 @@ function TextEditor() {
 }
 
 export default TextEditor;
-```
