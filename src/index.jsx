@@ -25,9 +25,9 @@ Sentry.init({
   initialScope: {
     tags: {
       type: 'frontend',
-      projectId: import.meta.env.VITE_PUBLIC_APP_ID
-    }
-  }
+      projectId: import.meta.env.VITE_PUBLIC_APP_ID,
+    },
+  },
 });
 
 render(

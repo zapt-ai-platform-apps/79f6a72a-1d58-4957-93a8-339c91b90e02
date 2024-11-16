@@ -65,7 +65,7 @@ function Assistant() {
   };
 
   return (
-    <div class="flex flex-col items-center p-4 h-full text-gray-800 pt-8 pb-16">
+    <div class="min-h-screen flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
       <NotificationComponent />
       <button
         onClick={() => navigate(-1)}
