@@ -1,6 +1,7 @@
 import { useNavigate } from '@solidjs/router';
 import { createSignal, Show, For } from 'solid-js';
 import { createEvent } from '../supabaseClient';
+import { createNotification } from '../components/Notification';
 
 function ContentGenerator() {
   const navigate = useNavigate();
@@ -11,6 +12,13 @@ function ContentGenerator() {
     { value: 'email', label: 'بريد إلكتروني' },
     { value: 'product_description', label: 'وصف منتج' },
     { value: 'advertisement', label: 'إعلان' },
+    { value: 'blog_post', label: 'منشور مدونة' },
+    { value: 'news_report', label: 'تقرير إخباري' },
+    { value: 'speech', label: 'خطاب' },
+    { value: 'story', label: 'قصة قصيرة' },
+    { value: 'poem', label: 'قصيدة' },
+    { value: 'report', label: 'تقرير' },
+    { value: 'letter', label: 'رسالة' },
     // يمكنك إضافة المزيد من أنواع المحتوى هنا
   ];
 
@@ -19,11 +27,13 @@ function ContentGenerator() {
   const [generatedContent, setGeneratedContent] = createSignal('');
   const [loading, setLoading] = createSignal(false);
 
+  const { NotificationComponent, showNotification } = createNotification();
+
   const handleGenerateContent = async () => {
     if (inputText().trim() === '' || selectedContentType() === '') return;
     setLoading(true);
+    const prompt = `أريد منك كتابة ${getContentTypeLabel(selectedContentType())} حول الموضوع التالي: ${inputText()}. الرجاء أن يكون المحتوى جذاباً ومفيداً.`;
     try {
-      const prompt = `أريد منك كتابة ${getContentTypeLabel(selectedContentType())} حول الموضوع التالي: ${inputText()}`;
       const result = await createEvent('chatgpt_request', {
         prompt: prompt,
         response_type: 'text',
@@ -32,6 +42,7 @@ function ContentGenerator() {
     } catch (error) {
       console.error('Error:', error);
       setGeneratedContent('حدث خطأ أثناء توليد المحتوى.');
+      showNotification('حدث خطأ أثناء توليد المحتوى.', 'error');
     } finally {
       setLoading(false);
     }
@@ -47,17 +58,18 @@ function ContentGenerator() {
       navigator.clipboard
         .writeText(generatedContent())
         .then(() => {
-          // يمكن إضافة إشعار بنجاح النسخ
+          showNotification('تم نسخ المحتوى إلى الحافظة', 'success');
         })
         .catch((error) => {
           console.error('فشل النسخ:', error);
-          // يمكن إعلام المستخدم بفشل النسخ
+          showNotification('فشل نسخ المحتوى', 'error');
         });
     }
   };
 
   return (
     <div class="flex flex-col items-center p-4 min-h-screen text-gray-800 pt-8 pb-16">
+      <NotificationComponent />
       <button
         onClick={() => navigate(-1)}
         class="self-start mb-4 text-2xl cursor-pointer"
@@ -94,8 +106,8 @@ function ContentGenerator() {
 
         <button
           onClick={handleGenerateContent}
-          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
-            loading() ? 'opacity-50 cursor-not-allowed' : ''
+          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${
+            loading() || inputText().trim() === '' || selectedContentType() === '' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
           }`}
           disabled={loading() || inputText().trim() === '' || selectedContentType() === ''}
         >
