@@ -12,8 +12,15 @@ function VoiceAssistant() {
   const [loadingAudio, setLoadingAudio] = createSignal(false);
 
   let recognition;
+  let currentAudio = null; // متغير لتخزين الكائن الصوتي الحالي
 
   const startListening = () => {
+    // إيقاف أي تشغيل صوتي سابق
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio = null;
+    }
+
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
       alert('متصفحك لا يدعم التعرف على الصوت.');
       return;
@@ -48,6 +55,12 @@ function VoiceAssistant() {
   };
 
   const handleAssistantRequest = async (inputText) => {
+    // إيقاف أي تشغيل صوتي سابق
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio = null;
+    }
+
     setLoading(true);
     try {
       const result = await createEvent('chatgpt_request', {
@@ -65,18 +78,26 @@ function VoiceAssistant() {
   };
 
   const handleSpeakResponse = async (text) => {
+    // إيقاف أي تشغيل صوتي سابق
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio = null;
+    }
+
     setLoadingAudio(true);
     try {
       const audioUrl = await createEvent('text_to_speech', {
         text: text,
       });
-      // تشغيل الصوت
-      const audio = new Audio(audioUrl);
-      await audio.play();
+      // تشغيل الصوت الجديد
+      currentAudio = new Audio(audioUrl);
+      currentAudio.play();
     } catch (error) {
       console.error('خطأ في تحويل النص إلى كلام:', error);
       // في حالة الخطأ، يمكن استخدام تحويل النص إلى كلام في المتصفح
       if ('speechSynthesis' in window) {
+        // إيقاف أي كلام جارٍ
+        window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'ar-EG';
         window.speechSynthesis.speak(utterance);
