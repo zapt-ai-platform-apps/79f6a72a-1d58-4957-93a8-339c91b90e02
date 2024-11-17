@@ -103,11 +103,11 @@ function RadioPlayer() {
       setLoading(true);
       setError(null);
       const newAudio = new Audio(station.url_resolved);
+      setAudio(newAudio); // Set audio before adding event listeners and playing
 
       newAudio.addEventListener('canplay', () => {
         setLoading(false);
         newAudio.play();
-        setAudio(newAudio);
         setIsPlaying(true);
       });
 
@@ -117,8 +117,6 @@ function RadioPlayer() {
         setError('حدث خطأ أثناء تشغيل المحطة. حاول مرة أخرى لاحقاً.');
         setIsPlaying(false);
       });
-
-      setAudio(newAudio);
     }
   };
 
