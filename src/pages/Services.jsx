@@ -12,7 +12,7 @@ function Services() {
       </button>
       <h1 class="text-4xl font-bold text-purple-600 mb-6">خدمات</h1>
       <p class="text-lg text-center leading-relaxed max-w-2xl">
-        هنا ستجد مجموعة من الخدمات المتاحة لتحسين إمكانية الوصول وتجربتك الرقمية.
+        اكتشف خدماتنا المتميزة المصممة خصيصًا لتسهيل حياتك الرقمية وتعزيز إمكانية الوصول بكفاءة وفعالية.
       </p>
     </div>
   );

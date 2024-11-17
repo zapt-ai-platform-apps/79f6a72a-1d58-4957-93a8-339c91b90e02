@@ -13,7 +13,7 @@ function Tools() {
       </button>
       <h1 class="text-4xl font-bold text-purple-600 mb-6">أدوات</h1>
       <p class="text-lg text-center leading-relaxed max-w-2xl mb-4">
-        هنا ستجد مجموعة من الأدوات المصممة لزيادة الإنتاجية وتحسين إمكانية الوصول.
+        استفد من أدواتنا الحديثة المصممة لتعزيز إنتاجيتك وتحسين إمكانية الوصول بطريقة مبتكرة وسهلة الاستخدام.
       </p>
 
       <div class="grid grid-cols-1 gap-4 w-full max-w-md mt-6">
