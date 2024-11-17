@@ -51,9 +51,7 @@ function Assistant() {
         />
         <button
           onClick={handleAssistantRequest}
-          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${
-            loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-          }`}
+          class="w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           disabled={loading()}
         >
           <Show when={!loading()} fallback={<Loader loading={loading()} />}>

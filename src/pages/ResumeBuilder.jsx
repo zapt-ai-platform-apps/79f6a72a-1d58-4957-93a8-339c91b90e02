@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router';
-import { createSignal, createEffect, Show, For, onCleanup } from 'solid-js';
+import { createSignal, Show, For, onCleanup } from 'solid-js';
 import { createEvent } from '../supabaseClient';
 
 function ResumeBuilder() {
@@ -201,13 +201,59 @@ function ResumeBuilder() {
       <h1 class="text-4xl font-bold text-purple-600 mb-6">منشئ السيرة الذاتية</h1>
 
       <form onSubmit={handleSubmit} class="w-full max-w-lg space-y-4">
-        {/* باقي النموذج */}
-        {/* ... */}
+        {/* معلومات شخصية */}
+        <div>
+          <h2 class="text-2xl font-semibold mb-2 text-purple-600">المعلومات الشخصية</h2>
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-2">الاسم الكامل</label>
+            <input
+              type="text"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+              placeholder="أدخل اسمك الكامل"
+              required
+              value={personalInfo().name}
+              onInput={(e) => setPersonalInfo({ ...personalInfo(), name: e.target.value })}
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-2">البريد الإلكتروني</label>
+            <input
+              type="email"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+              placeholder="أدخل بريدك الإلكتروني"
+              required
+              value={personalInfo().email}
+              onInput={(e) => setPersonalInfo({ ...personalInfo(), email: e.target.value })}
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-2">رقم الهاتف</label>
+            <input
+              type="tel"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+              placeholder="أدخل رقم هاتفك"
+              required
+              value={personalInfo().phone}
+              onInput={(e) => setPersonalInfo({ ...personalInfo(), phone: e.target.value })}
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-2">العنوان</label>
+            <input
+              type="text"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+              placeholder="أدخل عنوانك"
+              required
+              value={personalInfo().address}
+              onInput={(e) => setPersonalInfo({ ...personalInfo(), address: e.target.value })}
+            />
+          </div>
+        </div>
+        {/* ... باقي النموذج (التعليم، الخبرات، المهارات، اللغات، الهوايات) ... */}
+        {/* زر الإرسال */}
         <button
           type="submit"
-          class={`w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 ${
-            loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-          }`}
+          class="w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           disabled={loading()}
         >
           <Show when={!loading()} fallback="جاري الإنشاء...">
