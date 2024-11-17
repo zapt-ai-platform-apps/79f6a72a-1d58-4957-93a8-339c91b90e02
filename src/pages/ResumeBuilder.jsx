@@ -17,7 +17,6 @@ function ResumeBuilder() {
   const [skills, setSkills] = createSignal(['']);
   const [languages, setLanguages] = createSignal(['']);
   const [certifications, setCertifications] = createSignal(['']);
-  const [references, setReferences] = createSignal([{ name: '', contact: '', position: '' }]);
   const [loading, setLoading] = createSignal(false);
 
   const handleAddEducation = () => {
@@ -90,20 +89,6 @@ function ResumeBuilder() {
     setCertifications(updatedCertifications);
   };
 
-  const handleAddReference = () => {
-    setReferences([...references(), { name: '', contact: '', position: '' }]);
-  };
-
-  const handleRemoveReference = (index) => {
-    setReferences(references().filter((_, i) => i !== index));
-  };
-
-  const handleReferenceChange = (index, key, value) => {
-    const updatedReferences = [...references()];
-    updatedReferences[index][key] = value;
-    setReferences(updatedReferences);
-  };
-
   const handleSubmit = async () => {
     if (!name() || !email()) {
       showNotification('يرجى تعبئة الحقول المطلوبة.', 'error');
@@ -111,34 +96,31 @@ function ResumeBuilder() {
     }
     setLoading(true);
     const prompt = `
-      الرجاء إنشاء سيرة ذاتية احترافية ومُنسقة باللغة العربية باستخدام المعلومات التالية:
-      
-      الاسم: ${name()}
-      البريد الإلكتروني: ${email()}
-      الهاتف: ${phone()}
-      العنوان: ${address()}
-      الملخص الشخصي: ${summary()}
-      
-      التعليم:
-      ${education().map((edu) => `- ${edu.degree} من ${edu.institution} (${edu.year})`).join('\n')}
-      
-      الخبرات العملية:
-      ${experience().map((exp) => `- ${exp.title} في ${exp.company} لمدة ${exp.years}\nالمسؤوليات والإنجازات:\n${exp.responsibilities}`).join('\n')}
-      
-      المهارات:
-      ${skills().join(', ')}
-      
-      اللغات:
-      ${languages().join(', ')}
-      
-      الشهادات:
-      ${certifications().join(', ')}
-      
-      المراجع:
-      ${references().map((ref) => `- ${ref.name}, ${ref.position}, ${ref.contact}`).join('\n')}
-      
-      يجب أن تكون السيرة الذاتية مُنسقة بشكل احترافي وجاهزة للطباعة، مع التركيز على الوضوح والتنظيم.
-    `;
+          الرجاء إنشاء سيرة ذاتية احترافية ومُنسقة باللغة العربية باستخدام المعلومات التالية:
+          
+          الاسم: ${name()}
+          البريد الإلكتروني: ${email()}
+          الهاتف: ${phone()}
+          العنوان: ${address()}
+          الملخص الشخصي: ${summary()}
+          
+          التعليم:
+          ${education().map((edu) => `- ${edu.degree} من ${edu.institution} (${edu.year})`).join('\n')}
+          
+          الخبرات العملية:
+          ${experience().map((exp) => `- ${exp.title} في ${exp.company} لمدة ${exp.years}\nالمسؤوليات والإنجازات:\n${exp.responsibilities}`).join('\n')}
+          
+          المهارات:
+          ${skills().join(', ')}
+          
+          اللغات:
+          ${languages().join(', ')}
+          
+          الشهادات:
+          ${certifications().join(', ')}
+          
+          يجب أن تكون السيرة الذاتية مُنسقة بشكل احترافي وجاهزة للطباعة، مع التركيز على الوضوح والتنظيم.
+        `;
 
     try {
       const result = await createEvent('chatgpt_request', {
@@ -158,8 +140,7 @@ function ResumeBuilder() {
             experience: experience(),
             skills: skills(),
             languages: languages(),
-            certifications: certifications(),
-            references: references()
+            certifications: certifications()
           }
         },
       });
@@ -172,7 +153,7 @@ function ResumeBuilder() {
   };
 
   return (
-    <div class="flex flex-col items-center p-4 min-h-screen text-gray-800 pt-8 pb-16">
+    <div class="min-h-screen flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
       <NotificationComponent />
       <button
         onClick={() => navigate(-1)}
@@ -415,51 +396,6 @@ function ResumeBuilder() {
             class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
           >
             إضافة شهادة
-          </button>
-        </div>
-
-        {/* References */}
-        <div class="mb-6">
-          <h2 class="text-2xl font-bold text-purple-600 mb-4">المراجع</h2>
-          <For each={references()}>
-            {(reference, index) => (
-              <div class="mb-4 border border-gray-300 p-4 rounded-lg relative">
-                <button
-                  onClick={() => handleRemoveReference(index)}
-                  class="absolute top-2 left-2 text-red-500 font-bold cursor-pointer"
-                  aria-label="حذف المرجع"
-                >
-                  ✕
-                </button>
-                <label class="block mb-2 text-lg font-semibold text-gray-700">الاسم:</label>
-                <input
-                  class="w-full mb-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-                  type="text"
-                  value={reference.name}
-                  onInput={(e) => handleReferenceChange(index, 'name', e.target.value)}
-                />
-                <label class="block mb-2 text-lg font-semibold text-gray-700">الوظيفة:</label>
-                <input
-                  class="w-full mb-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-                  type="text"
-                  value={reference.position}
-                  onInput={(e) => handleReferenceChange(index, 'position', e.target.value)}
-                />
-                <label class="block mb-2 text-lg font-semibold text-gray-700">معلومات الاتصال:</label>
-                <input
-                  class="w-full mb-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-                  type="text"
-                  value={reference.contact}
-                  onInput={(e) => handleReferenceChange(index, 'contact', e.target.value)}
-                />
-              </div>
-            )}
-          </For>
-          <button
-            onClick={handleAddReference}
-            class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-          >
-            إضافة مرجع
           </button>
         </div>
 

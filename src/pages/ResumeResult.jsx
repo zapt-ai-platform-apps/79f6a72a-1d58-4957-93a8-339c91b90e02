@@ -106,22 +106,6 @@ function ResumeResult() {
                 bullet: { level: 0 },
               }),
             ]).flat(),
-
-            // References
-            new Paragraph({
-              text: 'المراجع',
-              heading: HeadingLevel.HEADING_1,
-            }),
-            ...resumeData.references.map((ref) => [
-              new Paragraph({
-                text: `${ref.name} - ${ref.position}`,
-                bullet: { level: 0 },
-              }),
-              new Paragraph({
-                text: `معلومات الاتصال: ${ref.contact}`,
-                indent: { left: 720 },
-              }),
-            ]).flat(),
           ],
         },
       ],
@@ -132,7 +116,7 @@ function ResumeResult() {
   };
 
   return (
-    <div class="w-full flex flex-col items-center p-4 h-full text-gray-800 pt-8 pb-16">
+    <div class="w-full flex flex-col items-center p-4 min-h-screen text-gray-800 pt-8 pb-16">
       <button
         onClick={() => navigate('/resume-builder')}
         class="self-start mb-4 text-2xl cursor-pointer"
