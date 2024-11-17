@@ -66,7 +66,7 @@ function ArabicRadio() {
     { name: 'إذاعة لبنان', url: 'http://icecast.ifrance.com/iradioliban', countryCode: 'LB' },
 
     // سوريا - Syria
-    { name: 'شام إف إم', url: 'http://ninarfm.myradiostream.com/;", countryCode: 'SY' },
+    { name: 'شام إف إم', url: 'http://ninarfm.myradiostream.com/;', countryCode: 'SY' },
 
     // العراق - Iraq
     { name: 'راديو الناس', url: 'http://radionas.mediacast.com.au:8000/;', countryCode: 'IQ' },
