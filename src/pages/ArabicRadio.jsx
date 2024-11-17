@@ -33,27 +33,158 @@ function ArabicRadio() {
   ];
 
   const radioStations = [
-    {
-      name: 'إذاعة القرآن الكريم',
-      url: 'http://live.mp3quran.net:8006/',
-      countryCode: 'SA', // السعودية
-    },
-    {
-      name: 'راديو سوا',
-      url: 'https://streaming.radiosawa.com/stream',
-      countryCode: 'AE', // الإمارات
-    },
+    // مصر
     {
       name: 'نجوم إف إم',
       url: 'http://streaming.nagume.net:8000/;',
-      countryCode: 'EG', // مصر
+      countryCode: 'EG',
     },
+    {
+      name: 'راديو مصر',
+      url: 'http://radios.mytv-online.com:8000/RadioMasr',
+      countryCode: 'EG',
+    },
+    // السعودية
+    {
+      name: 'إذاعة القرآن الكريم',
+      url: 'http://live.mp3quran.net:8006/',
+      countryCode: 'SA',
+    },
+    {
+      name: 'روتانا إف إم',
+      url: 'http://live.rotana.net/fm',
+      countryCode: 'SA',
+    },
+    // الإمارات
+    {
+      name: 'راديو سوا',
+      url: 'https://streaming.radiosawa.com/stream',
+      countryCode: 'AE',
+    },
+    {
+      name: 'الخليجية إف إم',
+      url: 'http://broadcast.infomaniak.network/defjam/grooves',
+      countryCode: 'AE',
+    },
+    // لبنان
     {
       name: 'مونت كارلو الدولية',
       url: 'http://live.mc-doualiya.com/mc-doualiya',
-      countryCode: 'LB', // لبنان
+      countryCode: 'LB',
     },
-    // يمكنك إضافة المزيد من المحطات هنا مع رمز الدولة المناسب
+    {
+      name: 'راديو وان',
+      url: 'http://38.97.225.67:8800/;',
+      countryCode: 'LB',
+    },
+    // الأردن
+    {
+      name: 'حسنى إف إم',
+      url: 'http://streaming.husnafm.com:7001/;',
+      countryCode: 'JO',
+    },
+    // الكويت
+    {
+      name: 'مارينا إف إم',
+      url: 'http://sp1.mjstream.eu:9300/;',
+      countryCode: 'KW',
+    },
+    // قطر
+    {
+      name: 'QF Radio',
+      url: 'http://212.77.203.199:8002/;',
+      countryCode: 'QA',
+    },
+    // عمان
+    {
+      name: 'إذاعة سلطنة عمان العامة',
+      url: 'http://oc.ch2.orange.jo:8080/omanradio',
+      countryCode: 'OM',
+    },
+    // البحرين
+    {
+      name: 'راديو البحرين',
+      url: 'http://live.radio99.net:8000/;stream.mp3',
+      countryCode: 'BH',
+    },
+    // سوريا
+    {
+      name: 'شام إف إم',
+      url: 'http://188.165.226.82:8000/;stream.mp3',
+      countryCode: 'SY',
+    },
+    // العراق
+    {
+      name: 'راديو سوا العراق',
+      url: 'https://streaming.radiosawa.com/iraq',
+      countryCode: 'IQ',
+    },
+    // اليمن
+    {
+      name: 'إذاعة عدن',
+      url: 'http://streaming.inet4server.com:8000/;stream.mp3',
+      countryCode: 'YE',
+    },
+    // ليبيا
+    {
+      name: 'راديو ليبيا',
+      url: 'http://176.9.181.94:8010/;stream.mp3',
+      countryCode: 'LY',
+    },
+    // تونس
+    {
+      name: 'موزاييك إف إم',
+      url: 'http://radio.mosaiquefm.net:8000/mosalive',
+      countryCode: 'TN',
+    },
+    // الجزائر
+    {
+      name: 'الشباب إف إم',
+      url: 'http://webradio.tda.dz:8001/Chaine1_64K.mp3',
+      countryCode: 'DZ',
+    },
+    // المغرب
+    {
+      name: 'ميد راديو',
+      url: 'http://broadcast.infomaniak.net:80/medradio-high.mp3',
+      countryCode: 'MA',
+    },
+    // السودان
+    {
+      name: 'إذاعة السودان',
+      url: 'http://www.sudanradio.info:8000/;stream.mp3',
+      countryCode: 'SD',
+    },
+    // فلسطين
+    {
+      name: 'راديو أجيال',
+      url: 'http://astream.agiatv.com:8000/;stream.mp3',
+      countryCode: 'PS',
+    },
+    // موريتانيا
+    {
+      name: 'إذاعة موريتانيا',
+      url: 'http://radiomauritanie.net:8000/;stream.mp3',
+      countryCode: 'MR',
+    },
+    // الصومال
+    {
+      name: 'راديو مقديشو',
+      url: 'http://198.178.123.14:8000/;stream.mp3',
+      countryCode: 'SO',
+    },
+    // جيبوتي
+    {
+      name: 'صوت من لا صوت له FM',
+      url: 'http://142.44.137.158:8269/;stream.mp3',
+      countryCode: 'DJ',
+    },
+    // جزر القمر
+    {
+      name: 'إذاعة جزر القمر',
+      url: 'http://stream.comorosradio.com/;stream.mp3',
+      countryCode: 'KM',
+    },
   ];
 
   const filteredStations = createMemo(() => {
