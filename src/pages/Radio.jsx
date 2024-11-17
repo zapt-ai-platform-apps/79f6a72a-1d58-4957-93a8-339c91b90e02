@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router';
-import { createSignal, Show, For } from 'solid-js';
+import { createSignal, Show, For, createEffect } from 'solid-js';
 
 function Radio() {
   const navigate = useNavigate();
@@ -35,9 +35,16 @@ function Radio() {
   const [selectedStation, setSelectedStation] = createSignal('');
   const [error, setError] = createSignal('');
 
-  const fetchStations = async () => {
+  createEffect(async () => {
+    const countryName = selectedCountry();
+    if (!countryName) {
+      setStations([]);
+      setSelectedStation('');
+      setCurrentStationUrl('');
+      return;
+    }
     const country = countries().find(
-      (c) => c.arabicName === selectedCountry()
+      (c) => c.arabicName === countryName
     );
     if (!country) return;
     setLoadingStations(true);
@@ -63,7 +70,7 @@ function Radio() {
     } finally {
       setLoadingStations(false);
     }
-  };
+  });
 
   const handlePlayStation = (url) => {
     setCurrentStationUrl(url);
@@ -90,9 +97,8 @@ function Radio() {
           value={selectedCountry()}
           onInput={(e) => {
             setSelectedCountry(e.target.value);
-            setStations([]);
-            setCurrentStationUrl('');
             setSelectedStation('');
+            setCurrentStationUrl('');
           }}
         >
           <option value="">-- اختر الدولة --</option>
@@ -102,46 +108,33 @@ function Radio() {
             )}
           </For>
         </select>
-        <Show
-          when={selectedCountry()}
-          fallback={<p class="text-center text-gray-600">يرجى اختيار دولة لعرض المحطات.</p>}
-        >
-          <button
-            onClick={fetchStations}
-            class={`w-full px-6 py-3 mb-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${
-              loadingStations() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-            }`}
-            disabled={loadingStations()}
-          >
-            <Show when={!loadingStations()} fallback="جاري جلب المحطات...">
-              جلب المحطات
-            </Show>
-          </button>
-          <Show when={error()}>
-            <p class="text-red-500 mt-4">{error()}</p>
-          </Show>
-          <Show when={stations().length > 0}>
-            <div class="mt-6">
-              <h2 class="text-2xl font-bold text-purple-600 mb-4">
-                المحطات المتاحة:
-              </h2>
-              <select
-                class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
-                value={selectedStation()}
-                onInput={(e) => {
-                  setSelectedStation(e.target.value);
-                  handlePlayStation(e.target.value);
-                }}
-              >
-                <option value="">-- اختر المحطة --</option>
-                <For each={stations()}>
-                  {(station) => (
-                    <option value={station.url_resolved}>{station.name}</option>
-                  )}
-                </For>
-              </select>
-            </div>
-          </Show>
+        <Show when={loadingStations()}>
+          <p class="text-center text-gray-600">جاري جلب المحطات...</p>
+        </Show>
+        <Show when={error()}>
+          <p class="text-red-500 mt-4">{error()}</p>
+        </Show>
+        <Show when={stations().length > 0 && !loadingStations()}>
+          <div class="mt-6">
+            <h2 class="text-2xl font-bold text-purple-600 mb-4">
+              المحطات المتاحة:
+            </h2>
+            <select
+              class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
+              value={selectedStation()}
+              onInput={(e) => {
+                setSelectedStation(e.target.value);
+                handlePlayStation(e.target.value);
+              }}
+            >
+              <option value="">-- اختر المحطة --</option>
+              <For each={stations()}>
+                {(station) => (
+                  <option value={station.url_resolved}>{station.name}</option>
+                )}
+              </For>
+            </select>
+          </div>
         </Show>
         <Show when={currentStationUrl()}>
           <div class="mt-6">
