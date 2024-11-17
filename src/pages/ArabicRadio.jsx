@@ -3,9 +3,10 @@ import { createSignal, For, Show, onCleanup, createMemo } from 'solid-js';
 
 function ArabicRadio() {
   const navigate = useNavigate();
+  const [selectedCountry, setSelectedCountry] = createSignal('');
+  const [selectedStation, setSelectedStation] = createSignal('');
   const [currentStation, setCurrentStation] = createSignal(null);
   const [audioPlayer, setAudioPlayer] = createSignal(null);
-  const [selectedCountry, setSelectedCountry] = createSignal('');
 
   const arabCountries = [
     { code: 'EG', name: 'مصر' },
@@ -33,169 +34,89 @@ function ArabicRadio() {
   ];
 
   const radioStations = [
-    // مصر
-    {
-      name: 'نجوم إف إم',
-      url: 'http://streaming.nagume.net:8000/;',
-      countryCode: 'EG',
-    },
-    {
-      name: 'راديو مصر',
-      url: 'http://radios.mytv-online.com:8000/RadioMasr',
-      countryCode: 'EG',
-    },
-    // السعودية
-    {
-      name: 'إذاعة القرآن الكريم',
-      url: 'http://live.mp3quran.net:8006/',
-      countryCode: 'SA',
-    },
-    {
-      name: 'روتانا إف إم',
-      url: 'http://live.rotana.net/fm',
-      countryCode: 'SA',
-    },
-    // الإمارات
-    {
-      name: 'راديو سوا',
-      url: 'https://streaming.radiosawa.com/stream',
-      countryCode: 'AE',
-    },
-    {
-      name: 'الخليجية إف إم',
-      url: 'http://broadcast.infomaniak.network/defjam/grooves',
-      countryCode: 'AE',
-    },
-    // لبنان
-    {
-      name: 'مونت كارلو الدولية',
-      url: 'http://live.mc-doualiya.com/mc-doualiya',
-      countryCode: 'LB',
-    },
-    {
-      name: 'راديو وان',
-      url: 'http://38.97.225.67:8800/;',
-      countryCode: 'LB',
-    },
-    // الأردن
-    {
-      name: 'حسنى إف إم',
-      url: 'http://streaming.husnafm.com:7001/;',
-      countryCode: 'JO',
-    },
-    // الكويت
-    {
-      name: 'مارينا إف إم',
-      url: 'http://sp1.mjstream.eu:9300/;',
-      countryCode: 'KW',
-    },
-    // قطر
-    {
-      name: 'QF Radio',
-      url: 'http://212.77.203.199:8002/;',
-      countryCode: 'QA',
-    },
-    // عمان
-    {
-      name: 'إذاعة سلطنة عمان العامة',
-      url: 'http://oc.ch2.orange.jo:8080/omanradio',
-      countryCode: 'OM',
-    },
-    // البحرين
-    {
-      name: 'راديو البحرين',
-      url: 'http://live.radio99.net:8000/;stream.mp3',
-      countryCode: 'BH',
-    },
-    // سوريا
-    {
-      name: 'شام إف إم',
-      url: 'http://188.165.226.82:8000/;stream.mp3',
-      countryCode: 'SY',
-    },
-    // العراق
-    {
-      name: 'راديو سوا العراق',
-      url: 'https://streaming.radiosawa.com/iraq',
-      countryCode: 'IQ',
-    },
-    // اليمن
-    {
-      name: 'إذاعة عدن',
-      url: 'http://streaming.inet4server.com:8000/;stream.mp3',
-      countryCode: 'YE',
-    },
-    // ليبيا
-    {
-      name: 'راديو ليبيا',
-      url: 'http://176.9.181.94:8010/;stream.mp3',
-      countryCode: 'LY',
-    },
-    // تونس
-    {
-      name: 'موزاييك إف إم',
-      url: 'http://radio.mosaiquefm.net:8000/mosalive',
-      countryCode: 'TN',
-    },
-    // الجزائر
-    {
-      name: 'الشباب إف إم',
-      url: 'http://webradio.tda.dz:8001/Chaine1_64K.mp3',
-      countryCode: 'DZ',
-    },
-    // المغرب
-    {
-      name: 'ميد راديو',
-      url: 'http://broadcast.infomaniak.net:80/medradio-high.mp3',
-      countryCode: 'MA',
-    },
-    // السودان
-    {
-      name: 'إذاعة السودان',
-      url: 'http://www.sudanradio.info:8000/;stream.mp3',
-      countryCode: 'SD',
-    },
-    // فلسطين
-    {
-      name: 'راديو أجيال',
-      url: 'http://astream.agiatv.com:8000/;stream.mp3',
-      countryCode: 'PS',
-    },
-    // موريتانيا
-    {
-      name: 'إذاعة موريتانيا',
-      url: 'http://radiomauritanie.net:8000/;stream.mp3',
-      countryCode: 'MR',
-    },
-    // الصومال
-    {
-      name: 'راديو مقديشو',
-      url: 'http://198.178.123.14:8000/;stream.mp3',
-      countryCode: 'SO',
-    },
-    // جيبوتي
-    {
-      name: 'صوت من لا صوت له FM',
-      url: 'http://142.44.137.158:8269/;stream.mp3',
-      countryCode: 'DJ',
-    },
-    // جزر القمر
-    {
-      name: 'إذاعة جزر القمر',
-      url: 'http://stream.comorosradio.com/;stream.mp3',
-      countryCode: 'KM',
-    },
+    // مصر - Egypt
+    { name: 'نجوم إف إم', url: 'http://streams.nogoumfm.net:8000/nogoumfm', countryCode: 'EG' },
+    { name: 'راديو مصر', url: 'http://radios.mytvradio.net:8000/radiomasr', countryCode: 'EG' },
+
+    // السعودية - Saudi Arabia
+    { name: 'إذاعة القرآن الكريم', url: 'http://live.mp3quran.net:8006/;', countryCode: 'SA' },
+    { name: 'روتانا إف إم', url: 'http://live.rotana.net/fm', countryCode: 'SA' },
+
+    // الإمارات - UAE
+    { name: 'العربية FM', url: 'http://streaming.radioarabia.ae/;', countryCode: 'AE' },
+    { name: 'إمارات FM', url: 'http://emaratfm.elmonzergroup.com:8000/;', countryCode: 'AE' },
+
+    // الكويت - Kuwait
+    { name: 'مارينا إف إم', url: 'http://live.marinafm.com:8000/marina', countryCode: 'KW' },
+
+    // قطر - Qatar
+    { name: 'راديو قطر', url: 'http://qtarradio.myradiostream.com/;', countryCode: 'QA' },
+
+    // عمان - Oman
+    { name: 'إذاعة سلطنة عمان', url: 'http://omanradio.omg.om:8000/;', countryCode: 'OM' },
+
+    // البحرين - Bahrain
+    { name: 'راديو البحرين', url: 'http://live.radiobahrainfm.com:8000/;', countryCode: 'BH' },
+
+    // الأردن - Jordan
+    { name: 'هلا إف إم', url: 'http://amman.jo:8000/hala', countryCode: 'JO' },
+
+    // لبنان - Lebanon
+    { name: 'صوت لبنان', url: 'http://radioliban.france:8000/;', countryCode: 'LB' },
+    { name: 'إذاعة لبنان', url: 'http://icecast.ifrance.com/iradioliban', countryCode: 'LB' },
+
+    // سوريا - Syria
+    { name: 'شام إف إم', url: 'http://ninarfm.myradiostream.com/;", countryCode: 'SY' },
+
+    // العراق - Iraq
+    { name: 'راديو الناس', url: 'http://radionas.mediacast.com.au:8000/;', countryCode: 'IQ' },
+
+    // اليمن - Yemen
+    { name: 'إذاعة عدن', url: 'http://adenradio.yemen.net.ye:8000/;', countryCode: 'YE' },
+
+    // ليبيا - Libya
+    { name: 'راديو ليبيا الوطنية', url: 'http://streaming.libya.ly:8000/;', countryCode: 'LY' },
+
+    // تونس - Tunisia
+    { name: 'موزاييك إف إم', url: 'http://radio.mosaiquefm.net:8000/mosalive', countryCode: 'TN' },
+
+    // الجزائر - Algeria
+    { name: 'الشباب إف إم', url: 'http://webradio.tda.dz:8001/Chaine1_64K.mp3', countryCode: 'DZ' },
+
+    // المغرب - Morocco
+    { name: 'ميد راديو', url: 'http://broadcast.infomaniak.net:80/medradio-high.mp3', countryCode: 'MA' },
+
+    // السودان - Sudan
+    { name: 'إذاعة السودان', url: 'http://www.sudanradio.info:8000/;stream.mp3', countryCode: 'SD' },
+
+    // فلسطين - Palestine
+    { name: 'راديو أجيال', url: 'http://astream.agiatv.com:8000/;', countryCode: 'PS' },
+
+    // موريتانيا - Mauritania
+    { name: 'إذاعة موريتانيا', url: 'http://radiomauritanie.mr:8000/stream', countryCode: 'MR' },
+
+    // الصومال - Somalia
+    { name: 'راديو مقديشو', url: 'http://radiosomalifm.com:8000/;', countryCode: 'SO' },
+
+    // جيبوتي - Djibouti
+    { name: 'راديو جيبوتي', url: 'http://djiboutiradio.org:8000/;', countryCode: 'DJ' },
+
+    // جزر القمر - Comoros
+    { name: 'راديو جزر القمر', url: 'http://comorosradio.com:8000/;', countryCode: 'KM' },
   ];
 
   const filteredStations = createMemo(() => {
     if (selectedCountry() === '') {
-      return radioStations;
+      return [];
     } else {
       return radioStations.filter((station) => station.countryCode === selectedCountry());
     }
   });
 
-  const playStation = (station) => {
+  const playStation = () => {
+    const station = filteredStations().find(s => s.name === selectedStation());
+    if (!station) return;
+
     if (audioPlayer()) {
       audioPlayer().pause();
     }
@@ -211,6 +132,7 @@ function ArabicRadio() {
       audioPlayer().pause();
       setAudioPlayer(null);
       setCurrentStation(null);
+      setSelectedStation('');
     }
   };
 
@@ -221,7 +143,7 @@ function ArabicRadio() {
   });
 
   return (
-    <div class="flex flex-col items-center p-4 h-full text-gray-800 pt-8 pb-16">
+    <div class="min-h-screen flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
       <button
         onClick={() => navigate(-1)}
         class="self-start mb-4 text-2xl cursor-pointer"
@@ -237,11 +159,15 @@ function ArabicRadio() {
       <div class="w-full max-w-md mb-4">
         <label class="block mb-2 text-lg font-semibold text-gray-700">اختر الدولة:</label>
         <select
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none cursor-pointer"
-          onInput={(e) => setSelectedCountry(e.target.value)}
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none cursor-pointer box-border"
+          onInput={(e) => {
+            setSelectedCountry(e.target.value);
+            setSelectedStation('');
+            stopStation();
+          }}
           value={selectedCountry()}
         >
-          <option value="">-- كل الدول --</option>
+          <option value="">-- اختر الدولة --</option>
           <For each={arabCountries}>
             {(country) => (
               <option value={country.code}>{country.name}</option>
@@ -250,37 +176,46 @@ function ArabicRadio() {
         </select>
       </div>
 
-      <div class="w-full max-w-md">
-        <For each={filteredStations()}>
-          {(station) => (
-            <div class="flex items-center justify-between bg-white p-4 mb-2 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
-              <span class="text-lg font-semibold text-gray-800">{station.name}</span>
-              <button
-                onClick={() => playStation(station)}
-                class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-              >
-                استماع
-              </button>
-            </div>
-          )}
-        </For>
-        <Show when={filteredStations().length === 0}>
-          <p class="text-center text-gray-600 mt-4">لا توجد محطات متاحة لهذه الدولة.</p>
-        </Show>
-        <Show when={currentStation()}>
-          <div class="mt-6 p-4 bg-purple-100 rounded-lg flex items-center justify-between">
-            <span class="text-lg font-semibold text-purple-800">
-              يتم الآن تشغيل: {currentStation().name}
-            </span>
-            <button
-              onClick={stopStation}
-              class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-            >
-              إيقاف
-            </button>
-          </div>
-        </Show>
-      </div>
+      <Show when={selectedCountry()}>
+        <div class="w-full max-w-md mb-4">
+          <label class="block mb-2 text-lg font-semibold text-gray-700">اختر المحطة:</label>
+          <select
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none cursor-pointer box-border"
+            onInput={(e) => setSelectedStation(e.target.value)}
+            value={selectedStation()}
+          >
+            <option value="">-- اختر المحطة --</option>
+            <For each={filteredStations()}>
+              {(station) => (
+                <option value={station.name}>{station.name}</option>
+              )}
+            </For>
+          </select>
+        </div>
+      </Show>
+
+      <Show when={selectedStation()}>
+        <button
+          onClick={playStation}
+          class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          استماع
+        </button>
+      </Show>
+
+      <Show when={currentStation()}>
+        <div class="mt-6 p-4 bg-purple-100 rounded-lg flex items-center justify-between w-full max-w-md">
+          <span class="text-lg font-semibold text-purple-800">
+            يتم الآن تشغيل: {currentStation().name}
+          </span>
+          <button
+            onClick={stopStation}
+            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+          >
+            إيقاف
+          </button>
+        </div>
+      </Show>
     </div>
   );
 }
