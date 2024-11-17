@@ -44,6 +44,9 @@ function TextEditor() {
         prompt = `الرجاء ترجمة النص التالي إلى ${languageLabel}: ${inputText()}`;
         break;
       }
+      case 'summarization':
+        prompt = `الرجاء تلخيص النص التالي بشكل موجز وواضح: ${inputText()}`;
+        break;
       default:
         break;
     }
@@ -97,6 +100,7 @@ function TextEditor() {
             }}
           >
             <option value="">-- اختر العملية --</option>
+            <option value="summarization">تلخيص النص</option>
             <option value="tashkeel">تشكيل النص</option>
             <option value="correction">تصحيح النص</option>
             <option value="paraphrase">إعادة صياغة النص</option>
