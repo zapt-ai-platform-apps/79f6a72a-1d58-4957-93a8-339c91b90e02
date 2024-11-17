@@ -4,7 +4,7 @@ import SocialMediaLinks from '../components/SocialMediaLinks';
 function MainPage() {
   const navigate = useNavigate();
   return (
-    <div class="flex flex-col items-center p-4 h-full bg-white text-gray-800 pt-8 pb-16">
+    <div class="flex flex-col items-center p-4 min-h-screen bg-white text-gray-800 pt-8 pb-16">
       <h1 class="text-5xl font-bold text-primary mb-6">Blind Accessibility</h1>
       <p class="text-center max-w-2xl text-lg leading-relaxed mb-8">
         انطلق في تجربة مميزة مع <strong>Blind Accessibility</strong>، التطبيق الرائد الذي يقدم حلولًا مبتكرة لتعزيز إمكانية الوصول وتحسين الإنتاجية لذوي الاحتياجات الخاصة، خاصة المكفوفين.
@@ -37,12 +37,14 @@ function MainPage() {
           نحن نبحث عن أفراد موهوبين وشغوفين للانضمام إلى فريقنا والمساهمة في تحسين إمكانية الوصول للجميع.
           إذا كنت ترغب في المشاركة والتميز، تواصل معنا الآن!
         </p>
-        <button
-          onClick={() => navigate('/join-us')}
-          class="mt-4 bg-danger text-white py-3 px-6 rounded-lg hover:bg-danger-dark transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        <a
+          href="https://blindaccess.pw/انضم-للفريق/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-4 inline-block bg-danger text-white py-3 px-6 rounded-lg hover:bg-danger-dark transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
         >
           انضم إلينا
-        </button>
+        </a>
       </div>
 
       <SocialMediaLinks />
