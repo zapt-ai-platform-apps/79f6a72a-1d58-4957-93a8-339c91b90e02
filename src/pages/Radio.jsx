@@ -142,7 +142,6 @@ function Radio() {
               جاري التشغيل:
             </h2>
             <audio
-              controls
               autoplay
               src={currentStationUrl()}
               class="w-full"
