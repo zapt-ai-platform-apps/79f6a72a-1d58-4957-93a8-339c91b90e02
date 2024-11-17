@@ -106,11 +106,12 @@ function ResumeBuilder() {
   };
 
   return (
-    <div class="flex flex-col items-center p-4 h-full text-gray-800 pt-8 pb-16">
+    <div class="flex flex-col items-center p-4 min-h-screen text-gray-800 pt-8 pb-16">
       <NotificationComponent />
       <button
         onClick={() => navigate(-1)}
         class="self-start mb-4 text-2xl cursor-pointer"
+        aria-label="العودة"
       >
         🔙
       </button>
@@ -172,6 +173,7 @@ function ResumeBuilder() {
                 <button
                   onClick={() => handleRemoveEducation(index)}
                   class="absolute top-2 left-2 text-red-500 font-bold cursor-pointer"
+                  aria-label="حذف التعليم"
                 >
                   ✕
                 </button>
@@ -216,6 +218,7 @@ function ResumeBuilder() {
                 <button
                   onClick={() => handleRemoveExperience(index)}
                   class="absolute top-2 left-2 text-red-500 font-bold cursor-pointer"
+                  aria-label="حذف الخبرة"
                 >
                   ✕
                 </button>
@@ -266,6 +269,7 @@ function ResumeBuilder() {
                 <button
                   onClick={() => handleRemoveSkill(index)}
                   class="ml-2 text-red-500 font-bold cursor-pointer"
+                  aria-label="حذف المهارة"
                 >
                   ✕
                 </button>
