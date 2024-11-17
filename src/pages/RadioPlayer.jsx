@@ -1,45 +1,44 @@
 import { useNavigate } from '@solidjs/router';
-import { createSignal, onCleanup, For, Show, onMount } from 'solid-js';
+import { createSignal, onCleanup, For, Show } from 'solid-js';
 
 function RadioPlayer() {
   const navigate = useNavigate();
 
-  const [countries, setCountries] = createSignal([]);
+  const arabCountries = [
+    { name: 'Algeria', arabicName: 'الجزائر' },
+    { name: 'Bahrain', arabicName: 'البحرين' },
+    { name: 'Comoros', arabicName: 'جزر القمر' },
+    { name: 'Djibouti', arabicName: 'جيبوتي' },
+    { name: 'Egypt', arabicName: 'مصر' },
+    { name: 'Iraq', arabicName: 'العراق' },
+    { name: 'Jordan', arabicName: 'الأردن' },
+    { name: 'Kuwait', arabicName: 'الكويت' },
+    { name: 'Lebanon', arabicName: 'لبنان' },
+    { name: 'Libya', arabicName: 'ليبيا' },
+    { name: 'Mauritania', arabicName: 'موريتانيا' },
+    { name: 'Morocco', arabicName: 'المغرب' },
+    { name: 'Oman', arabicName: 'عُمان' },
+    { name: 'Palestine', arabicName: 'فلسطين' },
+    { name: 'Qatar', arabicName: 'قطر' },
+    { name: 'Saudi Arabia', arabicName: 'السعودية' },
+    { name: 'Somalia', arabicName: 'الصومال' },
+    { name: 'Sudan', arabicName: 'السودان' },
+    { name: 'Syria', arabicName: 'سوريا' },
+    { name: 'Tunisia', arabicName: 'تونس' },
+    { name: 'United Arab Emirates', arabicName: 'الإمارات العربية المتحدة' },
+    { name: 'Yemen', arabicName: 'اليمن' },
+  ];
+
   const [selectedCountry, setSelectedCountry] = createSignal('');
   const [stations, setStations] = createSignal([]);
   const [selectedStation, setSelectedStation] = createSignal(null);
   const [isPlaying, setIsPlaying] = createSignal(false);
   const [audio, setAudio] = createSignal(null);
-  const [loadingCountries, setLoadingCountries] = createSignal(false);
   const [loadingStations, setLoadingStations] = createSignal(false);
   const [loading, setLoading] = createSignal(false);
   const [error, setError] = createSignal(null);
   const [stationSearchTerm, setStationSearchTerm] = createSignal('');
   const [filteredStations, setFilteredStations] = createSignal([]);
-
-  onMount(() => {
-    fetchCountries();
-  });
-
-  const fetchCountries = async () => {
-    setLoadingCountries(true);
-    setError(null);
-    try {
-      const response = await fetch('https://de1.api.radio-browser.info/json/countries');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      // Sort countries alphabetically
-      data.sort((a, b) => a.name.localeCompare(b.name));
-      setCountries(data.filter(country => country.stationcount > 0));
-    } catch (error) {
-      console.error('Error fetching countries:', error);
-      setError('حدث خطأ أثناء جلب قائمة الدول.');
-    } finally {
-      setLoadingCountries(false);
-    }
-  };
 
   const fetchStations = async (countryName) => {
     setLoadingStations(true);
@@ -130,7 +129,7 @@ function RadioPlayer() {
   });
 
   return (
-    <div class="flex flex-col items-center p-4 min-h-screen text-gray-800 pt-8 pb-16">
+    <div class="h-full flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
       <button
         onClick={() => navigate(-1)}
         class="self-start mb-4 text-2xl cursor-pointer"
@@ -143,44 +142,18 @@ function RadioPlayer() {
       <div class="w-full max-w-md">
         <div class="mb-4">
           <label class="block mb-2 text-lg font-semibold text-gray-700">اختر الدولة:</label>
-          <Show when={!loadingCountries()} fallback={
-            <div class="flex items-center justify-center">
-              <svg
-                class="animate-spin h-5 w-5 text-primary mx-auto"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8z"
-                ></path>
-              </svg>
-              <span class="ml-2 text-gray-700">جاري تحميل الدول...</span>
-            </div>
-          }>
-            <select
-              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
-              value={selectedCountry()}
-              onInput={handleCountryChange}
-            >
-              <option value="">-- اختر الدولة --</option>
-              <For each={countries()}>
-                {(country) => (
-                  <option value={country.name}>{country.name}</option>
-                )}
-              </For>
-            </select>
-          </Show>
+          <select
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
+            value={selectedCountry()}
+            onInput={handleCountryChange}
+          >
+            <option value="">-- اختر الدولة --</option>
+            <For each={arabCountries}>
+              {(country) => (
+                <option value={country.name}>{country.arabicName}</option>
+              )}
+            </For>
+          </select>
         </div>
 
         <Show when={loadingStations()}>
