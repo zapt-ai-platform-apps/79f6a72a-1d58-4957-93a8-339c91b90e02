@@ -4,7 +4,7 @@ function SocialMediaLinks() {
   const socialMedia = [
     {
       name: 'فيسبوك',
-      url: 'FACEBOOK_URL',
+      url: 'https://www.facebook.com/profile.php?id=61550796732035&mibextid=ZbWKwL',
       iconAlt: 'فيسبوك',
       imageRequest: 'Facebook logo icon',
     },
