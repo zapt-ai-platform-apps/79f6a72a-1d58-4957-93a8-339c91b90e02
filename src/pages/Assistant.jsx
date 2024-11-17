@@ -70,6 +70,7 @@ function Assistant() {
       <button
         onClick={() => navigate(-1)}
         class="self-start mb-4 text-2xl cursor-pointer"
+        aria-label="العودة"
       >
         🔙
       </button>
