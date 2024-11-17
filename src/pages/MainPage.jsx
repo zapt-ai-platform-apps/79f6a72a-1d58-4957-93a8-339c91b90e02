@@ -24,7 +24,7 @@ function MainPage() {
           المتجر
         </button>
         <button
-          onClick={() => navigate('/forum')}
+          onClick={() => window.open('https://blindaccess.pw/المنتدى/', '_blank')}
           class="bg-green-500 text-white py-4 px-6 rounded-lg hover:bg-green-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
         >
           المنتدى

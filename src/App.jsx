@@ -5,7 +5,7 @@ import Loader from './components/Loader';
 
 const MainPage = lazy(() => import('./pages/MainPage'));
 const Store = lazy(() => import('./pages/Store'));
-const Forum = lazy(() => import('./pages/Forum'));
+// Removed import of Forum page
 const Services = lazy(() => import('./pages/Services'));
 const Tools = lazy(() => import('./pages/Tools'));
 const Assistant = lazy(() => import('./pages/Assistant'));
@@ -25,7 +25,7 @@ function App() {
         <Routes>
           <Route path="/" component={MainPage} />
           <Route path="/store" component={Store} />
-          <Route path="/forum" component={Forum} />
+          {/* Removed route to Forum */}
           <Route path="/services" component={Services} />
           <Route path="/tools" component={Tools} />
           <Route path="/assistant" component={Assistant} />
