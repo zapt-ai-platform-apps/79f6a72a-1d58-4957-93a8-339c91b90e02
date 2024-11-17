@@ -32,6 +32,19 @@ function MainPage() {
       </div>
 
       <div class="mt-8 text-center">
+        <h2 class="text-3xl font-bold text-purple-600 mb-4">شاركنا رأيك</h2>
+        <p class="text-lg leading-relaxed max-w-2xl mb-4">
+          نحن نسعى دائمًا لتحسين تطبيق <strong>Blind Accessibility</strong> لتلبية احتياجاتك. نرجو منك مشاركتنا آرائك واقتراحاتك القيمة.
+        </p>
+        <button
+          onClick={() => navigate('/feedback')}
+          class="mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          أرسل اقتراحاتك
+        </button>
+      </div>
+
+      <div class="mt-8 text-center">
         <h2 class="text-3xl font-bold text-purple-600 mb-4">انضم إلى فريقنا</h2>
         <p class="text-lg leading-relaxed max-w-2xl mb-4">
           نحن نبحث عن أفراد موهوبين وشغوفين للانضمام إلى فريقنا والمساهمة في تحسين إمكانية الوصول للجميع.
