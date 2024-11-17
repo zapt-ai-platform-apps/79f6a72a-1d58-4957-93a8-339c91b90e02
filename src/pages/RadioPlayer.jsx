@@ -29,40 +29,41 @@ function RadioPlayer() {
     { name: 'جزر القمر', code: 'KM' },
   ];
 
-  const stationsData = {
-    'EG': [
-      { name: 'إذاعة القرآن الكريم', url: 'http://www.quran-radio.org:8000/;' },
-      { name: 'راديو مصر', url: 'http://www.radiosonline.cl/radio/radios-malaya-espejo' },
-      { name: 'راديو نجوم إف إم', url: 'http://62.241.160.194:8000/;' },
-    ],
-    'SA': [
-      { name: 'إذاعة القرآن الكريم', url: 'http://quran.saudi/stream' },
-      { name: 'إذاعة نداء الإسلام', url: 'http://nedaalislam.com.sa:8080/stream' },
-    ],
-    'AE': [
-      { name: 'إذاعة القرآن الكريم أبو ظبي', url: 'http://icecast.abudhabi-cdn.com/quran.aac' },
-      { name: 'إذاعة نور دبي', url: 'http://icecast.dmcradio.ae/noor108.aac' },
-    ],
-    // أضف المزيد من الدول والمحطات حسب الحاجة
-  };
-
   const [selectedCountry, setSelectedCountry] = createSignal('');
   const [stations, setStations] = createSignal([]);
   const [selectedStationIndex, setSelectedStationIndex] = createSignal(0);
   const [isPlaying, setIsPlaying] = createSignal(false);
   const [audio, setAudio] = createSignal(null);
+  const [loadingStations, setLoadingStations] = createSignal(false);
   const [loading, setLoading] = createSignal(false);
   const [error, setError] = createSignal(null);
+
+  const fetchStations = async (countryCode) => {
+    setLoadingStations(true);
+    setError(null);
+    try {
+      const response = await fetch(`https://de1.api.radio-browser.info/json/stations/bycountrycodeexact/${countryCode}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      const filteredStations = data.filter((station) => station.url_resolved && station.name);
+      setStations(filteredStations);
+      setSelectedStationIndex(0);
+    } catch (error) {
+      console.error('Error fetching stations:', error);
+      setError('حدث خطأ أثناء جلب المحطات. حاول مرة أخرى.');
+      setStations([]);
+    } finally {
+      setLoadingStations(false);
+    }
+  };
 
   const handleCountryChange = (e) => {
     const countryCode = e.target.value;
     setSelectedCountry(countryCode);
-    const uniqueStations = stationsData[countryCode]
-      ? stationsData[countryCode]
-      : [];
-    setStations(uniqueStations);
-    setSelectedStationIndex(0);
     stopAudio();
+    fetchStations(countryCode);
   };
 
   const handleStationChange = (e) => {
@@ -73,10 +74,10 @@ function RadioPlayer() {
   const playAudio = () => {
     const currentStation = stations()[selectedStationIndex()];
     if (currentStation) {
-      stopAudio(); // Stop any current audio before starting new one
+      stopAudio();
       setLoading(true);
       setError(null);
-      const newAudio = new Audio(currentStation.url);
+      const newAudio = new Audio(currentStation.url_resolved);
 
       newAudio.addEventListener('canplay', () => {
         setLoading(false);
@@ -161,7 +162,33 @@ function RadioPlayer() {
           </select>
         </div>
 
-        <Show when={stations().length > 0}>
+        <Show when={loadingStations()}>
+          <div class="flex items-center justify-center mt-6">
+            <svg
+              class="animate-spin h-8 w-8 text-primary mx-auto"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v8z"
+              ></path>
+            </svg>
+            <span class="ml-2 text-gray-700">جاري تحميل المحطات...</span>
+          </div>
+        </Show>
+
+        <Show when={!loadingStations() && stations().length > 0}>
           <div class="mb-4">
             <label class="block mb-2 text-lg font-semibold text-gray-700">اختر المحطة:</label>
             <select
@@ -201,6 +228,12 @@ function RadioPlayer() {
             >
               ⏭️ التالي
             </button>
+          </div>
+        </Show>
+
+        <Show when={!loadingStations() && stations().length === 0 && selectedCountry()}>
+          <div class="mt-4 p-4 bg-yellow-100 text-yellow-700 rounded-lg">
+            لا توجد محطات متاحة لهذا البلد.
           </div>
         </Show>
 
