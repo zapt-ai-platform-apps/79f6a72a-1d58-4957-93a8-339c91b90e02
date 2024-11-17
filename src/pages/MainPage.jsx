@@ -37,7 +37,7 @@ function MainPage() {
           نحن نسعى دائمًا لتحسين تطبيق <strong>Blind Accessibility</strong> لتلبية احتياجاتك. نرجو منك مشاركتنا آرائك واقتراحاتك القيمة.
         </p>
         <button
-          onClick={() => navigate('/feedback')}
+          onClick={() => window.open('https://blindaccess.pw/ملاحظات-واقترحات/', '_blank')}
           class="mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
         >
           أرسل اقتراحاتك
