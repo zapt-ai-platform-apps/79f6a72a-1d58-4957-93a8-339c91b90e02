@@ -18,6 +18,7 @@ const ContentResult = lazy(() => import('./pages/ContentResult'));
 const TextEditor = lazy(() => import('./pages/TextEditor'));
 const TextResult = lazy(() => import('./pages/TextResult'));
 const JoinUs = lazy(() => import('./pages/JoinUs'));
+const RadioPlayer = lazy(() => import('./pages/RadioPlayer'));
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route path="/text-editor" component={TextEditor} />
           <Route path="/text-result" component={TextResult} />
           <Route path="/join-us" component={JoinUs} />
+          <Route path="/radio-player" component={RadioPlayer} />
         </Routes>
       </Suspense>
       <BottomNavBar />
