@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router';
-import { createSignal, createEffect, For, Show } from 'solid-js';
+import { createSignal, onCleanup, For, Show } from 'solid-js';
 
 function RadioPlayer() {
   const navigate = useNavigate();
@@ -31,16 +31,19 @@ function RadioPlayer() {
 
   const stationsData = {
     'EG': [
-      { name: 'نجوم إف إم', url: 'https://streaming.naghamfm.net/naghamfm' },
-      { name: 'إذاعة القرآن الكريم', url: 'http://www.qurankareemradio.net:9890/;' },
-      { name: 'راديو 9090', url: 'http://9090streaming.mobtada.com/9090FMEGYPT' },
+      { name: 'إذاعة القرآن الكريم', url: 'http://www.quran-radio.org:8000/;' },
+      { name: 'راديو مصر', url: 'http://www.radiosonline.cl/radio/radios-malaya-espejo' },
+      { name: 'راديو نجوم إف إم', url: 'http://62.241.160.194:8000/;' },
     ],
     'SA': [
-      { name: 'إذاعة الرياض', url: 'http://live.shadiplanet.com:9124/;' },
-      { name: 'إذاعة جدة', url: 'http://player.live-streamer.com:8030/;' },
-      { name: 'إذاعة القرآن الكريم', url: 'http://n0d.radiojar.com/3h9g4r7g4tzuv' },
+      { name: 'إذاعة القرآن الكريم', url: 'http://quran.saudi/stream' },
+      { name: 'إذاعة نداء الإسلام', url: 'http://nedaalislam.com.sa:8080/stream' },
     ],
-    // أضف المزيد من الدول ومحطاتها هنا...
+    'AE': [
+      { name: 'إذاعة القرآن الكريم أبو ظبي', url: 'http://icecast.abudhabi-cdn.com/quran.aac' },
+      { name: 'إذاعة نور دبي', url: 'http://icecast.dmcradio.ae/noor108.aac' },
+    ],
+    // أضف المزيد من الدول والمحطات حسب الحاجة
   };
 
   const [selectedCountry, setSelectedCountry] = createSignal('');
@@ -48,11 +51,15 @@ function RadioPlayer() {
   const [selectedStationIndex, setSelectedStationIndex] = createSignal(0);
   const [isPlaying, setIsPlaying] = createSignal(false);
   const [audio, setAudio] = createSignal(null);
+  const [loading, setLoading] = createSignal(false);
+  const [error, setError] = createSignal(null);
 
   const handleCountryChange = (e) => {
     const countryCode = e.target.value;
     setSelectedCountry(countryCode);
-    const uniqueStations = stationsData[countryCode] ? Array.from(new Set(stationsData[countryCode].map(JSON.stringify))).map(JSON.parse) : [];
+    const uniqueStations = stationsData[countryCode]
+      ? stationsData[countryCode]
+      : [];
     setStations(uniqueStations);
     setSelectedStationIndex(0);
     stopAudio();
@@ -66,10 +73,26 @@ function RadioPlayer() {
   const playAudio = () => {
     const currentStation = stations()[selectedStationIndex()];
     if (currentStation) {
+      stopAudio(); // Stop any current audio before starting new one
+      setLoading(true);
+      setError(null);
       const newAudio = new Audio(currentStation.url);
-      newAudio.play();
+
+      newAudio.addEventListener('canplay', () => {
+        setLoading(false);
+        newAudio.play();
+        setAudio(newAudio);
+        setIsPlaying(true);
+      });
+
+      newAudio.addEventListener('error', (e) => {
+        console.error('Audio Error:', e);
+        setLoading(false);
+        setError('حدث خطأ أثناء تشغيل المحطة. حاول مرة أخرى لاحقاً.');
+        setIsPlaying(false);
+      });
+
       setAudio(newAudio);
-      setIsPlaying(true);
     }
   };
 
@@ -92,28 +115,30 @@ function RadioPlayer() {
 
   const nextStation = () => {
     stopAudio();
-    setSelectedStationIndex((prevIndex) => (prevIndex + 1) % stations().length);
+    setSelectedStationIndex((prevIndex) =>
+      (prevIndex + 1) % stations().length
+    );
     playAudio();
   };
 
   const previousStation = () => {
     stopAudio();
-    setSelectedStationIndex((prevIndex) => (prevIndex - 1 + stations().length) % stations().length);
+    setSelectedStationIndex((prevIndex) =>
+      (prevIndex - 1 + stations().length) % stations().length
+    );
     playAudio();
   };
 
-  createEffect(() => {
-    // إيقاف تشغيل الصوت عند إلغاء تحميل المكون
-    return () => {
-      stopAudio();
-    };
+  onCleanup(() => {
+    stopAudio();
   });
 
   return (
-    <div class="flex flex-col items-center p-4 h-full text-gray-800 pt-8 pb-16">
+    <div class="flex flex-col items-center p-4 min-h-screen text-gray-800 pt-8 pb-16">
       <button
         onClick={() => navigate(-1)}
         class="self-start mb-4 text-2xl cursor-pointer"
+        aria-label="العودة"
       >
         🔙
       </button>
@@ -146,7 +171,7 @@ function RadioPlayer() {
             >
               <For each={stations()}>
                 {(station, index) => (
-                  <option value={index}>{station.name}</option>
+                  <option value={index()}>{station.name}</option>
                 )}
               </For>
             </select>
@@ -161,9 +186,14 @@ function RadioPlayer() {
             </button>
             <button
               onClick={togglePlayPause}
-              class="px-6 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+              class={`px-6 py-3 ${
+                isPlaying() ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'
+              } text-white rounded-full transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
+              disabled={loading()}
             >
-              {isPlaying() ? '⏸️ إيقاف' : '▶️ تشغيل'}
+              <Show when={!loading()} fallback="جاري التحميل...">
+                {isPlaying() ? '⏸️ إيقاف' : '▶️ تشغيل'}
+              </Show>
             </button>
             <button
               onClick={nextStation}
@@ -171,6 +201,12 @@ function RadioPlayer() {
             >
               ⏭️ التالي
             </button>
+          </div>
+        </Show>
+
+        <Show when={error()}>
+          <div class="mt-4 p-4 bg-red-100 text-red-700 rounded-lg">
+            {error()}
           </div>
         </Show>
       </div>
