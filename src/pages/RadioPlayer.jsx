@@ -77,9 +77,15 @@ function RadioPlayer() {
     setFilteredStations(filtered);
   };
 
-  const handleStationSelect = (station) => {
-    stopAudio();
-    setSelectedStation(station);
+  const handleStationSelect = (e) => {
+    const stationuuid = e.target.value;
+    const station = filteredStations().find((s) => s.stationuuid === stationuuid);
+    if (station) {
+      stopAudio();
+      setSelectedStation(station);
+    } else {
+      setSelectedStation(null);
+    }
   };
 
   const playAudio = () => {
@@ -193,18 +199,18 @@ function RadioPlayer() {
               onInput={handleStationSearch}
             />
             <label class="block mb-2 text-lg font-semibold text-gray-700">اختر المحطة:</label>
-            <div class="max-h-64 overflow-y-auto border border-gray-300 rounded-lg">
+            <select
+              class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
+              value={selectedStation() ? selectedStation().stationuuid : ''}
+              onInput={handleStationSelect}
+            >
+              <option value="">-- اختر المحطة --</option>
               <For each={filteredStations()}>
                 {(station) => (
-                  <div
-                    onClick={() => handleStationSelect(station)}
-                    class={`p-2 cursor-pointer hover:bg-purple-100 ${selectedStation() === station ? 'bg-purple-200' : ''}`}
-                  >
-                    {station.name}
-                  </div>
+                  <option value={station.stationuuid}>{station.name}</option>
                 )}
               </For>
-            </div>
+            </select>
           </div>
 
           <Show when={selectedStation()}>
