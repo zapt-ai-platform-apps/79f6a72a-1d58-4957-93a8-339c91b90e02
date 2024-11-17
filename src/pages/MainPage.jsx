@@ -18,7 +18,7 @@ function MainPage() {
           المدونة
         </button>
         <button
-          onClick={() => window.open('https://blindaccess.pw/%d9%85%d8%aa%d8%ac%d8%b1/', '_blank')}
+          onClick={() => window.open('https://blindaccess.pw/متجر/', '_blank')}
           class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
         >
           المتجر
@@ -51,7 +51,7 @@ function MainPage() {
           إذا كنت ترغب في المشاركة والتميز، تواصل معنا الآن!
         </p>
         <button
-          onClick={() => window.open('https://blindaccess.pw/انضم-للفريق/', '_blank')}
+          onClick={() => navigate('/join-us')}
           class="mt-4 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
         >
           انضم إلينا
