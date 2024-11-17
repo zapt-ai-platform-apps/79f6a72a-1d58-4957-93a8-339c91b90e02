@@ -19,9 +19,6 @@ const TextEditor = lazy(() => import('./pages/TextEditor'));
 const TextResult = lazy(() => import('./pages/TextResult'));
 const JoinUs = lazy(() => import('./pages/JoinUs'));
 
-// تم حذف استيراد RadioPlayer
-// const RadioPlayer = lazy(() => import('./pages/RadioPlayer'));
-
 function App() {
   return (
     <div class="min-h-screen flex flex-col bg-gradient-to-br from-purple-100 via-blue-100 to-white text-gray-800" dir="rtl">
@@ -42,8 +39,6 @@ function App() {
           <Route path="/text-editor" component={TextEditor} />
           <Route path="/text-result" component={TextResult} />
           <Route path="/join-us" component={JoinUs} />
-          {/* تم حذف مسار RadioPlayer */}
-          {/* <Route path="/radio-player" component={RadioPlayer} /> */}
         </Routes>
       </Suspense>
       <BottomNavBar />
