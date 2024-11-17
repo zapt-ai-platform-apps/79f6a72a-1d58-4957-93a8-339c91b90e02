@@ -122,6 +122,10 @@ function VoiceAssistant() {
       </button>
       <h1 class="text-4xl font-bold text-purple-600 mb-6">المساعد الصوتي</h1>
 
+      <p class="text-lg text-center leading-relaxed max-w-2xl mb-4">
+        تحدث مع المساعد الصوتي واحصل على إجابات فورية بالاعتماد على الذكاء الاصطناعي. اضغط على الزر أدناه وابدأ التحدث.
+      </p>
+
       <button
         onClick={startListening}
         class={`px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${

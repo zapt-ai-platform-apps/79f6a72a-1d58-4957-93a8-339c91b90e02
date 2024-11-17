@@ -82,6 +82,10 @@ function TextEditor() {
       </button>
       <h1 class="text-4xl font-bold text-purple-600 mb-6">محرر النصوص</h1>
 
+      <p class="text-lg text-center leading-relaxed max-w-2xl mb-4">
+        استخدم محرر النصوص لمعالجة نصوصك بسهولة. يمكنك تشكيل النص، تصحيحه، إعادة صياغته، ترجمته، أو تلخيصه.
+      </p>
+
       <div class="w-full max-w-md">
         <textarea
           class="w-full h-40 p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"

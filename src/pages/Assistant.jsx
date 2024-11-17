@@ -75,6 +75,10 @@ function Assistant() {
       </button>
       <h1 class="text-4xl font-bold text-purple-600 mb-6">المساعد الذكي</h1>
 
+      <p class="text-lg text-center leading-relaxed max-w-2xl mb-4">
+        مرحبًا بك في المساعد الذكي! اطرح سؤالك واحصل على إجابة فورية باستخدام الذكاء الاصطناعي.
+      </p>
+
       <div class="w-full max-w-md">
         <textarea
           class="w-full h-32 p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"

@@ -65,6 +65,10 @@ function ContentGenerator() {
       </button>
       <h1 class="text-4xl font-bold text-purple-600 mb-6">منشئ المحتوى بالذكاء الاصطناعي</h1>
 
+      <p class="text-lg text-center leading-relaxed max-w-2xl mb-4">
+        قم بتوليد محتوى مخصص بسهولة باستخدام الذكاء الاصطناعي. اختر نوع المحتوى وأدخل الموضوع لتحصل على نص فريد وجذاب.
+      </p>
+
       <div class="w-full max-w-md">
         <div class="mb-4">
           <label class="block mb-2 text-lg font-semibold text-gray-700">اختر نوع المحتوى:</label>
