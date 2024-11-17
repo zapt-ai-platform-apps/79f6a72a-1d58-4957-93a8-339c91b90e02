@@ -31,7 +31,7 @@ function RadioPlayer() {
 
   const [selectedCountry, setSelectedCountry] = createSignal('');
   const [stations, setStations] = createSignal([]);
-  const [selectedStation, setSelectedStation] = createSignal(null);
+  const [selectedStationIndex, setSelectedStationIndex] = createSignal(-1);
   const [isPlaying, setIsPlaying] = createSignal(false);
   const [audio, setAudio] = createSignal(null);
   const [loadingStations, setLoadingStations] = createSignal(false);
@@ -39,6 +39,12 @@ function RadioPlayer() {
   const [error, setError] = createSignal(null);
   const [stationSearchTerm, setStationSearchTerm] = createSignal('');
   const [filteredStations, setFilteredStations] = createSignal([]);
+
+  const selectedStation = () => {
+    const index = selectedStationIndex();
+    const stationsList = filteredStations();
+    return index >= 0 && index < stationsList.length ? stationsList[index] : null;
+  };
 
   const fetchStations = async (countryName) => {
     setLoadingStations(true);
@@ -52,12 +58,13 @@ function RadioPlayer() {
       const filteredData = data.filter((station) => station.url_resolved && station.name);
       setStations(filteredData);
       setFilteredStations(filteredData);
-      setSelectedStation(null);
+      setSelectedStationIndex(-1);
     } catch (error) {
       console.error('Error fetching stations:', error);
       setError('حدث خطأ أثناء جلب المحطات. حاول مرة أخرى.');
       setStations([]);
       setFilteredStations([]);
+      setSelectedStationIndex(-1);
     } finally {
       setLoadingStations(false);
     }
@@ -79,21 +86,23 @@ function RadioPlayer() {
 
   const handleStationSelect = (e) => {
     const stationuuid = e.target.value;
-    const station = filteredStations().find((s) => s.stationuuid === stationuuid);
-    if (station) {
+    const index = filteredStations().findIndex((s) => s.stationuuid === stationuuid);
+    if (index !== -1) {
       stopAudio();
-      setSelectedStation(station);
+      setSelectedStationIndex(index);
     } else {
-      setSelectedStation(null);
+      stopAudio();
+      setSelectedStationIndex(-1);
     }
   };
 
   const playAudio = () => {
-    if (selectedStation()) {
+    const station = selectedStation();
+    if (station) {
       stopAudio();
       setLoading(true);
       setError(null);
-      const newAudio = new Audio(selectedStation().url_resolved);
+      const newAudio = new Audio(station.url_resolved);
 
       newAudio.addEventListener('canplay', () => {
         setLoading(false);
@@ -126,6 +135,22 @@ function RadioPlayer() {
     if (isPlaying()) {
       stopAudio();
     } else {
+      playAudio();
+    }
+  };
+
+  const handlePreviousStation = () => {
+    if (selectedStationIndex() > 0) {
+      stopAudio();
+      setSelectedStationIndex(selectedStationIndex() - 1);
+      playAudio();
+    }
+  };
+
+  const handleNextStation = () => {
+    if (selectedStationIndex() < filteredStations().length - 1) {
+      stopAudio();
+      setSelectedStationIndex(selectedStationIndex() + 1);
       playAudio();
     }
   };
@@ -216,15 +241,29 @@ function RadioPlayer() {
           <Show when={selectedStation()}>
             <div class="mt-6 flex items-center justify-center space-x-reverse space-x-4">
               <button
+                onClick={handlePreviousStation}
+                class="px-4 py-2 bg-gray-500 text-white rounded-full hover:bg-gray-600 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                disabled={selectedStationIndex() <= 0 || loading()}
+              >
+                ⏮️ السابق
+              </button>
+              <button
                 onClick={togglePlayPause}
                 class={`px-6 py-3 ${
                   isPlaying() ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'
-                } text-white rounded-full transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
+                } text-white rounded-full transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer`}
                 disabled={loading()}
               >
                 <Show when={!loading()} fallback="جاري التحميل...">
                   {isPlaying() ? '⏸️ إيقاف' : '▶️ تشغيل'}
                 </Show>
+              </button>
+              <button
+                onClick={handleNextStation}
+                class="px-4 py-2 bg-gray-500 text-white rounded-full hover:bg-gray-600 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                disabled={selectedStationIndex() >= filteredStations().length - 1 || loading()}
+              >
+                التالي ⏭️
               </button>
             </div>
           </Show>
