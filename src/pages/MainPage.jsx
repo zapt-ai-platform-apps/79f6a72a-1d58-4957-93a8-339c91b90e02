@@ -4,13 +4,7 @@ import SocialMediaLinks from '../components/SocialMediaLinks';
 function MainPage() {
   const navigate = useNavigate();
   return (
-    <div class="flex flex-col items-center p-4 min-h-screen pt-8 pb-16">
-      <img src="https://images.unsplash.com/photo-1579273166629-ef19c29b11fb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2NjQ4Nzh8MHwxfHNlYXJjaHw1fHxBbiUyMGlsbHVzdHJhdGlvbiUyMG9mJTIwYWNjZXNzaWJsZSUyMHRlY2hub2xvZ3klMjBmb3IlMjB2aXN1YWxseSUyMGltcGFpcmVkJTIwdXNlcnN8ZW58MHx8fHwxNzMxODY3MTQ1fDA&ixlib=rb-4.0.3&q=80&w=1080"
-        
-        alt="صورة توضيحية للتطبيق"
-        class="w-full h-64 object-cover rounded-lg mb-6"
-        data-image-request="An illustration of accessible technology for visually impaired users"
-      />
+    <div class="flex flex-col items-center p-4 min-h-screen pt-16 pb-16">
       <h1 class="text-5xl font-bold text-purple-600 mb-6">Blind Accessibility</h1>
       <p class="text-center max-w-2xl text-lg leading-relaxed mb-8">
         انطلق في تجربة مميزة مع <strong>Blind Accessibility</strong>، التطبيق الرائد الذي يقدم حلولًا مبتكرة لتعزيز إمكانية الوصول وتحسين الإنتاجية لذوي الاحتياجات الخاصة، خاصة المكفوفين.
