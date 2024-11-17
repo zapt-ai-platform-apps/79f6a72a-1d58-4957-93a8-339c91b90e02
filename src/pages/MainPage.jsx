@@ -37,14 +37,12 @@ function MainPage() {
           نحن نبحث عن أفراد موهوبين وشغوفين للانضمام إلى فريقنا والمساهمة في تحسين إمكانية الوصول للجميع.
           إذا كنت ترغب في المشاركة والتميز، تواصل معنا الآن!
         </p>
-        <a
-          href="https://blindaccess.pw/انضم-للفريق/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="mt-4 inline-block bg-red-500 text-white py-3 px-6 rounded-lg hover:bg-red-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        <button
+          onClick={() => window.open('https://blindaccess.pw/انضم-للفريق/', '_blank')}
+          class="mt-4 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
         >
           انضم إلينا
-        </a>
+        </button>
       </div>
 
       <SocialMediaLinks />
