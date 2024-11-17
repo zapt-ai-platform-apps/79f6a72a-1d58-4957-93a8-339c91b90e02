@@ -12,34 +12,37 @@ function BottomNavBar() {
 
   return (
     <nav class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-300 text-gray-800">
-      <div class="flex justify-around">
-        <div
-          class={`flex flex-col items-center py-2 cursor-pointer hover:text-primary ${
-            location.pathname === '/' ? 'text-primary' : ''
+      <div class="flex">
+        <button
+          class={`flex-1 flex flex-col items-center py-2 cursor-pointer ${
+            location.pathname === '/' ? 'text-primary border-t-2 border-primary' : ''
           }`}
           onClick={() => navigateTo('/')}
+          disabled={location.pathname === '/'}
         >
           <span class="text-2xl">🏠</span>
           <span>الرئيسية</span>
-        </div>
-        <div
-          class={`flex flex-col items-center py-2 cursor-pointer hover:text-primary ${
-            location.pathname === '/services' ? 'text-primary' : ''
+        </button>
+        <button
+          class={`flex-1 flex flex-col items-center py-2 cursor-pointer ${
+            location.pathname === '/services' ? 'text-primary border-t-2 border-primary' : ''
           }`}
           onClick={() => navigateTo('/services')}
+          disabled={location.pathname === '/services'}
         >
           <span class="text-2xl">🔧</span>
           <span>خدمات</span>
-        </div>
-        <div
-          class={`flex flex-col items-center py-2 cursor-pointer hover:text-primary ${
-            location.pathname === '/tools' ? 'text-primary' : ''
+        </button>
+        <button
+          class={`flex-1 flex flex-col items-center py-2 cursor-pointer ${
+            location.pathname === '/tools' ? 'text-primary border-t-2 border-primary' : ''
           }`}
           onClick={() => navigateTo('/tools')}
+          disabled={location.pathname === '/tools'}
         >
           <span class="text-2xl">🛠️</span>
           <span>أدوات</span>
-        </div>
+        </button>
       </div>
     </nav>
   );
