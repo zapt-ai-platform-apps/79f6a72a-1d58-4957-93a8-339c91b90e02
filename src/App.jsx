@@ -4,7 +4,6 @@ import BottomNavBar from './components/BottomNavBar';
 import Loader from './components/Loader';
 
 const MainPage = lazy(() => import('./pages/MainPage'));
-const Blog = lazy(() => import('./pages/Blog'));
 const Store = lazy(() => import('./pages/Store'));
 const Forum = lazy(() => import('./pages/Forum'));
 const Services = lazy(() => import('./pages/Services'));
@@ -25,7 +24,6 @@ function App() {
       <Suspense fallback={<div class="flex-grow flex items-center justify-center"><Loader loading={true} /></div>}>
         <Routes>
           <Route path="/" component={MainPage} />
-          <Route path="/blog" component={Blog} />
           <Route path="/store" component={Store} />
           <Route path="/forum" component={Forum} />
           <Route path="/services" component={Services} />

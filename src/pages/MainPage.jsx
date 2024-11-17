@@ -12,7 +12,7 @@ function MainPage() {
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-3xl mb-8">
         <button
-          onClick={() => navigate('/blog')}
+          onClick={() => window.open('https://blindaccess.pw/المدونة/', '_blank')}
           class="bg-purple-500 text-white py-4 px-6 rounded-lg hover:bg-purple-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
         >
           المدونة
