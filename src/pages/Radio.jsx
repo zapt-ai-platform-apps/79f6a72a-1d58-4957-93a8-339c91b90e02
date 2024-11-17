@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router';
-import { createSignal, Show, For, createEffect } from 'solid-js';
+import { createSignal, Show, For, createEffect, onCleanup } from 'solid-js';
 
 function Radio() {
   const navigate = useNavigate();
@@ -32,15 +32,19 @@ function Radio() {
   const [stations, setStations] = createSignal([]);
   const [loadingStations, setLoadingStations] = createSignal(false);
   const [currentStationUrl, setCurrentStationUrl] = createSignal('');
-  const [selectedStation, setSelectedStation] = createSignal('');
+  const [selectedStation, setSelectedStation] = createSignal(-1);
+  const [currentStationIndex, setCurrentStationIndex] = createSignal(-1);
   const [error, setError] = createSignal('');
+  const [isPlaying, setIsPlaying] = createSignal(false);
+  let audioElement;
 
   createEffect(async () => {
     const countryName = selectedCountry();
     if (!countryName) {
       setStations([]);
-      setSelectedStation('');
+      setSelectedStation(-1);
       setCurrentStationUrl('');
+      setCurrentStationIndex(-1);
       return;
     }
     const country = countries().find(
@@ -72,9 +76,51 @@ function Radio() {
     }
   });
 
-  const handlePlayStation = (url) => {
-    setCurrentStationUrl(url);
+  const handlePlayStation = (index) => {
+    if (index >= 0 && index < stations().length) {
+      setCurrentStationIndex(index);
+      const station = stations()[index];
+      setCurrentStationUrl(station.url_resolved);
+      setSelectedStation(index);
+      setIsPlaying(true);
+    }
   };
+
+  const handleNextStation = () => {
+    if (stations().length === 0) return;
+    let newIndex = currentStationIndex() + 1;
+    if (newIndex >= stations().length) {
+      newIndex = 0; // Wrap around
+    }
+    handlePlayStation(newIndex);
+  };
+
+  const handlePreviousStation = () => {
+    if (stations().length === 0) return;
+    let newIndex = currentStationIndex() - 1;
+    if (newIndex < 0) {
+      newIndex = stations().length - 1; // Wrap around
+    }
+    handlePlayStation(newIndex);
+  };
+
+  const handlePlayPause = () => {
+    if (audioElement) {
+      if (isPlaying()) {
+        audioElement.pause();
+        setIsPlaying(false);
+      } else {
+        audioElement.play();
+        setIsPlaying(true);
+      }
+    }
+  };
+
+  onCleanup(() => {
+    if (audioElement) {
+      audioElement.pause();
+    }
+  });
 
   return (
     <div class="h-full flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
@@ -97,8 +143,9 @@ function Radio() {
           value={selectedCountry()}
           onInput={(e) => {
             setSelectedCountry(e.target.value);
-            setSelectedStation('');
+            setSelectedStation(-1);
             setCurrentStationUrl('');
+            setCurrentStationIndex(-1);
           }}
         >
           <option value="">-- اختر الدولة --</option>
@@ -123,14 +170,15 @@ function Radio() {
               class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
               value={selectedStation()}
               onInput={(e) => {
-                setSelectedStation(e.target.value);
-                handlePlayStation(e.target.value);
+                const index = parseInt(e.target.value);
+                setSelectedStation(index);
+                handlePlayStation(index);
               }}
             >
-              <option value="">-- اختر المحطة --</option>
+              <option value="-1">-- اختر المحطة --</option>
               <For each={stations()}>
-                {(station) => (
-                  <option value={station.url_resolved}>{station.name}</option>
+                {(station, index) => (
+                  <option value={index()}>{station.name}</option>
                 )}
               </For>
             </select>
@@ -142,10 +190,33 @@ function Radio() {
               جاري التشغيل:
             </h2>
             <audio
+              ref={(el) => (audioElement = el)}
               autoplay
               src={currentStationUrl()}
               class="w-full"
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
             />
+            <div class="flex justify-center mt-4 space-x-reverse space-x-4">
+              <button
+                onClick={handlePreviousStation}
+                class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+              >
+                المحطة السابقة
+              </button>
+              <button
+                onClick={handlePlayPause}
+                class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+              >
+                {isPlaying() ? 'إيقاف' : 'تشغيل'}
+              </button>
+              <button
+                onClick={handleNextStation}
+                class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+              >
+                المحطة التالية
+              </button>
+            </div>
           </div>
         </Show>
       </div>
