@@ -1,7 +1,51 @@
 import { useNavigate } from '@solidjs/router';
+import { createSignal } from 'solid-js';
 
 function CreateYourApp() {
   const navigate = useNavigate();
+  const [selectedPackage, setSelectedPackage] = createSignal('');
+
+  const packages = [
+    {
+      name: 'الباقة المجانية',
+      price: '0 دولار سنويًا',
+      features: [
+        'تحتوي على إعلانات وحقوق المنشئ',
+        'لوحة تحكم أساسية',
+      ],
+      bgColor: 'bg-green-500',
+      hoverColor: 'hover:bg-green-600',
+      imageRequest: 'An inspiring image representing a free starter package',
+      value: 'free',
+    },
+    {
+      name: 'الباقة الأساسية',
+      price: '10 دولارات سنويًا',
+      features: [
+        'إزالة الإعلانات وحقوق المنشئ',
+        'لوحة تحكم متقدمة',
+        'ميزات إضافية',
+      ],
+      bgColor: 'bg-blue-500',
+      hoverColor: 'hover:bg-blue-600',
+      imageRequest: 'An attractive image representing a basic package with advanced features',
+      value: 'basic',
+    },
+    {
+      name: 'الباقة الاحترافية',
+      price: '50 دولارًا سنويًا',
+      features: [
+        'جميع مميزات الباقة الأساسية',
+        'تخصيصات متقدمة',
+        'تكاملات إضافية',
+        'دعم فني على مدار الساعة',
+      ],
+      bgColor: 'bg-purple-500',
+      hoverColor: 'hover:bg-purple-600',
+      imageRequest: 'A premium image representing a professional package with full features',
+      value: 'professional',
+    },
+  ];
 
   return (
     <div class="min-h-screen flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
@@ -12,45 +56,68 @@ function CreateYourApp() {
       >
         🔙
       </button>
-      <h1 class="text-4xl font-bold text-purple-600 mb-6">إنشاء تطبيقك الخاص</h1>
-      <p class="text-lg text-center leading-relaxed max-w-2xl mb-8">
-        قم بإنشاء تطبيقك الخاص المتوافق مع قارئات الشاشة للمكفوفين. نحن ندعم جميع المشاريع ونقدم خدمات تناسب احتياجاتك.
+      <h1 class="text-5xl font-bold text-purple-600 mb-6">✨ إنشاء تطبيقك الخاص ✨</h1>
+      <p class="text-xl text-center leading-relaxed max-w-3xl mb-8">
+        🌟 انطلق في رحلتك الرقمية معنا! قم بإنشاء تطبيقك الخاص المتوافق مع قارئات الشاشة للمكفوفين. نحن ندعم جميع المشاريع ونقدم خدمات تناسب احتياجاتك لتحقيق رؤيتك.
       </p>
 
-      <h2 class="text-3xl font-bold text-purple-600 mb-4">اختر الباقة المناسبة:</h2>
-      <div class="grid grid-cols-1 gap-6 w-full max-w-md">
-        {/* Free Package */}
-        <div class="border border-gray-300 rounded-lg p-6 text-center">
-          <h3 class="text-2xl font-bold mb-2">الباقة المجانية (0 دولار سنويًا)</h3>
-          <p class="mb-4">تحتوي على إعلانات وحقوق المنشئ. لوحة التحكم محدودة.</p>
-          <button
-            onClick={() => navigate('/contact-us?package=free')}
-            class="mt-4 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+      <h2 class="text-3xl font-bold text-purple-600 mb-6">اختر الباقة المثالية لك:</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
+        {packages.map((pkg) => (
+          <div
+            class="border border-gray-300 rounded-lg p-6 text-center shadow-lg transform hover:scale-105 transition duration-300 ease-in-out"
           >
-            ابدأ الآن
-          </button>
-        </div>
-        {/* Basic Package */}
-        <div class="border border-gray-300 rounded-lg p-6 text-center">
-          <h3 class="text-2xl font-bold mb-2">الباقة الأساسية (10 دولارات سنويًا)</h3>
-          <p class="mb-4">إزالة الإعلانات وحقوق المنشئ. لوحة تحكم متقدمة.</p>
-          <button
-            onClick={() => navigate('/contact-us?package=basic')}
-            class="mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-          >
-            ابدأ الآن
-          </button>
-        </div>
-        {/* Professional Package */}
-        <div class="border border-gray-300 rounded-lg p-6 text-center">
-          <h3 class="text-2xl font-bold mb-2">الباقة الاحترافية (50 دولارًا سنويًا)</h3>
-          <p class="mb-4">جميع مميزات الباقة الأساسية. تخصيصات متقدمة وتكاملات إضافية. دعم فني على مدار الساعة.</p>
-          <button
-            onClick={() => navigate('/contact-us?package=professional')}
-            class="mt-4 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-          >
-            ابدأ الآن
-          </button>
+            <img
+              src="PLACEHOLDER"
+              alt={`صورة ${pkg.name}`}
+              class="w-24 h-24 mx-auto mb-4"
+              data-image-request={pkg.imageRequest}
+            />
+            <h3 class="text-2xl font-bold mb-2">{pkg.name}</h3>
+            <p class="text-xl text-gray-700 mb-4">{pkg.price}</p>
+            <ul class="text-left mb-6">
+              {pkg.features.map((feature) => (
+                <li class="mb-2 flex items-center">
+                  <span class="text-green-500 mr-2">✔️</span>{feature}
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={() => navigate(`/contact-us?package=${pkg.value}`)}
+              class={`mt-4 w-full px-6 py-3 ${pkg.bgColor} ${pkg.hoverColor} text-white rounded-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
+            >
+              ابدأ الآن
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-12 text-center">
+        <h2 class="text-4xl font-bold text-purple-600 mb-4">لماذا تختار خدمتنا؟</h2>
+        <p class="text-lg leading-relaxed max-w-3xl mb-6">
+          💡 نحن ملتزمون بتقديم أفضل الحلول والتقنيات لمساعدتك في تحقيق أهدافك. انضم إلى مجموعة من العملاء الراضين وابدأ رحلتك معنا اليوم!
+        </p>
+        <div class="flex flex-wrap justify-center space-x-reverse space-x-6">
+          <div class="flex items-center mb-4">
+            <span class="text-3xl text-green-500 mr-2">🎨</span>
+            <span class="text-xl">تصميمات احترافية</span>
+          </div>
+          <div class="flex items-center mb-4">
+            <span class="text-3xl text-green-500 mr-2">🛠️</span>
+            <span class="text-xl">تطوير مخصص</span>
+          </div>
+          <div class="flex items-center mb-4">
+            <span class="text-3xl text-green-500 mr-2">⚙️</span>
+            <span class="text-xl">تكامل سلس</span>
+          </div>
+          <div class="flex items-center mb-4">
+            <span class="text-3xl text-green-500 mr-2">💻</span>
+            <span class="text-xl">توافق مثالي</span>
+          </div>
+          <div class="flex items-center mb-4">
+            <span class="text-3xl text-green-500 mr-2">📞</span>
+            <span class="text-xl">دعم مستمر</span>
+          </div>
         </div>
       </div>
     </div>
