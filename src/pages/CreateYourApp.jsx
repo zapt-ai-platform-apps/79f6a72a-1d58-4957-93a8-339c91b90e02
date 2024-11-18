@@ -15,7 +15,6 @@ function CreateYourApp() {
       ],
       bgColor: 'bg-green-500',
       hoverColor: 'hover:bg-green-600',
-      imageRequest: 'An inspiring image representing a free starter package',
       value: 'free',
     },
     {
@@ -28,7 +27,6 @@ function CreateYourApp() {
       ],
       bgColor: 'bg-blue-500',
       hoverColor: 'hover:bg-blue-600',
-      imageRequest: 'An attractive image representing a basic package with advanced features',
       value: 'basic',
     },
     {
@@ -42,7 +40,6 @@ function CreateYourApp() {
       ],
       bgColor: 'bg-purple-500',
       hoverColor: 'hover:bg-purple-600',
-      imageRequest: 'A premium image representing a professional package with full features',
       value: 'professional',
     },
   ];
@@ -67,12 +64,6 @@ function CreateYourApp() {
           <div
             class="border border-gray-300 rounded-lg p-6 text-center shadow-lg transform hover:scale-105 transition duration-300 ease-in-out"
           >
-            <img
-              src="PLACEHOLDER"
-              alt={`صورة ${pkg.name}`}
-              class="w-24 h-24 mx-auto mb-4"
-              data-image-request={pkg.imageRequest}
-            />
             <h3 class="text-2xl font-bold mb-2">{pkg.name}</h3>
             <p class="text-xl text-gray-700 mb-4">{pkg.price}</p>
             <ul class="text-left mb-6">
