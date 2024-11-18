@@ -16,6 +16,8 @@ const TextEditor = lazy(() => import('./pages/TextEditor'));
 const TextResult = lazy(() => import('./pages/TextResult'));
 const JoinUs = lazy(() => import('./pages/JoinUs'));
 const Radio = lazy(() => import('./pages/Radio'));
+const CreateYourApp = lazy(() => import('./pages/CreateYourApp'));
+const ContactUs = lazy(() => import('./pages/ContactUs'));
 
 function App() {
   return (
@@ -35,6 +37,8 @@ function App() {
           <Route path="/text-result" component={TextResult} />
           <Route path="/join-us" component={JoinUs} />
           <Route path="/radio" component={Radio} />
+          <Route path="/create-your-app" component={CreateYourApp} />
+          <Route path="/contact-us" component={ContactUs} />
         </Routes>
       </Suspense>
       <BottomNavBar />
