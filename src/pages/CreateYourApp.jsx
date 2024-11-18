@@ -21,8 +21,8 @@ function CreateYourApp() {
       <div class="grid grid-cols-1 gap-6 w-full max-w-md">
         {/* Free Package */}
         <div class="border border-gray-300 rounded-lg p-6 text-center">
-          <h3 class="text-2xl font-bold mb-2">الباقة المجانية</h3>
-          <p class="mb-4">إمكانية إنشاء تطبيق أساسي.</p>
+          <h3 class="text-2xl font-bold mb-2">الباقة المجانية (0 دولار سنويًا)</h3>
+          <p class="mb-4">تحتوي على إعلانات وحقوق المنشئ. لوحة التحكم محدودة.</p>
           <button
             onClick={() => navigate('/contact-us?package=free')}
             class="mt-4 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
@@ -32,8 +32,8 @@ function CreateYourApp() {
         </div>
         {/* Basic Package */}
         <div class="border border-gray-300 rounded-lg p-6 text-center">
-          <h3 class="text-2xl font-bold mb-2">الباقة الأساسية</h3>
-          <p class="mb-4">مزايا إضافية وتخصيصات أكثر مع دعم فني مخصص.</p>
+          <h3 class="text-2xl font-bold mb-2">الباقة الأساسية (10 دولارات سنويًا)</h3>
+          <p class="mb-4">إزالة الإعلانات وحقوق المنشئ. لوحة تحكم متقدمة.</p>
           <button
             onClick={() => navigate('/contact-us?package=basic')}
             class="mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
@@ -43,8 +43,8 @@ function CreateYourApp() {
         </div>
         {/* Professional Package */}
         <div class="border border-gray-300 rounded-lg p-6 text-center">
-          <h3 class="text-2xl font-bold mb-2">الباقة الاحترافية</h3>
-          <p class="mb-4">تخصيصات متقدمة وتكاملات إضافية مع دعم فني على مدار الساعة.</p>
+          <h3 class="text-2xl font-bold mb-2">الباقة الاحترافية (50 دولارًا سنويًا)</h3>
+          <p class="mb-4">جميع مميزات الباقة الأساسية. تخصيصات متقدمة وتكاملات إضافية. دعم فني على مدار الساعة.</p>
           <button
             onClick={() => navigate('/contact-us?package=professional')}
             class="mt-4 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
