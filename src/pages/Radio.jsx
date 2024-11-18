@@ -36,6 +36,7 @@ function Radio() {
   const [currentStationIndex, setCurrentStationIndex] = createSignal(-1);
   const [error, setError] = createSignal('');
   const [isPlaying, setIsPlaying] = createSignal(false);
+  const [volume, setVolume] = createSignal(1);
   let audioElement;
 
   createEffect(async () => {
@@ -73,6 +74,12 @@ function Radio() {
       setError('حدث خطأ أثناء جلب المحطات.');
     } finally {
       setLoadingStations(false);
+    }
+  });
+
+  createEffect(() => {
+    if (audioElement) {
+      audioElement.volume = volume();
     }
   });
 
@@ -123,7 +130,7 @@ function Radio() {
   });
 
   return (
-    <div class="h-full flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
+    <div class="min-h-screen flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
       <button
         onClick={() => navigate(-1)}
         class="self-start mb-4 text-2xl cursor-pointer"
@@ -216,6 +223,20 @@ function Radio() {
               >
                 المحطة التالية
               </button>
+            </div>
+            <div class="mt-6">
+              <label class="block mb-2 text-lg font-semibold text-gray-700">
+                مستوى الصوت:
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={volume()}
+                onInput={(e) => setVolume(parseFloat(e.target.value))}
+                class="w-full cursor-pointer"
+              />
             </div>
           </div>
         </Show>
