@@ -9,7 +9,6 @@ function Login() {
   return (
     <div class="flex items-center justify-center min-h-screen">
       <div class="w-full max-w-md p-8 bg-white rounded-xl shadow-lg">
-        <h2 class="text-3xl font-bold mb-4 text-center text-purple-600">تسجيل الدخول باستخدام ZAPT</h2>
         <div class="space-y-4">
           <button
             onClick={() => handleSignInWithProvider('google')}
