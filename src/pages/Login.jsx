@@ -9,15 +9,7 @@ function Login() {
   return (
     <div class="flex items-center justify-center min-h-screen">
       <div class="w-full max-w-md p-8 bg-white rounded-xl shadow-lg">
-        <h2 class="text-3xl font-bold mb-4 text-center text-purple-600">تسجيل الدخول باستخدام ZAPT</h2>
-        <a
-          href="https://www.zapt.ai"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-blue-500 hover:underline mb-6 block text-center"
-        >
-          تعرف على المزيد عن ZAPT
-        </a>
+        <h2 class="text-3xl font-bold mb-6 text-center text-purple-600">تسجيل الدخول باستخدام ZAPT</h2>
         <div class="space-y-4">
           <button
             onClick={() => handleSignInWithProvider('google')}
