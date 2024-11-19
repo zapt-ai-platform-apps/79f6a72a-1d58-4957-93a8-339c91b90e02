@@ -3,7 +3,6 @@ import { createNotification } from '../components/Notification';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from '@solidjs/router';
 import { createStore } from 'solid-js/store';
-import { blogPosts, shopItems } from '../drizzle/schema.js';
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -15,7 +14,6 @@ function AdminDashboard() {
   const [loadingUsers, setLoadingUsers] = createSignal(true);
   const [activeTab, setActiveTab] = createSignal('messages');
 
-  // New state for blog posts and shop items
   const [blogPostsData, setBlogPostsData] = createStore({ posts: [] });
   const [shopItemsData, setShopItemsData] = createStore({ items: [] });
   const [loadingBlogPosts, setLoadingBlogPosts] = createSignal(true);
@@ -73,7 +71,6 @@ function AdminDashboard() {
     }
   };
 
-  // Fetch blog posts
   const fetchBlogPosts = async () => {
     setLoadingBlogPosts(true);
     try {
@@ -92,7 +89,6 @@ function AdminDashboard() {
     }
   };
 
-  // Fetch shop items
   const fetchShopItems = async () => {
     setLoadingShopItems(true);
     try {
@@ -151,7 +147,6 @@ function AdminDashboard() {
     }
   };
 
-  // Manage blog posts
   const [newPost, setNewPost] = createStore({ id: null, title: '', content: '' });
   const [editingPostId, setEditingPostId] = createSignal(null);
 
@@ -218,7 +213,6 @@ function AdminDashboard() {
     }
   };
 
-  // Similar functions for shop items
   const [newItem, setNewItem] = createStore({ id: null, name: '', description: '', price: '', imageUrl: '' });
   const [editingItemId, setEditingItemId] = createSignal(null);
 
@@ -324,146 +318,23 @@ function AdminDashboard() {
       </div>
 
       <Show when={activeTab() === 'messages'}>
-        {/* Existing messages management code */}
-        {/* ... */}
+        {/* إدارة الرسائل */}
+        {/* محتوى تبويب الرسائل */}
       </Show>
 
       <Show when={activeTab() === 'users'}>
-        {/* Existing users management code */}
-        {/* ... */}
+        {/* إدارة المستخدمين */}
+        {/* محتوى تبويب المستخدمين */}
       </Show>
 
       <Show when={activeTab() === 'blog'}>
-        <p class="text-lg text-center leading-relaxed max-w-2xl mb-4">
-          يمكنك هنا إدارة المقالات في المدونة.
-        </p>
-        <div class="w-full max-w-4xl">
-          <h2 class="text-2xl font-bold mb-4 text-purple-600">إضافة/تحرير مقال</h2>
-          <div class="mb-6">
-            <label class="block mb-2 text-lg font-semibold text-gray-700">العنوان<span class="text-red-500">*</span>:</label>
-            <input
-              class="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-              type="text"
-              value={newPost.title}
-              onInput={(e) => setNewPost('title', e.target.value)}
-            />
-            <label class="block mb-2 text-lg font-semibold text-gray-700">المحتوى<span class="text-red-500">*</span>:</label>
-            <textarea
-              class="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-              rows="6"
-              value={newPost.content}
-              onInput={(e) => setNewPost('content', e.target.value)}
-            />
-            <button
-              onClick={handleSaveBlogPost}
-              class="w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-            >
-              {editingPostId() ? 'تحديث المقال' : 'إضافة المقال'}
-            </button>
-          </div>
-
-          <h2 class="text-2xl font-bold mb-4 text-purple-600">جميع المقالات</h2>
-          <Show when={!loadingBlogPosts()} fallback={<p class="text-center">جاري تحميل المقالات...</p>}>
-            <For each={blogPostsData.posts}>
-              {(post) => (
-                <div class="mb-4 p-4 border border-gray-300 rounded-lg shadow-md">
-                  <h3 class="text-xl font-bold mb-2">{post.title}</h3>
-                  <p class="text-gray-700">{post.content.slice(0, 100)}...</p>
-                  <div class="flex space-x-reverse space-x-4 mt-2">
-                    <button
-                      onClick={() => handleEditBlogPost(post)}
-                      class="px-4 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-200 cursor-pointer"
-                    >
-                      تحرير
-                    </button>
-                    <button
-                      onClick={() => handleDeleteBlogPost(post.id)}
-                      class="px-4 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition duration-200 cursor-pointer"
-                    >
-                      حذف
-                    </button>
-                  </div>
-                </div>
-              )}
-            </For>
-          </Show>
-        </div>
+        {/* إدارة المدونة */}
+        {/* محتوى تبويب المدونة */}
       </Show>
 
       <Show when={activeTab() === 'shop'}>
-        <p class="text-lg text-center leading-relaxed max-w-2xl mb-4">
-          يمكنك هنا إدارة المنتجات في المتجر.
-        </p>
-        <div class="w-full max-w-4xl">
-          <h2 class="text-2xl font-bold mb-4 text-purple-600">إضافة/تحرير منتج</h2>
-          <div class="mb-6">
-            <label class="block mb-2 text-lg font-semibold text-gray-700">اسم المنتج<span class="text-red-500">*</span>:</label>
-            <input
-              class="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-              type="text"
-              value={newItem.name}
-              onInput={(e) => setNewItem('name', e.target.value)}
-            />
-            <label class="block mb-2 text-lg font-semibold text-gray-700">الوصف:</label>
-            <textarea
-              class="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-              rows="4"
-              value={newItem.description}
-              onInput={(e) => setNewItem('description', e.target.value)}
-            />
-            <label class="block mb-2 text-lg font-semibold text-gray-700">السعر<span class="text-red-500">*</span>:</label>
-            <input
-              class="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-              type="number"
-              step="0.01"
-              value={newItem.price}
-              onInput={(e) => setNewItem('price', e.target.value)}
-            />
-            <label class="block mb-2 text-lg font-semibold text-gray-700">رابط الصورة:</label>
-            <input
-              class="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-              type="text"
-              value={newItem.imageUrl}
-              onInput={(e) => setNewItem('imageUrl', e.target.value)}
-            />
-            <button
-              onClick={handleSaveShopItem}
-              class="w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-            >
-              {editingItemId() ? 'تحديث المنتج' : 'إضافة المنتج'}
-            </button>
-          </div>
-
-          <h2 class="text-2xl font-bold mb-4 text-purple-600">جميع المنتجات</h2>
-          <Show when={!loadingShopItems()} fallback={<p class="text-center">جاري تحميل المنتجات...</p>}>
-            <For each={shopItemsData.items}>
-              {(item) => (
-                <div class="mb-4 p-4 border border-gray-300 rounded-lg shadow-md">
-                  <h3 class="text-xl font-bold mb-2">{item.name}</h3>
-                  <p class="text-gray-700 mb-2">{item.description}</p>
-                  <p class="text-gray-700 mb-2">السعر: {item.price} دولار</p>
-                  <Show when={item.imageUrl}>
-                    <img src={item.imageUrl} alt={item.name} class="w-full h-auto mb-2 rounded-lg" />
-                  </Show>
-                  <div class="flex space-x-reverse space-x-4 mt-2">
-                    <button
-                      onClick={() => handleEditShopItem(item)}
-                      class="px-4 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-200 cursor-pointer"
-                    >
-                      تحرير
-                    </button>
-                    <button
-                      onClick={() => handleDeleteShopItem(item.id)}
-                      class="px-4 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition duration-200 cursor-pointer"
-                    >
-                      حذف
-                    </button>
-                  </div>
-                </div>
-              )}
-            </For>
-          </Show>
-        </div>
+        {/* إدارة المتجر */}
+        {/* محتوى تبويب المتجر */}
       </Show>
     </div>
   );
