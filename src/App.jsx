@@ -22,29 +22,22 @@ const CreateYourApp = lazy(() => import('./pages/CreateYourApp'));
 const ContactUs = lazy(() => import('./pages/ContactUs'));
 const Login = lazy(() => import('./pages/Login'));
 const Profile = lazy(() => import('./pages/Profile'));
-const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
-const Blog = lazy(() => import('./pages/Blog'));
-const Shop = lazy(() => import('./pages/Shop'));
 
 function App() {
   const [user, setUser] = createSignal(null);
-  const [isAdmin, setIsAdmin] = createSignal(false);
   const [showTopNavBar, setShowTopNavBar] = createSignal(false);
 
   onMount(async () => {
     const { data: { user } } = await supabase.auth.getUser();
     setUser(user);
-    setIsAdmin(user?.email === 'daoudi.abdennour@gmail.com');
   });
 
   createEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         setUser(session.user);
-        setIsAdmin(session.user.email === 'daoudi.abdennour@gmail.com');
       } else {
         setUser(null);
-        setIsAdmin(false);
       }
     });
 
@@ -64,7 +57,7 @@ function App() {
           <Show when={showTopNavBar()} fallback="☰">×</Show>
         </button>
         <Show when={showTopNavBar()}>
-          <TopNavBar isAdmin={isAdmin()} />
+          <TopNavBar />
         </Show>
         <div class={`flex-grow ${showTopNavBar() ? 'pt-16' : ''} pb-16`}>
           <Suspense fallback={<div class="flex items-center justify-center h-full"><Loader loading={true} /></div>}>
@@ -85,9 +78,6 @@ function App() {
               <Route path="/create-your-app" component={CreateYourApp} />
               <Route path="/contact-us" component={ContactUs} />
               <Route path="/profile" component={Profile} />
-              <Route path="/admin" component={AdminDashboard} />
-              <Route path="/blog" component={Blog} />
-              <Route path="/shop" component={Shop} />
             </Routes>
           </Suspense>
         </div>

@@ -1,7 +1,6 @@
 import { useNavigate, useLocation } from '@solidjs/router';
-import { Show } from 'solid-js';
 
-function TopNavBar(props) {
+function TopNavBar() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -41,17 +40,6 @@ function TopNavBar(props) {
           <span class="text-2xl">📞</span>
           <span>اتصل بنا</span>
         </button>
-        <Show when={props.isAdmin}>
-          <button
-            class={`flex-1 flex flex-col items-center py-2 cursor-pointer ${
-              location.pathname === '/admin' ? 'text-primary border-b-2 border-primary' : ''
-            }`}
-            onClick={() => navigateTo('/admin')}
-          >
-            <span class="text-2xl">🛠️</span>
-            <span>لوحة التحكم الإدارية</span>
-          </button>
-        </Show>
       </div>
     </nav>
   );

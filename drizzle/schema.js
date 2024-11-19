@@ -18,24 +18,6 @@ export const messages = pgTable('messages', {
   createdAt: timestamp('created_at').defaultNow(),
 });
 
-export const blogPosts = pgTable('blog_posts', {
-  id: serial('id').primaryKey(),
-  title: text('title').notNull(),
-  content: text('content').notNull(),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
-});
-
-export const shopItems = pgTable('shop_items', {
-  id: serial('id').primaryKey(),
-  name: text('name').notNull(),
-  description: text('description'),
-  price: numeric('price', 10, 2).notNull(),
-  imageUrl: text('image_url'),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
-});
-
 export const pages = pgTable('pages', {
   id: serial('id').primaryKey(),
   title: text('title').notNull(),
