@@ -6,6 +6,7 @@ function AdminDashboard() {
   const navigate = useNavigate();
   const [user, setUser] = createSignal(null);
   const [loading, setLoading] = createSignal(true);
+  const [downloading, setDownloading] = createSignal(false);
 
   onMount(async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -18,6 +19,38 @@ function AdminDashboard() {
     }
   });
 
+  const handleDownloadBackup = async () => {
+    setDownloading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const response = await fetch('/api/downloadBackup', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        // Create a link element
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'backup.zip';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } else {
+        console.error('Failed to download backup');
+        alert('حدث خطأ أثناء تحميل النسخة الاحتياطية.');
+      }
+    } catch (error) {
+      console.error('Error downloading backup:', error);
+      alert('حدث خطأ أثناء تحميل النسخة الاحتياطية.');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   return (
     <Show when={!loading()}>
       <div class="min-h-screen flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
@@ -27,7 +60,7 @@ function AdminDashboard() {
         </p>
         {/* Admin dashboard content */}
         <div class="grid grid-cols-1 gap-4 w-full max-w-md mt-6">
-          {/* Update button to navigate to AdminMessages */}
+          {/* Existing buttons */}
           <button
             class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
             onClick={() => navigate('/admin/users')}
@@ -46,7 +79,16 @@ function AdminDashboard() {
           >
             إحصائيات الاستخدام
           </button>
-          {/* More features can be added */}
+          {/* New Backup Download Button */}
+          <button
+            class={`bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${downloading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+            onClick={handleDownloadBackup}
+            disabled={downloading()}
+          >
+            <Show when={!downloading()} fallback="جارٍ التحميل...">
+              تحميل نسخة احتياطية
+            </Show>
+          </button>
         </div>
       </div>
     </Show>
