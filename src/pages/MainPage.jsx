@@ -10,27 +10,6 @@ function MainPage() {
         اكتشف حلولًا مبتكرة تزيد إنتاجيتك وتعزز إمكانية وصولك. ابدأ الآن رحلتك نحو تجربة رقمية أفضل!
       </p>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-3xl mb-8">
-        <button
-          onClick={() => window.open('https://blindaccess.pw/المدونة/', '_blank')}
-          class="bg-purple-500 text-white py-4 px-6 rounded-lg hover:bg-purple-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-        >
-          المدونة
-        </button>
-        <button
-          onClick={() => window.open('https://blindaccess.pw/متجر/', '_blank')}
-          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-        >
-          المتجر
-        </button>
-        <button
-          onClick={() => window.open('https://blindaccess.pw/المنتدى/', '_blank')}
-          class="bg-green-500 text-white py-4 px-6 rounded-lg hover:bg-green-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-        >
-          المنتدى
-        </button>
-      </div>
-
       <div class="mt-8 text-center">
         <h2 class="text-3xl font-bold text-purple-600 mb-4">انضم إلى فريقنا</h2>
         <p class="text-lg leading-relaxed max-w-2xl mb-4">
