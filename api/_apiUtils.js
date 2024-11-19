@@ -17,3 +17,7 @@ export async function authenticateUser(req) {
 
   return user;
 }
+
+export function isAdmin(user) {
+  return user.email === 'daoudi.abdennour@gmail.com';
+}
