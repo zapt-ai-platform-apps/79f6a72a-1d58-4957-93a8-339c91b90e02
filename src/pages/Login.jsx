@@ -22,12 +22,6 @@ function Login() {
           >
             تسجيل الدخول باستخدام فيسبوك
           </button>
-          <button
-            onClick={() => handleSignInWithProvider('apple')}
-            class="w-full px-6 py-3 bg-black text-white rounded-lg flex items-center justify-center hover:bg-gray-800 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-          >
-            تسجيل الدخول باستخدام أبل
-          </button>
         </div>
       </div>
     </div>
