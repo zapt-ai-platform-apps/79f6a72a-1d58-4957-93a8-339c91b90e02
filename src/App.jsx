@@ -20,7 +20,7 @@ const Radio = lazy(() => import('./pages/Radio'));
 const CreateYourApp = lazy(() => import('./pages/CreateYourApp'));
 const ContactUs = lazy(() => import('./pages/ContactUs'));
 const Login = lazy(() => import('./pages/Login'));
-const Profile = lazy(() => import('./pages/Profile'));
+// تم حذف الاستيراد الخاص بصفحة الملف الشخصي
 
 function App() {
   const [user, setUser] = createSignal(null);
@@ -64,7 +64,7 @@ function App() {
             <Route path="/radio" component={Radio} />
             <Route path="/create-your-app" component={CreateYourApp} />
             <Route path="/contact-us" component={ContactUs} />
-            <Route path="/profile" component={Profile} />
+            {/* تم حذف المسار الخاص بالملف الشخصي */}
           </Routes>
         </Suspense>
         <BottomNavBar />
