@@ -27,7 +27,7 @@ function Profile() {
       </button>
       <h1 class="text-4xl font-bold text-purple-600 mb-6">الملف الشخصي</h1>
       <p class="text-lg text-center leading-relaxed max-w-2xl mb-4">
-        مرحبًا، {user()?.email}
+        مرحبًا، {user()?.user_metadata?.full_name || user()?.email}
       </p>
       <button
         onClick={handleSignOut}
