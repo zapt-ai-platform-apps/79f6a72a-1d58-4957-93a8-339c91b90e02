@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from '@solidjs/router';
-import { createSignal } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 import { createNotification } from '../components/Notification';
 import BackButton from '../components/BackButton';
 
@@ -14,19 +14,30 @@ function ContactUs() {
   const [name, setName] = createSignal('');
   const [email, setEmail] = createSignal('');
   const [message, setMessage] = createSignal(`أرغب في الاشتراك في ${selectedPackage === 'free' ? 'الباقة المجانية' : selectedPackage === 'basic' ? 'الباقة الأساسية' : 'الباقة الاحترافية'}.`);
+  const [loading, setLoading] = createSignal(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!name() || !email() || !message()) {
       showNotification('يرجى تعبئة الحقول المطلوبة.', 'error');
       return;
     }
 
-    // هنا يمكنك إرسال البريد الإلكتروني أو تخزين البيانات في قاعدة بيانات
-    showNotification('تم إرسال طلبك بنجاح. سنتواصل معك قريبًا.', 'success');
-    // إعادة تعيين النموذج
-    setName('');
-    setEmail('');
-    setMessage('');
+    setLoading(true);
+    try {
+      // هنا يمكنك إرسال البريد الإلكتروني أو تخزين البيانات في قاعدة بيانات
+      // محاكاة تأخير لإظهار حالة التحميل
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      showNotification('تم إرسال طلبك بنجاح. سنتواصل معك قريبًا.', 'success');
+      // إعادة تعيين النموذج
+      setName('');
+      setEmail('');
+      setMessage('');
+    } catch (error) {
+      console.error('Error:', error);
+      showNotification('حدث خطأ أثناء إرسال الطلب.', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -64,9 +75,15 @@ function ContactUs() {
 
         <button
           onClick={handleSubmit}
-          class="w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+          class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600
+            transition duration-300 ease-in-out transform hover:scale-105 ${
+              loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+            }`}
+          disabled={loading()}
         >
-          إرسال
+          <Show when={!loading()} fallback="جاري الإرسال...">
+            إرسال
+          </Show>
         </button>
       </div>
     </div>
