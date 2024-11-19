@@ -4,6 +4,7 @@ import { createEvent } from '../supabaseClient';
 import { createNotification } from '../components/Notification';
 import Loader from '../components/Loader';
 import { SolidMarkdown } from 'solid-markdown';
+import BackButton from '../components/BackButton';
 
 function Assistant() {
   const navigate = useNavigate();
@@ -67,13 +68,7 @@ function Assistant() {
   return (
     <div class="h-full flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
       <NotificationComponent />
-      <button
-        onClick={() => navigate(-1)}
-        class="self-start mb-4 text-2xl cursor-pointer"
-        aria-label="العودة"
-      >
-        🔙
-      </button>
+      <BackButton />
       <h1 class="text-4xl font-bold text-purple-600 mb-6">المساعد الذكي</h1>
 
       <p class="text-lg text-center leading-relaxed max-w-2xl mb-4">
@@ -111,7 +106,7 @@ function Assistant() {
               </button>
               <button
                 onClick={handleListenResponse}
-                class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                class={`px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer`}
                 disabled={loadingAudio()}
               >
                 <Show when={!loadingAudio()} fallback={<Loader loading={loadingAudio()} />}>

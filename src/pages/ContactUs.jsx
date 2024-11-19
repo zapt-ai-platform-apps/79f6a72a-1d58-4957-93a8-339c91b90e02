@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from '@solidjs/router';
 import { createSignal } from 'solid-js';
 import { createNotification } from '../components/Notification';
+import BackButton from '../components/BackButton';
 
 function ContactUs() {
   const navigate = useNavigate();
@@ -31,13 +32,7 @@ function ContactUs() {
   return (
     <div class="min-h-screen flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
       <NotificationComponent />
-      <button
-        onClick={() => navigate(-1)}
-        class="self-start mb-4 text-2xl cursor-pointer"
-        aria-label="العودة"
-      >
-        🔙
-      </button>
+      <BackButton />
       <h1 class="text-4xl font-bold text-purple-600 mb-6">تواصل معنا</h1>
       <p class="text-lg text-center leading-relaxed max-w-2xl mb-8">
         يرجى تعبئة النموذج أدناه وسنقوم بالتواصل معك لتفاصيل أكثر حول طلبك.
