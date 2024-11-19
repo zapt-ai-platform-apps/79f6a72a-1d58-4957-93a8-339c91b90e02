@@ -11,10 +11,7 @@ function Login() {
           supabaseClient={supabase}
           appearance={{ theme: ThemeSupa }}
           providers={['google', 'facebook', 'apple']}
-          magicLink={true}
-          view="magic_link"
           showLinks={false}
-          authView="magic_link"
         />
       </div>
     </div>
