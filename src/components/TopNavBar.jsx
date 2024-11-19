@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from '@solidjs/router';
 
-function TopNavBar() {
+function TopNavBar(props) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -9,6 +9,12 @@ function TopNavBar() {
       navigate(path, { replace: true });
     }
   };
+
+  const user = props.user;
+
+  function isAdmin(user) {
+    return user?.email === 'daoudi.abdennour@gmail.com';
+  }
 
   return (
     <nav class="fixed top-0 left-0 w-full bg-white border-b border-gray-300 text-gray-800 z-10">
@@ -40,6 +46,17 @@ function TopNavBar() {
           <span class="text-2xl">📞</span>
           <span>اتصل بنا</span>
         </button>
+        {isAdmin(user()) && (
+          <button
+            class={`flex-1 flex flex-col items-center py-2 cursor-pointer ${
+              location.pathname === '/admin' ? 'text-primary border-b-2 border-primary' : ''
+            }`}
+            onClick={() => navigateTo('/admin')}
+          >
+            <span class="text-2xl">🛠️</span>
+            <span>لوحة التحكم</span>
+          </button>
+        )}
       </div>
     </nav>
   );

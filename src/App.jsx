@@ -22,6 +22,7 @@ const CreateYourApp = lazy(() => import('./pages/CreateYourApp'));
 const ContactUs = lazy(() => import('./pages/ContactUs'));
 const Login = lazy(() => import('./pages/Login'));
 const Profile = lazy(() => import('./pages/Profile'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
 function App() {
   const [user, setUser] = createSignal(null);
@@ -46,6 +47,10 @@ function App() {
     };
   });
 
+  function isAdmin(user) {
+    return user?.email === 'daoudi.abdennour@gmail.com';
+  }
+
   return (
     <div class="min-h-screen flex flex-col bg-gradient-to-br from-purple-100 via-blue-100 to-white text-gray-800" dir="rtl">
       <Show when={user()} fallback={<Login />}>
@@ -57,7 +62,7 @@ function App() {
           <Show when={showTopNavBar()} fallback="☰">×</Show>
         </button>
         <Show when={showTopNavBar()}>
-          <TopNavBar />
+          <TopNavBar user={user} />
         </Show>
         <div class={`flex-grow ${showTopNavBar() ? 'pt-16' : ''} pb-16`}>
           <Suspense fallback={<div class="flex items-center justify-center h-full"><Loader loading={true} /></div>}>
@@ -78,6 +83,9 @@ function App() {
               <Route path="/create-your-app" component={CreateYourApp} />
               <Route path="/contact-us" component={ContactUs} />
               <Route path="/profile" component={Profile} />
+              <Show when={isAdmin(user())}>
+                <Route path="/admin" component={AdminDashboard} />
+              </Show>
             </Routes>
           </Suspense>
         </div>
