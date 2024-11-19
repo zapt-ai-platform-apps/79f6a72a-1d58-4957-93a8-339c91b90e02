@@ -1,4 +1,4 @@
-import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, timestamp, uuid, numeric } from 'drizzle-orm/pg-core';
 
 export const jokes = pgTable('jokes', {
   id: serial('id').primaryKey(),
@@ -16,4 +16,22 @@ export const messages = pgTable('messages', {
   phone: text('phone'),
   message: text('message').notNull(),
   createdAt: timestamp('created_at').defaultNow(),
+});
+
+export const blogPosts = pgTable('blog_posts', {
+  id: serial('id').primaryKey(),
+  title: text('title').notNull(),
+  content: text('content').notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+export const shopItems = pgTable('shop_items', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  description: text('description'),
+  price: numeric('price', 10, 2).notNull(),
+  imageUrl: text('image_url'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
 });
