@@ -1,5 +1,5 @@
 import { Routes, Route } from '@solidjs/router';
-import { lazy, Suspense, createSignal, onMount, createEffect, Show, createMemo } from 'solid-js';
+import { lazy, Suspense, createSignal, onMount, createEffect, Show } from 'solid-js';
 import TopNavBar from './components/TopNavBar';
 import BottomNavBar from './components/BottomNavBar';
 import Loader from './components/Loader';
@@ -22,8 +22,6 @@ const CreateYourApp = lazy(() => import('./pages/CreateYourApp'));
 const ContactUs = lazy(() => import('./pages/ContactUs'));
 const Login = lazy(() => import('./pages/Login'));
 const Profile = lazy(() => import('./pages/Profile'));
-const AdminDashboard = lazy(() => import('./pages/AdminDashboard')); 
-const AdminMessages = lazy(() => import('./pages/AdminMessages'));
 
 function App() {
   const [user, setUser] = createSignal(null);
@@ -48,8 +46,6 @@ function App() {
     };
   });
 
-  const isAdmin = createMemo(() => user()?.email === 'daoudi.abdennour@gmail.com');
-
   return (
     <div class="min-h-screen flex flex-col bg-gradient-to-br from-purple-100 via-blue-100 to-white text-gray-800" dir="rtl">
       <Show when={user()} fallback={<Login />}>
@@ -61,7 +57,7 @@ function App() {
           <Show when={showTopNavBar()} fallback="☰">×</Show>
         </button>
         <Show when={showTopNavBar()}>
-          <TopNavBar isAdmin={isAdmin} />
+          <TopNavBar />
         </Show>
         <div class={`flex-grow ${showTopNavBar() ? 'pt-16' : ''} pb-16`}>
           <Suspense fallback={<div class="flex items-center justify-center h-full"><Loader loading={true} /></div>}>
@@ -82,8 +78,6 @@ function App() {
               <Route path="/create-your-app" component={CreateYourApp} />
               <Route path="/contact-us" component={ContactUs} />
               <Route path="/profile" component={Profile} />
-              <Route path="/admin" component={AdminDashboard} />
-              <Route path="/admin/messages" component={AdminMessages} />
             </Routes>
           </Suspense>
         </div>
