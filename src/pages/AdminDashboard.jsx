@@ -1,4 +1,4 @@
-import { createSignal, For, Show, onMount } from 'solid-js';
+import { createSignal, For, Show, onMount, createEffect } from 'solid-js';
 import { createNotification } from '../components/Notification';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from '@solidjs/router';
@@ -87,6 +87,10 @@ function AdminDashboard() {
   };
 
   onMount(() => {
+    fetchData();
+  });
+
+  createEffect(() => {
     fetchData();
   });
 
@@ -351,79 +355,236 @@ function AdminDashboard() {
         🔙
       </button>
       <h1 class="text-4xl font-bold text-purple-600 mb-6">لوحة التحكم الإدارية</h1>
-      <div class="flex flex-wrap justify-center space-x-reverse space-x-4 mb-6">
-        <button
-          class={`px-4 py-2 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
-            activeTab() === 'pages' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
-          }`}
-          onClick={() => {
-            setActiveTab('pages');
-            fetchData();
-          }}
+
+      <div class="w-full max-w-md mb-6">
+        <label class="block mb-2 text-lg font-semibold text-gray-700">اختر القسم:</label>
+        <select
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
+          value={activeTab()}
+          onInput={(e) => setActiveTab(e.target.value)}
         >
-          الصفحات
-        </button>
-        <button
-          class={`px-4 py-2 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
-            activeTab() === 'blogPosts' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
-          }`}
-          onClick={() => {
-            setActiveTab('blogPosts');
-            fetchData();
-          }}
-        >
-          المقالات
-        </button>
-        <button
-          class={`px-4 py-2 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
-            activeTab() === 'shopItems' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
-          }`}
-          onClick={() => {
-            setActiveTab('shopItems');
-            fetchData();
-          }}
-        >
-          المنتجات
-        </button>
-        <button
-          class={`px-4 py-2 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
-            activeTab() === 'messages' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
-          }`}
-          onClick={() => {
-            setActiveTab('messages');
-            fetchData();
-          }}
-        >
-          الرسائل
-        </button>
-        <button
-          class={`px-4 py-2 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
-            activeTab() === 'users' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
-          }`}
-          onClick={() => {
-            setActiveTab('users');
-            fetchData();
-          }}
-        >
-          المستخدمون
-        </button>
+          <option value="pages">الصفحات</option>
+          <option value="blogPosts">المقالات</option>
+          <option value="shopItems">المنتجات</option>
+          <option value="messages">الرسائل</option>
+          <option value="users">المستخدمون</option>
+        </select>
       </div>
 
       <Show when={!loading()} fallback={<Loader />}>
         <div class="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6">
           <Show when={activeTab() === 'pages'}>
-            {/* Existing code for managing pages */}
-            {/* ... */}
+            <h2 class="text-2xl font-bold mb-4 text-purple-600">إدارة الصفحات</h2>
+            <div class="mb-6">
+              <label class="block mb-2 text-lg font-semibold text-gray-700">{editingPageId() ? 'تعديل الصفحة' : 'إضافة صفحة جديدة'}</label>
+              <input
+                type="text"
+                placeholder="عنوان الصفحة"
+                value={newPage.title}
+                onInput={(e) => setNewPage('title', e.target.value)}
+                class="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+              />
+              <textarea
+                placeholder="محتوى الصفحة"
+                value={newPage.content}
+                onInput={(e) => setNewPage('content', e.target.value)}
+                class="w-full p-3 mb-2 h-32 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+              ></textarea>
+              <div class="flex space-x-reverse space-x-4">
+                <button
+                  onClick={handleSavePage}
+                  class="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                >
+                  {editingPageId() ? 'تحديث' : 'حفظ'}
+                </button>
+                <Show when={editingPageId()}>
+                  <button
+                    onClick={() => {
+                      setNewPage({ id: null, title: '', content: '' });
+                      setEditingPageId(null);
+                    }}
+                    class="flex-1 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                  >
+                    إلغاء
+                  </button>
+                </Show>
+              </div>
+            </div>
+            <Show when={pagesData.pages.length > 0} fallback={<p class="text-center">لا توجد صفحات.</p>}>
+              <For each={pagesData.pages}>
+                {(page) => (
+                  <div class="mb-4 p-4 bg-gray-50 rounded-lg shadow-md flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div class="flex-grow mb-4 md:mb-0">
+                      <h3 class="text-xl font-bold mb-2">{page.title}</h3>
+                      <p class="text-gray-700 whitespace-pre-wrap">{page.content}</p>
+                      <p class="text-sm text-gray-500 mt-2">{new Date(page.created_at).toLocaleDateString()}</p>
+                    </div>
+                    <div class="flex space-x-reverse space-x-2">
+                      <button
+                        onClick={() => handleEditPage(page)}
+                        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                      >
+                        تعديل
+                      </button>
+                      <button
+                        onClick={() => handleDeletePage(page.id)}
+                        class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                      >
+                        حذف
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </For>
+            </Show>
           </Show>
 
           <Show when={activeTab() === 'blogPosts'}>
-            {/* Existing code for managing blog posts */}
-            {/* ... */}
+            <h2 class="text-2xl font-bold mb-4 text-purple-600">إدارة المقالات</h2>
+            <div class="mb-6">
+              <label class="block mb-2 text-lg font-semibold text-gray-700">{editingBlogPostId() ? 'تعديل المقالة' : 'إضافة مقالة جديدة'}</label>
+              <input
+                type="text"
+                placeholder="عنوان المقالة"
+                value={newBlogPost.title}
+                onInput={(e) => setNewBlogPost('title', e.target.value)}
+                class="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+              />
+              <textarea
+                placeholder="محتوى المقالة"
+                value={newBlogPost.content}
+                onInput={(e) => setNewBlogPost('content', e.target.value)}
+                class="w-full p-3 mb-2 h-32 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+              ></textarea>
+              <div class="flex space-x-reverse space-x-4">
+                <button
+                  onClick={handleSaveBlogPost}
+                  class="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                >
+                  {editingBlogPostId() ? 'تحديث' : 'حفظ'}
+                </button>
+                <Show when={editingBlogPostId()}>
+                  <button
+                    onClick={() => {
+                      setNewBlogPost({ id: null, title: '', content: '' });
+                      setEditingBlogPostId(null);
+                    }}
+                    class="flex-1 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                  >
+                    إلغاء
+                  </button>
+                </Show>
+              </div>
+            </div>
+            <Show when={blogPostsData.blogPosts.length > 0} fallback={<p class="text-center">لا توجد مقالات.</p>}>
+              <For each={blogPostsData.blogPosts}>
+                {(post) => (
+                  <div class="mb-4 p-4 bg-gray-50 rounded-lg shadow-md flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div class="flex-grow mb-4 md:mb-0">
+                      <h3 class="text-xl font-bold mb-2">{post.title}</h3>
+                      <p class="text-gray-700 whitespace-pre-wrap">{post.content}</p>
+                      <p class="text-sm text-gray-500 mt-2">{new Date(post.created_at).toLocaleDateString()}</p>
+                    </div>
+                    <div class="flex space-x-reverse space-x-2">
+                      <button
+                        onClick={() => handleEditBlogPost(post)}
+                        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                      >
+                        تعديل
+                      </button>
+                      <button
+                        onClick={() => handleDeleteBlogPost(post.id)}
+                        class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                      >
+                        حذف
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </For>
+            </Show>
           </Show>
 
           <Show when={activeTab() === 'shopItems'}>
-            {/* Existing code for managing shop items */}
-            {/* ... */}
+            <h2 class="text-2xl font-bold mb-4 text-purple-600">إدارة المنتجات</h2>
+            <div class="mb-6">
+              <label class="block mb-2 text-lg font-semibold text-gray-700">{editingShopItemId() ? 'تعديل المنتج' : 'إضافة منتج جديد'}</label>
+              <input
+                type="text"
+                placeholder="اسم المنتج"
+                value={newShopItem.name}
+                onInput={(e) => setNewShopItem('name', e.target.value)}
+                class="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+              />
+              <input
+                type="text"
+                placeholder="الوصف"
+                value={newShopItem.description}
+                onInput={(e) => setNewShopItem('description', e.target.value)}
+                class="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+              />
+              <input
+                type="number"
+                placeholder="السعر"
+                value={newShopItem.price}
+                onInput={(e) => setNewShopItem('price', e.target.value)}
+                class="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+              />
+              <input
+                type="text"
+                placeholder="رابط الصورة"
+                value={newShopItem.imageUrl}
+                onInput={(e) => setNewShopItem('imageUrl', e.target.value)}
+                class="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+              />
+              <div class="flex space-x-reverse space-x-4">
+                <button
+                  onClick={handleSaveShopItem}
+                  class="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                >
+                  {editingShopItemId() ? 'تحديث' : 'حفظ'}
+                </button>
+                <Show when={editingShopItemId()}>
+                  <button
+                    onClick={() => {
+                      setNewShopItem({ id: null, name: '', description: '', price: '', imageUrl: '' });
+                      setEditingShopItemId(null);
+                    }}
+                    class="flex-1 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                  >
+                    إلغاء
+                  </button>
+                </Show>
+              </div>
+            </div>
+            <Show when={shopItemsData.shopItems.length > 0} fallback={<p class="text-center">لا توجد منتجات.</p>}>
+              <For each={shopItemsData.shopItems}>
+                {(item) => (
+                  <div class="mb-4 p-4 bg-gray-50 rounded-lg shadow-md flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div class="flex-grow mb-4 md:mb-0">
+                      <h3 class="text-xl font-bold mb-2">{item.name}</h3>
+                      <p class="text-gray-700 mb-2">{item.description}</p>
+                      <p class="text-gray-700 font-semibold">السعر: {item.price} دولار</p>
+                      <p class="text-sm text-gray-500 mt-2">{new Date(item.created_at).toLocaleDateString()}</p>
+                    </div>
+                    <div class="flex space-x-reverse space-x-2">
+                      <button
+                        onClick={() => handleEditShopItem(item)}
+                        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                      >
+                        تعديل
+                      </button>
+                      <button
+                        onClick={() => handleDeleteShopItem(item.id)}
+                        class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                      >
+                        حذف
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </For>
+            </Show>
           </Show>
 
           <Show when={activeTab() === 'messages'}>
