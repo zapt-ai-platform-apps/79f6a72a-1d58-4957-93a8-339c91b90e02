@@ -25,6 +25,7 @@ const Profile = lazy(() => import('./pages/Profile'));
 
 function App() {
   const [user, setUser] = createSignal(null);
+  const [showTopNavBar, setShowTopNavBar] = createSignal(false);
 
   onMount(async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -48,8 +49,17 @@ function App() {
   return (
     <div class="min-h-screen flex flex-col bg-gradient-to-br from-purple-100 via-blue-100 to-white text-gray-800" dir="rtl">
       <Show when={user()} fallback={<Login />}>
-        <TopNavBar />
-        <div class="flex-grow pt-16 pb-16">
+        <button
+          class="fixed top-2 left-2 z-20 bg-blue-500 text-white p-2 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
+          onClick={() => setShowTopNavBar(!showTopNavBar())}
+          aria-label="Toggle Navigation"
+        >
+          <Show when={showTopNavBar()} fallback="☰">×</Show>
+        </button>
+        <Show when={showTopNavBar()}>
+          <TopNavBar />
+        </Show>
+        <div class={`flex-grow ${showTopNavBar() ? 'pt-16' : ''} pb-16`}>
           <Suspense fallback={<div class="flex items-center justify-center h-full"><Loader loading={true} /></div>}>
             <Routes>
               <Route path="/" component={MainPage} />
