@@ -52,7 +52,7 @@ function App() {
         <button
           class="fixed top-2 left-2 z-20 bg-blue-500 text-white p-2 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
           onClick={() => setShowTopNavBar(!showTopNavBar())}
-          aria-label="Toggle Navigation"
+          aria-label="تبديل القائمة"
         >
           <Show when={showTopNavBar()} fallback="☰">×</Show>
         </button>
