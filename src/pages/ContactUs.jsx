@@ -2,6 +2,7 @@ import { useNavigate, useLocation } from '@solidjs/router';
 import { createSignal, Show } from 'solid-js';
 import { createNotification } from '../components/Notification';
 import BackButton from '../components/BackButton';
+import Loader from '../components/Loader';
 
 function ContactUs() {
   const navigate = useNavigate();
@@ -16,6 +17,8 @@ function ContactUs() {
   const [message, setMessage] = createSignal(`أرغب في الاشتراك في ${selectedPackage === 'free' ? 'الباقة المجانية' : selectedPackage === 'basic' ? 'الباقة الأساسية' : 'الباقة الاحترافية'}.`);
   const [loading, setLoading] = createSignal(false);
 
+  const [phone, setPhone] = createSignal('');
+
   const handleSubmit = async () => {
     if (!name() || !email() || !message()) {
       showNotification('يرجى تعبئة الحقول المطلوبة.', 'error');
@@ -24,14 +27,28 @@ function ContactUs() {
 
     setLoading(true);
     try {
-      // هنا يمكنك إرسال البريد الإلكتروني أو تخزين البيانات في قاعدة بيانات
-      // محاكاة تأخير لإظهار حالة التحميل
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      showNotification('تم إرسال طلبك بنجاح. سنتواصل معك قريبًا.', 'success');
-      // إعادة تعيين النموذج
-      setName('');
-      setEmail('');
-      setMessage('');
+      const response = await fetch('/api/saveMessage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'contact',
+          name: name(),
+          email: email(),
+          phone: phone(),
+          message: message(),
+        }),
+      });
+
+      if (response.ok) {
+        showNotification('تم إرسال طلبك بنجاح. سنتواصل معك قريبًا.', 'success');
+        setName('');
+        setEmail('');
+        setPhone('');
+        setMessage('');
+      } else {
+        const data = await response.json();
+        showNotification(data.error || 'حدث خطأ أثناء إرسال الطلب.', 'error');
+      }
     } catch (error) {
       console.error('Error:', error);
       showNotification('حدث خطأ أثناء إرسال الطلب.', 'error');
@@ -66,6 +83,14 @@ function ContactUs() {
           onInput={(e) => setEmail(e.target.value)}
         />
 
+        <label class="block mb-2 text-lg font-semibold text-gray-700">رقم الهاتف:</label>
+        <input
+          class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+          type="tel"
+          value={phone()}
+          onInput={(e) => setPhone(e.target.value)}
+        />
+
         <label class="block mb-2 text-lg font-semibold text-gray-700">رسالتك<span class="text-red-500">*</span>:</label>
         <textarea
           class="w-full h-32 p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
@@ -81,7 +106,7 @@ function ContactUs() {
             }`}
           disabled={loading()}
         >
-          <Show when={!loading()} fallback="جاري الإرسال...">
+          <Show when={!loading()} fallback={<Loader />}>
             إرسال
           </Show>
         </button>

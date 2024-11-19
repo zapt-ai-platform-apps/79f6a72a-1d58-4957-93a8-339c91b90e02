@@ -1,7 +1,7 @@
 import { useNavigate } from '@solidjs/router';
 import { createSignal, Show } from 'solid-js';
-import { createEvent } from '../supabaseClient';
 import { createNotification } from '../components/Notification';
+import Loader from '../components/Loader';
 
 function JoinUs() {
   const navigate = useNavigate();
@@ -19,27 +19,31 @@ function JoinUs() {
       return;
     }
     setLoading(true);
-    const prompt = `
-      تلقيت طلبًا من شخص يرغب في الانضمام إلى الفريق. فيما يلي التفاصيل:
-
-      الاسم: ${name()}
-      البريد الإلكتروني: ${email()}
-      الهاتف: ${phone()}
-      الرسالة: ${message()}
-
-      الرجاء التواصل معه لمزيد من التفاصيل.
-    `;
 
     try {
-      // هنا يمكنك إرسال البريد الإلكتروني أو تخزين البيانات في قاعدة بيانات
-      // لأغراض هذا المثال، سنظهر إشعارًا فقط
+      const response = await fetch('/api/saveMessage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'join',
+          name: name(),
+          email: email(),
+          phone: phone(),
+          message: message(),
+        }),
+      });
 
-      showNotification('تم إرسال طلبك بنجاح. شكرًا لتواصلك معنا.', 'success');
-      // إعادة تعيين النموذج
-      setName('');
-      setEmail('');
-      setPhone('');
-      setMessage('');
+      if (response.ok) {
+        showNotification('تم إرسال طلبك بنجاح. شكرًا لتواصلك معنا.', 'success');
+        // Reset form
+        setName('');
+        setEmail('');
+        setPhone('');
+        setMessage('');
+      } else {
+        const data = await response.json();
+        showNotification(data.error || 'حدث خطأ أثناء إرسال الطلب.', 'error');
+      }
     } catch (error) {
       console.error('Error:', error);
       showNotification('حدث خطأ أثناء إرسال الطلب.', 'error');
@@ -99,7 +103,7 @@ function JoinUs() {
           class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
           disabled={loading()}
         >
-          <Show when={!loading()} fallback="جاري الإرسال...">
+          <Show when={!loading()} fallback={<Loader />}>
             إرسال الطلب
           </Show>
         </button>

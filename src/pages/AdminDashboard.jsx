@@ -11,7 +11,7 @@ function AdminDashboard() {
     const { data: { user } } = await supabase.auth.getUser();
     setUser(user);
     if (user?.email !== 'daoudi.abdennour@gmail.com') {
-      // إذا لم يكن المستخدم هو المسؤول، إعادة التوجيه إلى الصفحة الرئيسية
+      // If not admin, redirect to home page
       navigate('/', { replace: true });
     } else {
       setLoading(false);
@@ -25,8 +25,9 @@ function AdminDashboard() {
         <p class="text-lg text-center leading-relaxed max-w-2xl mb-4">
           مرحبًا، {user()?.user_metadata?.full_name || user()?.email} - هنا يمكنك التحكم الكامل في التطبيق.
         </p>
-        {/* محتوى لوحة التحكم */}
+        {/* Admin dashboard content */}
         <div class="grid grid-cols-1 gap-4 w-full max-w-md mt-6">
+          {/* Update button to navigate to AdminMessages */}
           <button
             class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
             onClick={() => navigate('/admin/users')}
@@ -45,7 +46,7 @@ function AdminDashboard() {
           >
             إحصائيات الاستخدام
           </button>
-          {/* يمكن إضافة المزيد من الميزات */}
+          {/* More features can be added */}
         </div>
       </div>
     </Show>

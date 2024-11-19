@@ -22,7 +22,8 @@ const CreateYourApp = lazy(() => import('./pages/CreateYourApp'));
 const ContactUs = lazy(() => import('./pages/ContactUs'));
 const Login = lazy(() => import('./pages/Login'));
 const Profile = lazy(() => import('./pages/Profile'));
-const AdminDashboard = lazy(() => import('./pages/AdminDashboard')); // إضافة جديدة
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard')); 
+const AdminMessages = lazy(() => import('./pages/AdminMessages'));
 
 function App() {
   const [user, setUser] = createSignal(null);
@@ -81,7 +82,8 @@ function App() {
               <Route path="/create-your-app" component={CreateYourApp} />
               <Route path="/contact-us" component={ContactUs} />
               <Route path="/profile" component={Profile} />
-              <Route path="/admin" component={AdminDashboard} /> {/* إضافة جديدة */}
+              <Route path="/admin" component={AdminDashboard} />
+              <Route path="/admin/messages" component={AdminMessages} />
             </Routes>
           </Suspense>
         </div>
