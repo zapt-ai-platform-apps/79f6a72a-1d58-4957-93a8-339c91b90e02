@@ -7,7 +7,7 @@ function MainPage() {
     <div class="flex flex-col items-center p-4 min-h-screen pt-16 pb-16">
       <h1 class="text-5xl font-bold text-purple-600 mb-6">Blind Accessibility</h1>
       <p class="text-center max-w-2xl text-lg leading-relaxed mb-8">
-        انطلق في تجربة مميزة مع <strong>Blind Accessibility</strong>، التطبيق الرائد الذي يقدم حلولًا مبتكرة لتعزيز إمكانية الوصول وتحسين الإنتاجية لذوي الاحتياجات الخاصة، خاصة المكفوفين.
+        تطبيق <strong>Blind Accessibility</strong> يقدم حلولًا مبتكرة لتعزيز إمكانية الوصول والإنتاجية لذوي الاحتياجات الخاصة.
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-3xl mb-8">
