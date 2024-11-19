@@ -35,6 +35,12 @@ const arabicLocalization = {
       button_label: 'تحديث كلمة المرور',
       loading_button_label: 'جاري التحديث...',
     },
+    social: {
+      provider_text: 'أو تسجيل الدخول باستخدام',
+      apple: 'تسجيل الدخول باستخدام آبل',
+      google: 'تسجيل الدخول باستخدام جوجل',
+      facebook: 'تسجيل الدخول باستخدام فيسبوك',
+    },
   },
 };
 
