@@ -23,7 +23,9 @@ function AdminDashboard() {
   return (
     <div class="h-full flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
       <h1 class="text-4xl font-bold text-purple-600 mb-6">لوحة التحكم</h1>
-      <p class="text-lg">مرحبًا، هذا هو لوحة التحكم للمسؤول.</p>
+      <p class="text-lg text-center leading-relaxed max-w-2xl mb-6">
+        مرحبًا بك في لوحة التحكم. هنا يمكنك إدارة التطبيق، الاطلاع على الرسائل والطلبات المقدمة من المستخدمين، ومتابعة المحتوى.
+      </p>
       {/* يمكنك إضافة مكونات وأقسام لوحة التحكم هنا */}
     </div>
   );
