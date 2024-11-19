@@ -1,7 +1,8 @@
 import { Routes, Route } from '@solidjs/router';
-import { lazy, Suspense } from 'solid-js';
+import { lazy, Suspense, createSignal, onMount, createEffect, Show } from 'solid-js';
 import BottomNavBar from './components/BottomNavBar';
 import Loader from './components/Loader';
+import { supabase } from './supabaseClient';
 
 const MainPage = lazy(() => import('./pages/MainPage'));
 const Services = lazy(() => import('./pages/Services'));
@@ -18,30 +19,56 @@ const JoinUs = lazy(() => import('./pages/JoinUs'));
 const Radio = lazy(() => import('./pages/Radio'));
 const CreateYourApp = lazy(() => import('./pages/CreateYourApp'));
 const ContactUs = lazy(() => import('./pages/ContactUs'));
+const Login = lazy(() => import('./pages/Login'));
+const Profile = lazy(() => import('./pages/Profile'));
 
 function App() {
+  const [user, setUser] = createSignal(null);
+
+  onMount(async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    setUser(user);
+  });
+
+  createEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUser(session.user);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => {
+      authListener?.unsubscribe();
+    };
+  });
+
   return (
     <div class="min-h-screen flex flex-col bg-gradient-to-br from-purple-100 via-blue-100 to-white text-gray-800" dir="rtl">
-      <Suspense fallback={<div class="flex-grow flex items-center justify-center"><Loader loading={true} /></div>}>
-        <Routes>
-          <Route path="/" component={MainPage} />
-          <Route path="/services" component={Services} />
-          <Route path="/tools" component={Tools} />
-          <Route path="/assistant" component={Assistant} />
-          <Route path="/voice-assistant" component={VoiceAssistant} />
-          <Route path="/resume-builder" component={ResumeBuilder} />
-          <Route path="/resume-result" component={ResumeResult} />
-          <Route path="/content-generator" component={ContentGenerator} />
-          <Route path="/content-result" component={ContentResult} />
-          <Route path="/text-editor" component={TextEditor} />
-          <Route path="/text-result" component={TextResult} />
-          <Route path="/join-us" component={JoinUs} />
-          <Route path="/radio" component={Radio} />
-          <Route path="/create-your-app" component={CreateYourApp} />
-          <Route path="/contact-us" component={ContactUs} />
-        </Routes>
-      </Suspense>
-      <BottomNavBar />
+      <Show when={user()} fallback={<Login />}>
+        <Suspense fallback={<div class="flex-grow flex items-center justify-center"><Loader loading={true} /></div>}>
+          <Routes>
+            <Route path="/" component={MainPage} />
+            <Route path="/services" component={Services} />
+            <Route path="/tools" component={Tools} />
+            <Route path="/assistant" component={Assistant} />
+            <Route path="/voice-assistant" component={VoiceAssistant} />
+            <Route path="/resume-builder" component={ResumeBuilder} />
+            <Route path="/resume-result" component={ResumeResult} />
+            <Route path="/content-generator" component={ContentGenerator} />
+            <Route path="/content-result" component={ContentResult} />
+            <Route path="/text-editor" component={TextEditor} />
+            <Route path="/text-result" component={TextResult} />
+            <Route path="/join-us" component={JoinUs} />
+            <Route path="/radio" component={Radio} />
+            <Route path="/create-your-app" component={CreateYourApp} />
+            <Route path="/contact-us" component={ContactUs} />
+            <Route path="/profile" component={Profile} />
+          </Routes>
+        </Suspense>
+        <BottomNavBar />
+      </Show>
     </div>
   );
 }
