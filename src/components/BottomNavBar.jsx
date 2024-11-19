@@ -43,7 +43,16 @@ function BottomNavBar() {
           <span class="text-2xl">🛠️</span>
           <span>أدوات</span>
         </button>
-        {/* تم حذف زر الملف الشخصي */}
+        <button
+          class={`flex-1 flex flex-col items-center py-2 cursor-pointer ${
+            location.pathname === '/profile' ? 'text-primary border-t-2 border-primary' : ''
+          }`}
+          onClick={() => navigateTo('/profile')}
+          disabled={location.pathname === '/profile'}
+        >
+          <span class="text-2xl">👤</span>
+          <span>الملف الشخصي</span>
+        </button>
       </div>
     </nav>
   );
