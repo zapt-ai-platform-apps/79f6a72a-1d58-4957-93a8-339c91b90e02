@@ -9,6 +9,12 @@ function Login() {
   return (
     <div class="flex items-center justify-center min-h-screen">
       <div class="w-full max-w-md p-8 bg-white rounded-xl shadow-lg">
+        <div class="mb-6 text-center">
+          <h2 class="text-3xl font-bold mb-4 text-purple-600">تسجيل الدخول</h2>
+          <p class="text-lg">
+            انطلق في رحلتك الرقمية معنا! تسجيل الدخول يمنحك الوصول إلى مجموعة متنوعة من الأدوات والخدمات المبتكرة المصممة خصيصًا لتعزيز إمكانية الوصول وتحسين الإنتاجية.
+          </p>
+        </div>
         <div class="space-y-4">
           <button
             onClick={() => handleSignInWithProvider('google')}
