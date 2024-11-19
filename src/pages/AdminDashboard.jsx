@@ -7,277 +7,132 @@ import { createStore } from 'solid-js/store';
 function AdminDashboard() {
   const navigate = useNavigate();
   const { NotificationComponent, showNotification } = createNotification();
-  const [messages, setMessages] = createSignal([]);
-  const [users, setUsers] = createSignal([]);
-  const [filterType, setFilterType] = createSignal('');
-  const [loadingMessages, setLoadingMessages] = createSignal(true);
-  const [loadingUsers, setLoadingUsers] = createSignal(true);
-  const [activeTab, setActiveTab] = createSignal('messages');
+  const [loading, setLoading] = createSignal(true);
+  const [activeTab, setActiveTab] = createSignal('pages');
 
-  const [blogPostsData, setBlogPostsData] = createStore({ posts: [] });
-  const [shopItemsData, setShopItemsData] = createStore({ items: [] });
-  const [loadingBlogPosts, setLoadingBlogPosts] = createSignal(true);
-  const [loadingShopItems, setLoadingShopItems] = createSignal(true);
+  const [pagesData, setPagesData] = createStore({ pages: [] });
+  const [menusData, setMenusData] = createStore({ menus: [] });
+  const [servicesData, setServicesData] = createStore({ services: [] });
+  const [toolsData, setToolsData] = createStore({ tools: [] });
+  const [settingsData, setSettingsData] = createStore({ settings: {} });
 
-  const fetchMessages = async () => {
-    setLoadingMessages(true);
+  const fetchData = async () => {
+    setLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const response = await fetch('/api/getMessages', {
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`
-        }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setMessages(data);
-      } else if (response.status === 403) {
-        showNotification('غير مصرح لك بالوصول إلى هذه الصفحة.', 'error');
-        navigate('/');
-      } else {
-        showNotification('حدث خطأ أثناء جلب الرسائل.', 'error');
-      }
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-      showNotification('حدث خطأ أثناء جلب الرسائل.', 'error');
-    } finally {
-      setLoadingMessages(false);
-    }
-  };
+      const [pagesRes, menusRes, servicesRes, toolsRes, settingsRes] = await Promise.all([
+        fetch('/api/getPages', {
+          headers: { 'Authorization': `Bearer ${session.access_token}` },
+        }),
+        fetch('/api/getMenus', {
+          headers: { 'Authorization': `Bearer ${session.access_token}` },
+        }),
+        fetch('/api/getServices', {
+          headers: { 'Authorization': `Bearer ${session.access_token}` },
+        }),
+        fetch('/api/getTools', {
+          headers: { 'Authorization': `Bearer ${session.access_token}` },
+        }),
+        fetch('/api/getSettings', {
+          headers: { 'Authorization': `Bearer ${session.access_token}` },
+        }),
+      ]);
 
-  const fetchUsers = async () => {
-    setLoadingUsers(true);
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const response = await fetch('/api/getUsers', {
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`
-        }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setUsers(data.users || []);
-      } else if (response.status === 403) {
-        showNotification('غير مصرح لك بالوصول إلى هذه الصفحة.', 'error');
-        navigate('/');
+      if (pagesRes.ok && menusRes.ok && servicesRes.ok && toolsRes.ok && settingsRes.ok) {
+        const [pagesData, menusData, servicesData, toolsData, settingsData] = await Promise.all([
+          pagesRes.json(),
+          menusRes.json(),
+          servicesRes.json(),
+          toolsRes.json(),
+          settingsRes.json(),
+        ]);
+        setPagesData({ pages: pagesData });
+        setMenusData({ menus: menusData });
+        setServicesData({ services: servicesData });
+        setToolsData({ tools: toolsData });
+        setSettingsData({ settings: settingsData });
       } else {
-        showNotification('حدث خطأ أثناء جلب المستخدمين.', 'error');
+        showNotification('حدث خطأ أثناء جلب البيانات.', 'error');
       }
     } catch (error) {
-      console.error('Error fetching users:', error);
-      showNotification('حدث خطأ أثناء جلب المستخدمين.', 'error');
+      console.error('Error fetching data:', error);
+      showNotification('حدث خطأ أثناء جلب البيانات.', 'error');
     } finally {
-      setLoadingUsers(false);
-    }
-  };
-
-  const fetchBlogPosts = async () => {
-    setLoadingBlogPosts(true);
-    try {
-      const response = await fetch('/api/getBlogPosts');
-      if (response.ok) {
-        const data = await response.json();
-        setBlogPostsData({ posts: data });
-      } else {
-        showNotification('حدث خطأ أثناء جلب المقالات.', 'error');
-      }
-    } catch (error) {
-      console.error('Error fetching blog posts:', error);
-      showNotification('حدث خطأ أثناء جلب المقالات.', 'error');
-    } finally {
-      setLoadingBlogPosts(false);
-    }
-  };
-
-  const fetchShopItems = async () => {
-    setLoadingShopItems(true);
-    try {
-      const response = await fetch('/api/getShopItems');
-      if (response.ok) {
-        const data = await response.json();
-        setShopItemsData({ items: data });
-      } else {
-        showNotification('حدث خطأ أثناء جلب المنتجات.', 'error');
-      }
-    } catch (error) {
-      console.error('Error fetching shop items:', error);
-      showNotification('حدث خطأ أثناء جلب المنتجات.', 'error');
-    } finally {
-      setLoadingShopItems(false);
+      setLoading(false);
     }
   };
 
   onMount(() => {
-    fetchMessages();
-    fetchUsers();
-    fetchBlogPosts();
-    fetchShopItems();
+    fetchData();
   });
 
-  const filteredMessages = () => {
-    if (filterType()) {
-      return messages().filter(message => message.type === filterType());
-    }
-    return messages();
-  };
+  const [newPage, setNewPage] = createStore({ id: null, title: '', content: '' });
+  const [editingPageId, setEditingPageId] = createSignal(null);
 
-  const handleDeleteUser = async (userId) => {
-    if (!confirm('هل أنت متأكد من حذف هذا المستخدم؟')) return;
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const response = await fetch('/api/deleteUser', {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id: userId })
-      });
-
-      if (response.ok) {
-        showNotification('تم حذف المستخدم بنجاح.', 'success');
-        setUsers(users().filter(user => user.id !== userId));
-      } else {
-        const data = await response.json();
-        showNotification(data.error || 'حدث خطأ أثناء حذف المستخدم.', 'error');
-      }
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      showNotification('حدث خطأ أثناء حذف المستخدم.', 'error');
-    }
-  };
-
-  const [newPost, setNewPost] = createStore({ id: null, title: '', content: '' });
-  const [editingPostId, setEditingPostId] = createSignal(null);
-
-  const handleSaveBlogPost = async () => {
-    if (!newPost.title || !newPost.content) {
+  const handleSavePage = async () => {
+    if (!newPage.title || !newPage.content) {
       showNotification('يرجى تعبئة الحقول المطلوبة.', 'error');
       return;
     }
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const method = editingPostId() ? 'PUT' : 'POST';
-      const response = await fetch('/api/saveBlogPost', {
+      const method = editingPageId() ? 'PUT' : 'POST';
+      const response = await fetch('/api/savePage', {
         method,
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newPost)
+        body: JSON.stringify(newPage),
       });
 
       if (response.ok) {
-        showNotification('تم حفظ المقال بنجاح.', 'success');
-        setNewPost({ id: null, title: '', content: '' });
-        setEditingPostId(null);
-        fetchBlogPosts();
+        showNotification('تم حفظ الصفحة بنجاح.', 'success');
+        setNewPage({ id: null, title: '', content: '' });
+        setEditingPageId(null);
+        fetchData();
       } else {
         const data = await response.json();
-        showNotification(data.error || 'حدث خطأ أثناء حفظ المقال.', 'error');
+        showNotification(data.error || 'حدث خطأ أثناء حفظ الصفحة.', 'error');
       }
     } catch (error) {
-      console.error('Error saving blog post:', error);
-      showNotification('حدث خطأ أثناء حفظ المقال.', 'error');
+      console.error('Error saving page:', error);
+      showNotification('حدث خطأ أثناء حفظ الصفحة.', 'error');
     }
   };
 
-  const handleEditBlogPost = (post) => {
-    setNewPost({ ...post });
-    setEditingPostId(post.id);
+  const handleEditPage = (page) => {
+    setNewPage({ ...page });
+    setEditingPageId(page.id);
   };
 
-  const handleDeleteBlogPost = async (id) => {
-    if (!confirm('هل أنت متأكد من حذف هذا المقال؟')) return;
+  const handleDeletePage = async (id) => {
+    if (!confirm('هل أنت متأكد من حذف هذه الصفحة؟')) return;
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const response = await fetch('/api/saveBlogPost', {
+      const response = await fetch('/api/savePage', {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id })
+        body: JSON.stringify({ id }),
       });
 
       if (response.ok) {
-        showNotification('تم حذف المقال بنجاح.', 'success');
-        fetchBlogPosts();
+        showNotification('تم حذف الصفحة بنجاح.', 'success');
+        fetchData();
       } else {
         const data = await response.json();
-        showNotification(data.error || 'حدث خطأ أثناء حذف المقال.', 'error');
+        showNotification(data.error || 'حدث خطأ أثناء حذف الصفحة.', 'error');
       }
     } catch (error) {
-      console.error('Error deleting blog post:', error);
-      showNotification('حدث خطأ أثناء حذف المقال.', 'error');
+      console.error('Error deleting page:', error);
+      showNotification('حدث خطأ أثناء حذف الصفحة.', 'error');
     }
   };
 
-  const [newItem, setNewItem] = createStore({ id: null, name: '', description: '', price: '', imageUrl: '' });
-  const [editingItemId, setEditingItemId] = createSignal(null);
-
-  const handleSaveShopItem = async () => {
-    if (!newItem.name || !newItem.price) {
-      showNotification('يرجى تعبئة الحقول المطلوبة.', 'error');
-      return;
-    }
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const method = editingItemId() ? 'PUT' : 'POST';
-      const response = await fetch('/api/saveShopItem', {
-        method,
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newItem)
-      });
-
-      if (response.ok) {
-        showNotification('تم حفظ المنتج بنجاح.', 'success');
-        setNewItem({ id: null, name: '', description: '', price: '', imageUrl: '' });
-        setEditingItemId(null);
-        fetchShopItems();
-      } else {
-        const data = await response.json();
-        showNotification(data.error || 'حدث خطأ أثناء حفظ المنتج.', 'error');
-      }
-    } catch (error) {
-      console.error('Error saving shop item:', error);
-      showNotification('حدث خطأ أثناء حفظ المنتج.', 'error');
-    }
-  };
-
-  const handleEditShopItem = (item) => {
-    setNewItem({ ...item });
-    setEditingItemId(item.id);
-  };
-
-  const handleDeleteShopItem = async (id) => {
-    if (!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const response = await fetch('/api/saveShopItem', {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id })
-      });
-
-      if (response.ok) {
-        showNotification('تم حذف المنتج بنجاح.', 'success');
-        fetchShopItems();
-      } else {
-        const data = await response.json();
-        showNotification(data.error || 'حدث خطأ أثناء حذف المنتج.', 'error');
-      }
-    } catch (error) {
-      console.error('Error deleting shop item:', error);
-      showNotification('حدث خطأ أثناء حذف المنتج.', 'error');
-    }
-  };
+  // Similar handlers for menus, services, tools, and settings...
 
   return (
     <div class="min-h-screen flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
@@ -292,49 +147,89 @@ function AdminDashboard() {
       <h1 class="text-4xl font-bold text-purple-600 mb-6">لوحة التحكم الإدارية</h1>
       <div class="flex flex-wrap justify-center space-x-reverse space-x-4 mb-6">
         <button
-          class={`px-4 py-2 rounded-lg ${activeTab() === 'messages' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} cursor-pointer`}
-          onClick={() => setActiveTab('messages')}
+          class={`px-4 py-2 rounded-lg ${activeTab() === 'pages' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} cursor-pointer`}
+          onClick={() => setActiveTab('pages')}
         >
-          إدارة الرسائل
+          الصفحات
         </button>
         <button
-          class={`px-4 py-2 rounded-lg ${activeTab() === 'users' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} cursor-pointer`}
-          onClick={() => setActiveTab('users')}
+          class={`px-4 py-2 rounded-lg ${activeTab() === 'menus' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} cursor-pointer`}
+          onClick={() => setActiveTab('menus')}
         >
-          إدارة المستخدمين
+          القوائم
         </button>
         <button
-          class={`px-4 py-2 rounded-lg ${activeTab() === 'blog' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} cursor-pointer`}
-          onClick={() => setActiveTab('blog')}
+          class={`px-4 py-2 rounded-lg ${activeTab() === 'services' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} cursor-pointer`}
+          onClick={() => setActiveTab('services')}
         >
-          إدارة المدونة
+          الخدمات
         </button>
         <button
-          class={`px-4 py-2 rounded-lg ${activeTab() === 'shop' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} cursor-pointer`}
-          onClick={() => setActiveTab('shop')}
+          class={`px-4 py-2 rounded-lg ${activeTab() === 'tools' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} cursor-pointer`}
+          onClick={() => setActiveTab('tools')}
         >
-          إدارة المتجر
+          الأدوات
+        </button>
+        <button
+          class={`px-4 py-2 rounded-lg ${activeTab() === 'settings' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} cursor-pointer`}
+          onClick={() => setActiveTab('settings')}
+        >
+          الإعدادات
         </button>
       </div>
 
-      <Show when={activeTab() === 'messages'}>
-        {/* إدارة الرسائل */}
-        {/* محتوى تبويب الرسائل */}
-      </Show>
-
-      <Show when={activeTab() === 'users'}>
-        {/* إدارة المستخدمين */}
-        {/* محتوى تبويب المستخدمين */}
-      </Show>
-
-      <Show when={activeTab() === 'blog'}>
-        {/* إدارة المدونة */}
-        {/* محتوى تبويب المدونة */}
-      </Show>
-
-      <Show when={activeTab() === 'shop'}>
-        {/* إدارة المتجر */}
-        {/* محتوى تبويب المتجر */}
+      <Show when={!loading()} fallback={<div>جاري التحميل...</div>}>
+        <Show when={activeTab() === 'pages'}>
+          {/* إدارة الصفحات */}
+          <div class="w-full max-w-4xl">
+            <h2 class="text-2xl font-bold mb-4 text-purple-600">إدارة الصفحات</h2>
+            <div class="mb-6">
+              <label class="block mb-2 text-lg font-semibold text-gray-700">عنوان الصفحة:</label>
+              <input
+                class="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+                type="text"
+                value={newPage.title}
+                onInput={(e) => setNewPage('title', e.target.value)}
+              />
+              <label class="block mb-2 text-lg font-semibold text-gray-700">محتوى الصفحة:</label>
+              <textarea
+                class="w-full h-32 p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+                value={newPage.content}
+                onInput={(e) => setNewPage('content', e.target.value)}
+              />
+              <button
+                onClick={handleSavePage}
+                class="w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+              >
+                {editingPageId() ? 'تحديث الصفحة' : 'إضافة صفحة'}
+              </button>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-purple-600">الصفحات الحالية:</h3>
+            <For each={pagesData.pages}>
+              {(page) => (
+                <div class="mb-4 p-4 bg-white rounded-lg shadow-md">
+                  <h4 class="text-lg font-bold mb-2">{page.title}</h4>
+                  <p class="text-gray-700 mb-2">{page.content}</p>
+                  <div class="flex space-x-reverse space-x-2">
+                    <button
+                      onClick={() => handleEditPage(page)}
+                      class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                    >
+                      تعديل
+                    </button>
+                    <button
+                      onClick={() => handleDeletePage(page.id)}
+                      class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                    >
+                      حذف
+                    </button>
+                  </div>
+                </div>
+              )}
+            </For>
+          </div>
+        </Show>
+        {/* Similar sections for menus, services, tools, and settings */}
       </Show>
     </div>
   );
