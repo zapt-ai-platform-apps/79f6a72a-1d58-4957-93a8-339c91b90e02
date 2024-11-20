@@ -27,14 +27,6 @@ function AdminDashboard() {
         مرحبًا بك في لوحة التحكم. هنا يمكنك إدارة التطبيق، الاطلاع على الرسائل والطلبات المقدمة من المستخدمين، ومتابعة المحتوى.
       </p>
       {/* يمكنك إضافة مكونات وأقسام لوحة التحكم هنا */}
-      <button
-        onClick={() => {
-          window.location.href = '/BlindAccessibility.apk';
-        }}
-        class="mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-      >
-        تحميل BlindAccessibility.apk
-      </button>
     </div>
   );
 }
