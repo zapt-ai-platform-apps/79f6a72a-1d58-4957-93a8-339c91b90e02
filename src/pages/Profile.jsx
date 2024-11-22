@@ -83,7 +83,7 @@ function Profile() {
   };
 
   return (
-    <div class="min-h-screen flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
+    <div class="h-full flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
       <button
         onClick={() => navigate(-1)}
         class="self-start mb-4 text-2xl cursor-pointer"
@@ -91,15 +91,8 @@ function Profile() {
         🔙
       </button>
       <Show when={user()}>
-        <h1 class="text-4xl font-bold text-purple-600 mb-6">مرحبًا، {name()}!</h1>
+        <h1 class="text-4xl font-bold text-purple-600 mb-6">مرحبًا!</h1>
         <div class="w-full max-w-md">
-          <div class="flex flex-col items-center mb-6">
-            <div class="w-32 h-32 bg-gray-200 rounded-full mb-4 flex items-center justify-center">
-              <span class="text-4xl text-gray-500">👤</span>
-            </div>
-            <p class="text-gray-600">{email()}</p>
-          </div>
-
           <Show when={!editing()} fallback={
             <>
               <label class="block mb-2 text-lg font-semibold text-gray-700">الاسم:</label>
@@ -180,36 +173,6 @@ function Profile() {
               </div>
             </>
           }>
-            <div class="mb-4">
-              <p class="text-lg font-semibold text-gray-700">الاسم:</p>
-              <p class="text-gray-800">{name()}</p>
-            </div>
-
-            <div class="mb-4">
-              <p class="text-lg font-semibold text-gray-700">البريد الإلكتروني:</p>
-              <p class="text-gray-800">{email()}</p>
-            </div>
-
-            <div class="mb-4">
-              <p class="text-lg font-semibold text-gray-700">نبذة عنك:</p>
-              <p class="text-gray-800">{bio() || 'لا توجد نبذة'}</p>
-            </div>
-
-            <div class="mb-4">
-              <p class="text-lg font-semibold text-gray-700">الجنس:</p>
-              <p class="text-gray-800">{gender() || 'غير محدد'}</p>
-            </div>
-
-            <div class="mb-4">
-              <p class="text-lg font-semibold text-gray-700">الدولة:</p>
-              <p class="text-gray-800">{country() || 'غير محدد'}</p>
-            </div>
-
-            <div class="mb-4">
-              <p class="text-lg font-semibold text-gray-700">رقم الهاتف:</p>
-              <p class="text-gray-800">{phoneNumber() || 'غير محدد'}</p>
-            </div>
-
             <button
               onClick={() => setEditing(true)}
               class="w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 mb-4 cursor-pointer"
