@@ -3,7 +3,6 @@ import { createSignal, onMount, Show, For } from 'solid-js';
 import { supabase } from '../supabaseClient';
 import { createNotification } from '../components/Notification';
 import countries from '../data/countries';
-import { useSettings } from '../contexts/SettingsContext';
 
 function Profile() {
   const navigate = useNavigate();
@@ -13,9 +12,6 @@ function Profile() {
   const [gender, setGender] = createSignal('');
   const [country, setCountry] = createSignal('');
   const [phoneNumber, setPhoneNumber] = createSignal('');
-
-  const { theme, setTheme, fontSize, setFontSize } = useSettings();
-
   const [loading, setLoading] = createSignal(false);
 
   const { NotificationComponent, showNotification } = createNotification();
@@ -30,8 +26,6 @@ function Profile() {
       setGender(metadata.gender || '');
       setCountry(metadata.country || '');
       setPhoneNumber(metadata.phoneNumber || '');
-      setTheme(metadata.theme || 'light');
-      setFontSize(metadata.fontSize || 'medium');
     }
   });
 
@@ -42,8 +36,6 @@ function Profile() {
       gender: gender(),
       country: country(),
       phoneNumber: phoneNumber(),
-      theme: theme(),
-      fontSize: fontSize(),
     };
 
     try {
@@ -126,40 +118,21 @@ function Profile() {
             onInput={(e) => setPhoneNumber(e.target.value)}
           />
 
-          {/* قسم الإعدادات */}
-          <h2 class="text-2xl font-bold text-purple-600 mb-4 mt-8">الإعدادات</h2>
-
-          <label class="block mb-2 text-lg font-semibold text-gray-700">السمة (الثيم):</label>
-          <select
-            class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
-            value={theme()}
-            onInput={(e) => setTheme(e.target.value)}
-          >
-            <option value="light">فاتح</option>
-            <option value="dark">داكن</option>
-          </select>
-
-          <label class="block mb-2 text-lg font-semibold text-gray-700">حجم الخط:</label>
-          <select
-            class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
-            value={fontSize()}
-            onInput={(e) => setFontSize(e.target.value)}
-          >
-            <option value="small">صغير</option>
-            <option value="medium">متوسط</option>
-            <option value="large">كبير</option>
-          </select>
-
           <button
             onClick={handleUpdateProfile}
-            class={`w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 mb-4 ${
-              loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-            }`}
+            class={`w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 mb-4 ${loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
             disabled={loading()}
           >
             <Show when={!loading()} fallback="جاري التحديث...">
               تحديث الملف الشخصي
             </Show>
+          </button>
+
+          <button
+            onClick={() => navigate('/settings')}
+            class="w-full px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 mb-4 cursor-pointer"
+          >
+            الإعدادات
           </button>
 
           <button
