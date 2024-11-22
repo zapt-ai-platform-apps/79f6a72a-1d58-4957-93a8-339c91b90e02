@@ -1,31 +1,38 @@
 import { useNavigate } from '@solidjs/router';
-import { createSignal, onMount, Show, For } from 'solid-js';
+import { createSignal, onMount, Show, For, useContext } from 'solid-js';
 import { supabase } from '../supabaseClient';
 import { createNotification } from '../components/Notification';
 import countries from '../data/countries';
+import { AuthContext } from '../App';
 
 function Profile() {
   const navigate = useNavigate();
-  const [user, setUser] = createSignal(null);
+  const { user, setUser, setTheme, setFontSize } = useContext(AuthContext);
 
   const [name, setName] = createSignal('');
   const [gender, setGender] = createSignal('');
   const [country, setCountry] = createSignal('');
   const [phoneNumber, setPhoneNumber] = createSignal('');
+
+  // إضافة متغيرات الحالة للإعدادات
+  const [theme, setLocalTheme] = createSignal('light');
+  const [fontSize, setLocalFontSize] = createSignal('medium');
+
   const [loading, setLoading] = createSignal(false);
 
   const { NotificationComponent, showNotification } = createNotification();
 
   onMount(async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    setUser(user);
-
-    if (user) {
-      const metadata = user.user_metadata || {};
+    if (user()) {
+      const metadata = user().user_metadata || {};
       setName(metadata.name || '');
       setGender(metadata.gender || '');
       setCountry(metadata.country || '');
       setPhoneNumber(metadata.phoneNumber || '');
+
+      // تحميل الإعدادات
+      setLocalTheme(metadata.theme || 'light');
+      setLocalFontSize(metadata.fontSize || 'medium');
     }
   });
 
@@ -36,6 +43,8 @@ function Profile() {
       gender: gender(),
       country: country(),
       phoneNumber: phoneNumber(),
+      theme: theme(),
+      fontSize: fontSize(),
     };
 
     try {
@@ -49,6 +58,8 @@ function Profile() {
       } else {
         showNotification('تم تحديث الملف الشخصي بنجاح.', 'success');
         setUser(data.user);
+        setTheme(theme());
+        setFontSize(fontSize());
       }
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -117,6 +128,30 @@ function Profile() {
             value={phoneNumber()}
             onInput={(e) => setPhoneNumber(e.target.value)}
           />
+
+          {/* قسم الإعدادات */}
+          <h2 class="text-2xl font-bold text-purple-600 mb-4 mt-8">الإعدادات</h2>
+
+          <label class="block mb-2 text-lg font-semibold text-gray-700">السمة (الثيم):</label>
+          <select
+            class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
+            value={theme()}
+            onInput={(e) => setLocalTheme(e.target.value)}
+          >
+            <option value="light">فاتح</option>
+            <option value="dark">داكن</option>
+          </select>
+
+          <label class="block mb-2 text-lg font-semibold text-gray-700">حجم الخط:</label>
+          <select
+            class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
+            value={fontSize()}
+            onInput={(e) => setLocalFontSize(e.target.value)}
+          >
+            <option value="small">صغير</option>
+            <option value="medium">متوسط</option>
+            <option value="large">كبير</option>
+          </select>
 
           <button
             onClick={handleUpdateProfile}
