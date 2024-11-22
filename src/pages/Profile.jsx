@@ -15,6 +15,7 @@ function Profile() {
   const [country, setCountry] = createSignal('');
   const [phoneNumber, setPhoneNumber] = createSignal('');
   const [loading, setLoading] = createSignal(false);
+  const [editing, setEditing] = createSignal(false);
 
   const showNotification = useNotification();
 
@@ -54,6 +55,7 @@ function Profile() {
       } else {
         showNotification('تم تحديث الملف الشخصي بنجاح.', 'success');
         setUser(data.user);
+        setEditing(false);
       }
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -61,6 +63,17 @@ function Profile() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCancelEdit = () => {
+    const metadata = user().user_metadata || {};
+    setName(metadata.name || '');
+    setEmail(user().email || '');
+    setBio(metadata.bio || '');
+    setGender(metadata.gender || '');
+    setCountry(metadata.country || '');
+    setPhoneNumber(metadata.phoneNumber || '');
+    setEditing(false);
   };
 
   const handleSignOut = async () => {
@@ -87,88 +100,130 @@ function Profile() {
             <p class="text-gray-600">{email()}</p>
           </div>
 
-          <label class="block mb-2 text-lg font-semibold text-gray-700">الاسم:</label>
-          <input
-            class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-            type="text"
-            value={name()}
-            onInput={(e) => setName(e.target.value)}
-          />
+          <Show when={!editing()} fallback={
+            <>
+              <label class="block mb-2 text-lg font-semibold text-gray-700">الاسم:</label>
+              <input
+                class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+                type="text"
+                value={name()}
+                onInput={(e) => setName(e.target.value)}
+              />
 
-          <label class="block mb-2 text-lg font-semibold text-gray-700">البريد الإلكتروني:</label>
-          <input
-            class="w-full p-3 mb-4 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
-            type="email"
-            value={email()}
-            disabled
-          />
+              <label class="block mb-2 text-lg font-semibold text-gray-700">البريد الإلكتروني:</label>
+              <input
+                class="w-full p-3 mb-4 border border-gray-300 bg-gray-100 text-gray-600 cursor-not-allowed rounded-lg box-border"
+                type="email"
+                value={email()}
+                disabled
+              />
 
-          <label class="block mb-2 text-lg font-semibold text-gray-700">نبذة عنك:</label>
-          <textarea
-            class="w-full h-24 p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-            value={bio()}
-            onInput={(e) => setBio(e.target.value)}
-          />
+              <label class="block mb-2 text-lg font-semibold text-gray-700">نبذة عنك:</label>
+              <textarea
+                class="w-full h-24 p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+                value={bio()}
+                onInput={(e) => setBio(e.target.value)}
+              />
 
-          <label class="block mb-2 text-lg font-semibold text-gray-700">الجنس:</label>
-          <select
-            class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
-            value={gender()}
-            onInput={(e) => setGender(e.target.value)}
-          >
-            <option value="">-- اختر الجنس --</option>
-            <option value="ذكر">ذكر</option>
-            <option value="أنثى">أنثى</option>
-            <option value="آخر">آخر</option>
-          </select>
+              <label class="block mb-2 text-lg font-semibold text-gray-700">الجنس:</label>
+              <select
+                class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
+                value={gender()}
+                onInput={(e) => setGender(e.target.value)}
+              >
+                <option value="">-- اختر الجنس --</option>
+                <option value="ذكر">ذكر</option>
+                <option value="أنثى">أنثى</option>
+                <option value="آخر">آخر</option>
+              </select>
 
-          <label class="block mb-2 text-lg font-semibold text-gray-700">الدولة:</label>
-          <select
-            class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
-            value={country()}
-            onInput={(e) => setCountry(e.target.value)}
-          >
-            <option value="">-- اختر الدولة --</option>
-            <For each={countries}>
-              {(countryName) => (
-                <option value={countryName}>{countryName}</option>
-              )}
-            </For>
-          </select>
+              <label class="block mb-2 text-lg font-semibold text-gray-700">الدولة:</label>
+              <select
+                class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
+                value={country()}
+                onInput={(e) => setCountry(e.target.value)}
+              >
+                <option value="">-- اختر الدولة --</option>
+                <For each={countries}>
+                  {(countryName) => (
+                    <option value={countryName}>{countryName}</option>
+                  )}
+                </For>
+              </select>
 
-          <label class="block mb-2 text-lg font-semibold text-gray-700">رقم الهاتف:</label>
-          <input
-            class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-            type="tel"
-            value={phoneNumber()}
-            onInput={(e) => setPhoneNumber(e.target.value)}
-          />
+              <label class="block mb-2 text-lg font-semibold text-gray-700">رقم الهاتف:</label>
+              <input
+                class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+                type="tel"
+                value={phoneNumber()}
+                onInput={(e) => setPhoneNumber(e.target.value)}
+              />
 
-          <button
-            onClick={handleUpdateProfile}
-            class={`w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 mb-4 ${
-              loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-            }`}
-            disabled={loading()}
-          >
-            <Show when={!loading()} fallback="جاري التحديث...">
-              تحديث الملف الشخصي
-            </Show>
-          </button>
+              <div class="flex space-x-4">
+                <button
+                  onClick={handleUpdateProfile}
+                  class={`flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 mb-4 ${
+                    loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                  }`}
+                  disabled={loading()}
+                >
+                  <Show when={!loading()} fallback="جاري التحديث...">
+                    حفظ التغييرات
+                  </Show>
+                </button>
+                <button
+                  onClick={handleCancelEdit}
+                  class="flex-1 px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-300 ease-in-out transform hover:scale-105 mb-4 cursor-pointer"
+                >
+                  إلغاء
+                </button>
+              </div>
+            </>
+          }>
+            <div class="mb-4">
+              <p class="text-lg font-semibold text-gray-700">الاسم:</p>
+              <p class="text-gray-800">{name()}</p>
+            </div>
 
-          <button
-            onClick={() => navigate('/settings')}
-            class="w-full px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 mb-4 cursor-pointer"
-          >
-            الإعدادات
-          </button>
+            <div class="mb-4">
+              <p class="text-lg font-semibold text-gray-700">البريد الإلكتروني:</p>
+              <p class="text-gray-800">{email()}</p>
+            </div>
 
-          <button
-            onClick={handleSignOut}
-            class="w-full px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-          >
-            تسجيل الخروج
-          </button>
+            <div class="mb-4">
+              <p class="text-lg font-semibold text-gray-700">نبذة عنك:</p>
+              <p class="text-gray-800">{bio() || 'لا توجد نبذة'}</p>
+            </div>
+
+            <div class="mb-4">
+              <p class="text-lg font-semibold text-gray-700">الجنس:</p>
+              <p class="text-gray-800">{gender() || 'غير محدد'}</p>
+            </div>
+
+            <div class="mb-4">
+              <p class="text-lg font-semibold text-gray-700">الدولة:</p>
+              <p class="text-gray-800">{country() || 'غير محدد'}</p>
+            </div>
+
+            <div class="mb-4">
+              <p class="text-lg font-semibold text-gray-700">رقم الهاتف:</p>
+              <p class="text-gray-800">{phoneNumber() || 'غير محدد'}</p>
+            </div>
+
+            <button
+              onClick={() => setEditing(true)}
+              class="w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 mb-4 cursor-pointer"
+            >
+              تعديل الملف الشخصي
+            </button>
+
+            <button
+              onClick={handleSignOut}
+              class="w-full px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+            >
+              تسجيل الخروج
+            </button>
+          </Show>
         </div>
       </Show>
     </div>
