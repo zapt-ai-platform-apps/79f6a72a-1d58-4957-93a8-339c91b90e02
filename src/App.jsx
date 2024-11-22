@@ -22,9 +22,6 @@ const CreateYourApp = lazy(() => import('./pages/CreateYourApp'));
 const ContactUs = lazy(() => import('./pages/ContactUs'));
 const Login = lazy(() => import('./pages/Login'));
 const Profile = lazy(() => import('./pages/Profile'));
-const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
-const Forum = lazy(() => import('./pages/Forum'));
-const Shop = lazy(() => import('./pages/Shop'));
 
 function App() {
   const [user, setUser] = createSignal(null);
@@ -48,10 +45,6 @@ function App() {
       authListener?.unsubscribe();
     };
   });
-
-  function isAdmin(user) {
-    return user?.email === 'daoudi.abdennour@gmail.com';
-  }
 
   return (
     <div class="min-h-screen flex flex-col bg-gradient-to-br from-purple-100 via-blue-100 to-white text-gray-800" dir="rtl">
@@ -85,11 +78,6 @@ function App() {
               <Route path="/create-your-app" component={CreateYourApp} />
               <Route path="/contact-us" component={ContactUs} />
               <Route path="/profile" component={Profile} />
-              <Route path="/forum" component={Forum} />
-              <Route path="/shop" component={Shop} />
-              <Show when={isAdmin(user())}>
-                <Route path="/admin" component={AdminDashboard} />
-              </Show>
             </Routes>
           </Suspense>
         </div>

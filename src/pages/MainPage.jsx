@@ -10,21 +10,6 @@ function MainPage() {
         اكتشف حلولًا مبتكرة تزيد إنتاجيتك وتعزز إمكانية وصولك. ابدأ الآن رحلتك نحو تجربة رقمية أفضل!
       </p>
 
-      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-md">
-        <button
-          onClick={() => navigate('/forum')}
-          class="w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-        >
-          منتدى
-        </button>
-        <button
-          onClick={() => navigate('/shop')}
-          class="w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-        >
-          متجر
-        </button>
-      </div>
-
       <div class="mt-8 text-center">
         <h2 class="text-3xl font-bold text-purple-600 mb-4">انضم إلى فريقنا</h2>
         <p class="text-lg leading-relaxed max-w-2xl mb-4">
