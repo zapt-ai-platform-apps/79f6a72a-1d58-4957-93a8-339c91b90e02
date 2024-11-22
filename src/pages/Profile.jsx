@@ -1,7 +1,8 @@
 import { useNavigate } from '@solidjs/router';
-import { createSignal, onMount, Show } from 'solid-js';
+import { createSignal, onMount, Show, For } from 'solid-js';
 import { supabase } from '../supabaseClient';
 import { createNotification } from '../components/Notification';
+import countries from '../data/countries';
 
 function Profile() {
   const navigate = useNavigate();
@@ -96,12 +97,18 @@ function Profile() {
           </select>
 
           <label class="block mb-2 text-lg font-semibold text-gray-700">الدولة:</label>
-          <input
-            class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-            type="text"
+          <select
+            class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
             value={country()}
             onInput={(e) => setCountry(e.target.value)}
-          />
+          >
+            <option value="">-- اختر الدولة --</option>
+            <For each={countries}>
+              {(countryName) => (
+                <option value={countryName}>{countryName}</option>
+              )}
+            </For>
+          </select>
 
           <label class="block mb-2 text-lg font-semibold text-gray-700">رقم الهاتف:</label>
           <input
