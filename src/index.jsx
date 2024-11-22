@@ -30,6 +30,15 @@ progressierScript.setAttribute('src', 'https://progressier.app/z8yY3IKmfpDIw3mSn
 progressierScript.setAttribute('defer', 'true');
 document.querySelector('head').appendChild(progressierScript);
 
+// إضافة كود Umami لتحليل المستخدمين
+if (!window.location.hostname.includes('vercel.app')) {
+  const umamiScript = document.createElement('script');
+  umamiScript.defer = true;
+  umamiScript.src = 'https://cloud.umami.is/script.js';
+  umamiScript.setAttribute('data-website-id', import.meta.env.VITE_PUBLIC_UMAMI_WEBSITE_ID);
+  document.head.appendChild(umamiScript);
+}
+
 render(
   () => (
     <Router>

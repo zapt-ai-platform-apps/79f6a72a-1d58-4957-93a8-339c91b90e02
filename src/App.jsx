@@ -4,6 +4,7 @@ import TopNavBar from './components/TopNavBar';
 import BottomNavBar from './components/BottomNavBar';
 import Loader from './components/Loader';
 import { supabase } from './supabaseClient';
+import MadeOnZapt from './components/MadeOnZapt';
 
 const MainPage = lazy(() => import('./pages/MainPage'));
 const Services = lazy(() => import('./pages/Services'));
@@ -47,10 +48,10 @@ function App() {
   });
 
   return (
-    <div class="min-h-screen flex flex-col bg-gradient-to-br from-purple-100 via-blue-100 to-white text-gray-800" dir="rtl">
+    <div class="min-h-screen flex flex-col bg-gray-50 text-gray-800" dir="rtl">
       <Show when={user()} fallback={<Login />}>
         <button
-          class="fixed top-2 left-2 z-20 bg-blue-500 text-white p-2 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
+          class="fixed top-2 right-2 z-20 bg-blue-500 text-white p-2 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
           onClick={() => setShowTopNavBar(!showTopNavBar())}
           aria-label="تبديل القائمة"
         >
@@ -59,7 +60,7 @@ function App() {
         <Show when={showTopNavBar()}>
           <TopNavBar user={user} />
         </Show>
-        <div class={`flex-grow ${showTopNavBar() ? 'pt-16' : ''} pb-16`}>
+        <div class={`flex-grow ${showTopNavBar() ? 'pt-16' : ''} pb-16 h-full`}>
           <Suspense fallback={<div class="flex items-center justify-center h-full"><Loader loading={true} /></div>}>
             <Routes>
               <Route path="/" component={MainPage} />
@@ -82,6 +83,7 @@ function App() {
           </Suspense>
         </div>
         <BottomNavBar />
+        <MadeOnZapt />
       </Show>
     </div>
   );
