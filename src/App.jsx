@@ -23,6 +23,8 @@ const ContactUs = lazy(() => import('./pages/ContactUs'));
 const Login = lazy(() => import('./pages/Login'));
 const Profile = lazy(() => import('./pages/Profile'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const Forum = lazy(() => import('./pages/Forum'));
+const Shop = lazy(() => import('./pages/Shop'));
 
 function App() {
   const [user, setUser] = createSignal(null);
@@ -83,6 +85,8 @@ function App() {
               <Route path="/create-your-app" component={CreateYourApp} />
               <Route path="/contact-us" component={ContactUs} />
               <Route path="/profile" component={Profile} />
+              <Route path="/forum" component={Forum} />
+              <Route path="/shop" component={Shop} />
               <Show when={isAdmin(user())}>
                 <Route path="/admin" component={AdminDashboard} />
               </Show>
