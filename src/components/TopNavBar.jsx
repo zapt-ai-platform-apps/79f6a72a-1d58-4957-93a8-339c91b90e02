@@ -11,35 +11,38 @@ function TopNavBar(props) {
   };
 
   return (
-    <nav class="fixed top-0 left-0 w-full bg-white border-b border-gray-300 text-gray-800 z-10">
-      <div class="flex">
+    <nav class="fixed top-0 right-0 w-2/3 max-w-xs bg-white border-l border-gray-300 text-gray-800 z-20 h-full shadow-lg">
+      <div class="flex flex-col h-full">
         <button
-          class={`flex-1 flex flex-col items-center py-2 cursor-pointer ${
-            location.pathname === '/' ? 'text-primary border-b-2 border-primary' : ''
+          class={`flex items-center py-4 px-6 text-left text-lg cursor-pointer hover:bg-gray-100 ${
+            location.pathname === '/' ? 'text-primary' : ''
           }`}
           onClick={() => navigateTo('/')}
         >
-          <span class="text-2xl">🏠</span>
+          <span class="text-2xl mr-4">🏠</span>
           <span>الرئيسية</span>
         </button>
         <button
-          class={`flex-1 flex flex-col items-center py-2 cursor-pointer ${
-            location.pathname === '/join-us' ? 'text-primary border-b-2 border-primary' : ''
+          class={`flex items-center py-4 px-6 text-left text-lg cursor-pointer hover:bg-gray-100 ${
+            location.pathname === '/join-us' ? 'text-primary' : ''
           }`}
           onClick={() => navigateTo('/join-us')}
         >
-          <span class="text-2xl">🤝</span>
+          <span class="text-2xl mr-4">🤝</span>
           <span>انضم للفريق</span>
         </button>
         <button
-          class={`flex-1 flex flex-col items-center py-2 cursor-pointer ${
-            location.pathname === '/contact-us' ? 'text-primary border-b-2 border-primary' : ''
+          class={`flex items-center py-4 px-6 text-left text-lg cursor-pointer hover:bg-gray-100 ${
+            location.pathname === '/contact-us' ? 'text-primary' : ''
           }`}
           onClick={() => navigateTo('/contact-us')}
         >
-          <span class="text-2xl">📞</span>
+          <span class="text-2xl mr-4">📞</span>
           <span>اتصل بنا</span>
         </button>
+        <div class="mt-auto mb-4 px-6">
+          <p class="text-sm text-gray-600">© 2023 Blind Accessibility</p>
+        </div>
       </div>
     </nav>
   );

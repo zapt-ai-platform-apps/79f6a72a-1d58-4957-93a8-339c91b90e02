@@ -18,7 +18,6 @@ function BottomNavBar() {
             location.pathname === '/' ? 'text-primary border-t-2 border-primary' : ''
           }`}
           onClick={() => navigateTo('/')}
-          disabled={location.pathname === '/'}
         >
           <span class="text-2xl">🏠</span>
           <span>الرئيسية</span>
@@ -28,7 +27,6 @@ function BottomNavBar() {
             location.pathname === '/services' ? 'text-primary border-t-2 border-primary' : ''
           }`}
           onClick={() => navigateTo('/services')}
-          disabled={location.pathname === '/services'}
         >
           <span class="text-2xl">🔧</span>
           <span>خدمات</span>
@@ -38,7 +36,6 @@ function BottomNavBar() {
             location.pathname === '/tools' ? 'text-primary border-t-2 border-primary' : ''
           }`}
           onClick={() => navigateTo('/tools')}
-          disabled={location.pathname === '/tools'}
         >
           <span class="text-2xl">🛠️</span>
           <span>أدوات</span>
@@ -48,7 +45,6 @@ function BottomNavBar() {
             location.pathname === '/profile' ? 'text-primary border-t-2 border-primary' : ''
           }`}
           onClick={() => navigateTo('/profile')}
-          disabled={location.pathname === '/profile'}
         >
           <span class="text-2xl">👤</span>
           <span>الملف الشخصي</span>

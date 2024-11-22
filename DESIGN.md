@@ -23,14 +23,15 @@
 - **Guided Experience**
 - **Clear Contrast**
 - **Consistent Patterns**
+- **Progressive Disclosure**
 
 ## 2. Visual Theme Layer
 
-### Minimalist
+### Minimalist with Touches of Material Design
 
-- Extensive whitespace
-- Limited color palette
-- Typography-focused
+- Clean white backgrounds
+- Clear contrast
+- Use of shadows and paper-like layers for elevation
 - Best for: Focused experiences and accessibility
 
 ## 3. Design Principles Layer
@@ -38,37 +39,30 @@
 ### A. Space Management
 
 - **Clean White Space**
-  - Consistent padding
-  - Clear content sections
-  - Breathing room between elements
-
+  - Consistent padding and margins using an 8px grid
+  - Clear content sections with sufficient breathing room
 - **Structured Layout**
-  - Clear grid system
-  - Aligned elements
-  - Predictable patterns
+  - Use of grid systems
+  - Aligned elements for predictability
 
 ### B. Visual Hierarchy
 
+- **Subtle Depth**
+  - Light shadows and elevation to highlight important elements
 - **Clear Hierarchy**
-  - Important info stands out
-  - Secondary info recedes
-  - Visual relationships clear
+  - Headings and subheadings to organize content
+  - Use of color and weight to distinguish elements
 
 ### C. User Experience
 
 - **Quiet Interface**
-  - Muted colors
-  - Reserved bold colors
-  - Meaningful color use
-
+  - Muted primary colors
+  - Reserved use of bold colors for actions
 - **Gentle Interactions**
   - Subtle hover states
   - Smooth transitions
-  - Soft feedback
-
 - **Typography with Purpose**
-  - Limited font sizes
-  - Meaningful weights
+  - Limited font sizes and weights
   - Clear reading hierarchy
 
 ## 4. Implementation Layer
@@ -77,56 +71,65 @@
 
 #### Layout Components
 
-- Navigation (top/side)
-- Page containers
-- Grid systems
-- Section dividers
+- Responsive Navigation (top)
+- Responsive Grid System
+- Modal Overlays
 
 #### Content Components
 
-- Cards
-- Lists
-- Tabs
+- Cards with elevation
+- Lists with clear item separation
+- Tabs for content categorization
 
 #### Interactive Components
 
-- Buttons
-- Forms
-- Dropdowns
-- Modals
+- Buttons with hover and active states
+- Form elements with clear labels and help text
+- Icons to aid recognition
 
 ### B. Technical Specifications
 
 #### Spacing System
 
 - Base unit: 8px
-- Spacing scale: Multiples of 8px
-- Consistent margin and padding
+- Spacing scale: Multiples of 8px (8, 16, 24, 32, 40, 48, 56, 64)
 
 #### Color System
 
 - Primary color: #1D4ED8 (Blue)
 - Secondary color: #9333EA (Purple)
-- Neutral grays
+- Accent color: #F59E0B (Amber)
+- Neutral colors: Shades of gray for backgrounds and borders
 - Feedback colors:
   - Success: #10B981 (Green)
   - Error: #EF4444 (Red)
+  - Warning: #F59E0B (Amber)
 
 #### Typography Scale
 
 - Font family: 'Noto Sans Arabic', sans-serif
 - Font sizes:
-  - Heading: 32px
-  - Subheading: 24px
+  - Heading 1: 32px
+  - Heading 2: 24px
+  - Heading 3: 20px
   - Body: 16px
-- Meaningful use of font weights
+  - Small: 14px
+- Font weights:
+  - Regular: 400
+  - Bold: 700
 
 #### Interactive States
 
-- Hover
-- Focus
-- Active
-- Disabled
+- **Hover**
+  - Slight background change
+  - Cursor changes to pointer
+- **Focus**
+  - Outline or border highlight
+- **Active**
+  - Pressed effect with color darkening
+- **Disabled**
+  - Reduced opacity
+  - Cursor changes to not-allowed
 
 #### Responsive Approach
 
@@ -136,27 +139,26 @@
   - Medium (md): 768px
   - Large (lg): 1024px
   - Extra Large (xl): 1280px
-- Layout changes at each breakpoint
-- Component adaptation for different screen sizes
+- Layout adjustments at each breakpoint
+- Components adapt to screen size (e.g., navigation transforms from hamburger menu on mobile to full menu on desktop)
 
 ## Application Process
 
 1. **Strategy Definition**
-   - Defined Core Values: Clarity, Simplicity, Warmth
-   - Ranked Priorities: Accessibility, Clarity of Information, User Confidence, etc.
-   - Selected Key Characteristics: Guided Experience, Clear Contrast, Consistent Patterns
+   - Maintained core values: Clarity, Simplicity, Warmth
+   - Ensured Accessibility is the top priority
+   - Selected key characteristics to guide the user through the app
 
 2. **Theme Selection**
-   - Chose Minimalist Theme
-   - Considered industry fit: Accessibility App
-   - No variations planned currently
+   - Combined Minimalist with touches of Material Design for better hierarchy and depth
+   - Ensured the theme aligns with the app's focus on accessibility
 
 3. **Principles Application**
-   - Applied principles based on strategy
-   - Implemented Clean White Space and Structured Layout
-   - Used Clear Hierarchy in visual elements
+   - Applied clean white space and structured layouts
+   - Implemented visual hierarchy using typography and subtle depth
+   - Designed interactions to be gentle and informative
 
 4. **Implementation Planning**
-   - Defined component library
-   - Documented technical specs
-   - Created pattern library in code
+   - Refactored components into smaller, reusable pieces
+   - Updated technical specifications in Tailwind configuration
+   - Ensured all components are responsive and accessible

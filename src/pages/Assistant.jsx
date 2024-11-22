@@ -1,7 +1,7 @@
 import { useNavigate } from '@solidjs/router';
 import { createSignal, Show } from 'solid-js';
 import { createEvent } from '../supabaseClient';
-import { createNotification } from '../components/Notification';
+import { useNotification } from '../components/NotificationProvider';
 import Loader from '../components/Loader';
 import { SolidMarkdown } from 'solid-markdown';
 import BackButton from '../components/BackButton';
@@ -14,7 +14,7 @@ function Assistant() {
   const [assistantResponse, setAssistantResponse] = createSignal('');
   const [loadingAudio, setLoadingAudio] = createSignal(false);
 
-  const { NotificationComponent, showNotification } = createNotification();
+  const showNotification = useNotification();
 
   const handleAssistantRequest = async () => {
     if (inputText().trim() === '') return;
@@ -67,7 +67,6 @@ function Assistant() {
 
   return (
     <div class="h-full flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
-      <NotificationComponent />
       <BackButton />
       <h1 class="text-4xl font-bold text-purple-600 mb-6">المساعد الذكي</h1>
 
