@@ -1,11 +1,12 @@
 import { Routes, Route } from '@solidjs/router';
-import { lazy, Suspense, createSignal, onMount, createEffect, createContext } from 'solid-js';
+import { lazy, Suspense, createSignal, onMount, createEffect, Show } from 'solid-js';
 import TopNavBar from './components/TopNavBar';
 import BottomNavBar from './components/BottomNavBar';
 import Loader from './components/Loader';
 import { supabase } from './supabaseClient';
 import MadeOnZapt from './components/MadeOnZapt';
 import NotificationProvider from './components/NotificationProvider';
+import { useSettings } from './contexts/SettingsContext';
 
 const MainPage = lazy(() => import('./pages/MainPage'));
 const Services = lazy(() => import('./pages/Services'));
@@ -25,17 +26,11 @@ const ContactUs = lazy(() => import('./pages/ContactUs'));
 const Login = lazy(() => import('./pages/Login'));
 const Profile = lazy(() => import('./pages/Profile'));
 
-import { createContext } from 'solid-js';
-
-export const AuthContext = createContext();
-
 function App() {
   const [user, setUser] = createSignal(null);
   const [showTopNavBar, setShowTopNavBar] = createSignal(false);
 
-  // متغيرات الحالة للسمة وحجم الخط
-  const [theme, setTheme] = createSignal('light');
-  const [fontSize, setFontSize] = createSignal('medium');
+  const { theme, setTheme, fontSize, setFontSize } = useSettings();
 
   onMount(async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -43,8 +38,6 @@ function App() {
 
     if (user) {
       const metadata = user.user_metadata || {};
-
-      // تعيين السمة وحجم الخط من بيانات المستخدم
       setTheme(metadata.theme || 'light');
       setFontSize(metadata.fontSize || 'medium');
     }
@@ -81,50 +74,48 @@ function App() {
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, theme, setTheme, fontSize, setFontSize }}>
-      <div class={`${theme() === 'dark' ? 'dark' : ''} h-full`}>
-        <div class={`h-full flex flex-col bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 ${fontSizeClass()}`} dir="rtl">
-          <NotificationProvider>
-            <Show when={user()} fallback={<Login />}>
-              <button
-                class="fixed top-2 right-2 z-20 bg-blue-500 text-white p-2 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
-                onClick={() => setShowTopNavBar(!showTopNavBar())}
-                aria-label="تبديل القائمة"
-              >
-                <Show when={showTopNavBar()} fallback="☰">×</Show>
-              </button>
-              <Show when={showTopNavBar()}>
-                <TopNavBar user={user} />
-              </Show>
-              <div class={`flex-grow ${showTopNavBar() ? 'pt-16' : ''} pb-16 h-full`}>
-                <Suspense fallback={<div class="flex items-center justify-center h-full"><Loader loading={true} /></div>}>
-                  <Routes>
-                    <Route path="/" component={MainPage} />
-                    <Route path="/services" component={Services} />
-                    <Route path="/tools" component={Tools} />
-                    <Route path="/assistant" component={Assistant} />
-                    <Route path="/voice-assistant" component={VoiceAssistant} />
-                    <Route path="/resume-builder" component={ResumeBuilder} />
-                    <Route path="/resume-result" component={ResumeResult} />
-                    <Route path="/content-generator" component={ContentGenerator} />
-                    <Route path="/content-result" component={ContentResult} />
-                    <Route path="/text-editor" component={TextEditor} />
-                    <Route path="/text-result" component={TextResult} />
-                    <Route path="/join-us" component={JoinUs} />
-                    <Route path="/radio" component={Radio} />
-                    <Route path="/create-your-app" component={CreateYourApp} />
-                    <Route path="/contact-us" component={ContactUs} />
-                    <Route path="/profile" component={Profile} />
-                  </Routes>
-                </Suspense>
-              </div>
-              <BottomNavBar />
-              <MadeOnZapt />
+    <div class={`${theme() === 'dark' ? 'dark' : ''} h-full`}>
+      <div class={`h-full flex flex-col bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 ${fontSizeClass()}`} dir="rtl">
+        <NotificationProvider>
+          <Show when={user()} fallback={<Login />}>
+            <button
+              class="fixed top-2 right-2 z-20 bg-blue-500 text-white p-2 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
+              onClick={() => setShowTopNavBar(!showTopNavBar())}
+              aria-label="تبديل القائمة"
+            >
+              <Show when={showTopNavBar()} fallback="☰">×</Show>
+            </button>
+            <Show when={showTopNavBar()}>
+              <TopNavBar user={user} />
             </Show>
-          </NotificationProvider>
-        </div>
+            <div class={`flex-grow ${showTopNavBar() ? 'pt-16' : ''} pb-16 h-full`}>
+              <Suspense fallback={<div class="flex items-center justify-center h-full"><Loader loading={true} /></div>}>
+                <Routes>
+                  <Route path="/" component={MainPage} />
+                  <Route path="/services" component={Services} />
+                  <Route path="/tools" component={Tools} />
+                  <Route path="/assistant" component={Assistant} />
+                  <Route path="/voice-assistant" component={VoiceAssistant} />
+                  <Route path="/resume-builder" component={ResumeBuilder} />
+                  <Route path="/resume-result" component={ResumeResult} />
+                  <Route path="/content-generator" component={ContentGenerator} />
+                  <Route path="/content-result" component={ContentResult} />
+                  <Route path="/text-editor" component={TextEditor} />
+                  <Route path="/text-result" component={TextResult} />
+                  <Route path="/join-us" component={JoinUs} />
+                  <Route path="/radio" component={Radio} />
+                  <Route path="/create-your-app" component={CreateYourApp} />
+                  <Route path="/contact-us" component={ContactUs} />
+                  <Route path="/profile" component={Profile} />
+                </Routes>
+              </Suspense>
+            </div>
+            <BottomNavBar />
+            <MadeOnZapt />
+          </Show>
+        </NotificationProvider>
       </div>
-    </AuthContext.Provider>
+    </div>
   );
 }
 

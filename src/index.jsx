@@ -7,6 +7,8 @@ import { Router } from '@solidjs/router';
 // تهيئة Sentry لتسجيل الأخطاء
 import * as Sentry from '@sentry/browser';
 
+import { SettingsProvider } from './contexts/SettingsContext';
+
 Sentry.init({
   dsn: import.meta.env.VITE_PUBLIC_SENTRY_DSN,
   environment: import.meta.env.VITE_PUBLIC_APP_ENV,
@@ -42,7 +44,9 @@ if (!window.location.hostname.includes('vercel.app')) {
 render(
   () => (
     <Router>
-      <App />
+      <SettingsProvider>
+        <App />
+      </SettingsProvider>
     </Router>
   ),
   document.getElementById('root')
