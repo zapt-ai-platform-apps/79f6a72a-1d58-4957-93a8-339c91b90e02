@@ -1,7 +1,7 @@
 import { useNavigate } from '@solidjs/router';
 import { createSignal, onMount, Show, For } from 'solid-js';
 import { supabase } from '../supabaseClient';
-import { createNotification } from '../components/Notification';
+import { useNotification } from '../components/NotificationProvider';
 import countries from '../data/countries';
 
 function Profile() {
@@ -9,12 +9,14 @@ function Profile() {
   const [user, setUser] = createSignal(null);
 
   const [name, setName] = createSignal('');
+  const [email, setEmail] = createSignal('');
+  const [bio, setBio] = createSignal('');
   const [gender, setGender] = createSignal('');
   const [country, setCountry] = createSignal('');
   const [phoneNumber, setPhoneNumber] = createSignal('');
   const [loading, setLoading] = createSignal(false);
 
-  const { NotificationComponent, showNotification } = createNotification();
+  const showNotification = useNotification();
 
   onMount(async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -23,6 +25,8 @@ function Profile() {
     if (user) {
       const metadata = user.user_metadata || {};
       setName(metadata.name || '');
+      setEmail(user.email || '');
+      setBio(metadata.bio || '');
       setGender(metadata.gender || '');
       setCountry(metadata.country || '');
       setPhoneNumber(metadata.phoneNumber || '');
@@ -33,6 +37,7 @@ function Profile() {
     setLoading(true);
     const updates = {
       name: name(),
+      bio: bio(),
       gender: gender(),
       country: country(),
       phoneNumber: phoneNumber(),
@@ -66,22 +71,43 @@ function Profile() {
 
   return (
     <div class="min-h-screen flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
-      <NotificationComponent />
       <button
         onClick={() => navigate(-1)}
         class="self-start mb-4 text-2xl cursor-pointer"
       >
         🔙
       </button>
-      <h1 class="text-4xl font-bold text-purple-600 mb-6">الملف الشخصي</h1>
       <Show when={user()}>
+        <h1 class="text-4xl font-bold text-purple-600 mb-6">مرحبًا، {name()}!</h1>
         <div class="w-full max-w-md">
+          <div class="flex flex-col items-center mb-6">
+            <div class="w-32 h-32 bg-gray-200 rounded-full mb-4 flex items-center justify-center">
+              <span class="text-4xl text-gray-500">👤</span>
+            </div>
+            <p class="text-gray-600">{email()}</p>
+          </div>
+
           <label class="block mb-2 text-lg font-semibold text-gray-700">الاسم:</label>
           <input
             class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
             type="text"
             value={name()}
             onInput={(e) => setName(e.target.value)}
+          />
+
+          <label class="block mb-2 text-lg font-semibold text-gray-700">البريد الإلكتروني:</label>
+          <input
+            class="w-full p-3 mb-4 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+            type="email"
+            value={email()}
+            disabled
+          />
+
+          <label class="block mb-2 text-lg font-semibold text-gray-700">نبذة عنك:</label>
+          <textarea
+            class="w-full h-24 p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+            value={bio()}
+            onInput={(e) => setBio(e.target.value)}
           />
 
           <label class="block mb-2 text-lg font-semibold text-gray-700">الجنس:</label>
@@ -120,7 +146,9 @@ function Profile() {
 
           <button
             onClick={handleUpdateProfile}
-            class={`w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 mb-4 ${loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+            class={`w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 mb-4 ${
+              loading() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+            }`}
             disabled={loading()}
           >
             <Show when={!loading()} fallback="جاري التحديث...">
