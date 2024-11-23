@@ -22,6 +22,15 @@ function AdminDashboard() {
   const [newPostCategory, setNewPostCategory] = createSignal('');
   const [creatingPost, setCreatingPost] = createSignal(false);
 
+  // Categories for blog posts
+  const [categories] = createSignal([
+    'أحدث الأخبار والمستجدات التقنية',
+    'قارئات الشاشة',
+    'برامج وتطبيقات',
+    'حصريات',
+    'دروس وشروحات',
+  ]);
+
   onMount(async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (user && user.email === 'daoudi.abdennour@gmail.com') {
@@ -205,13 +214,18 @@ function AdminDashboard() {
             </div>
             <div class="mb-4">
               <label class="block mb-2 text-lg font-semibold text-gray-700">التصنيف:</label>
-              <input
-                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-                type="text"
+              <select
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
                 value={newPostCategory()}
                 onInput={(e) => setNewPostCategory(e.target.value)}
-                placeholder="مثال: أحدث الأخبار والمستجدات التقنية"
-              />
+              >
+                <option value="">-- اختر التصنيف --</option>
+                <For each={categories()}>
+                  {(category) => (
+                    <option value={category}>{category}</option>
+                  )}
+                </For>
+              </select>
             </div>
             <div class="mb-4">
               <label class="block mb-2 text-lg font-semibold text-gray-700">المحتوى:</label>
