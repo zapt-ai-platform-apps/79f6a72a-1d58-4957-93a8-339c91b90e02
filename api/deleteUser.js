@@ -13,12 +13,17 @@ Sentry.init({
 });
 
 export default async function handler(req, res) {
-  if (req.method !== 'GET') {
-    res.setHeader('Allow', ['GET']);
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', ['POST']);
     return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 
   try {
+    const { userId } = req.body;
+    if (!userId) {
+      return res.status(400).json({ error: 'معرف المستخدم مطلوب' });
+    }
+
     const { supabase } = initializeZapt(process.env.APP_ID, {
       supabaseUrl: process.env.SUPABASE_URL,
       supabaseServiceKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
@@ -36,17 +41,17 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: 'غير مصرح' });
     }
 
-    // Fetch users
-    const { data: users, error: usersError } = await supabase.auth.admin.listUsers();
+    // Delete user
+    const { error: deleteError } = await supabase.auth.admin.deleteUser(userId);
 
-    if (usersError) {
-      throw usersError;
+    if (deleteError) {
+      throw deleteError;
     }
 
-    res.status(200).json({ users });
+    res.status(200).json({ message: 'تم حذف المستخدم بنجاح' });
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('Error deleting user:', error);
     Sentry.captureException(error);
-    res.status(500).json({ error: 'Error fetching users' });
+    res.status(500).json({ error: 'حدث خطأ أثناء حذف المستخدم' });
   }
 }

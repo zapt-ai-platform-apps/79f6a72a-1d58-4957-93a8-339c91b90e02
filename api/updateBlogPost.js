@@ -30,21 +30,28 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: 'غير مصرح' });
     }
 
-    const { postId } = req.body;
+    const { postId, title, content, category } = req.body;
 
-    if (!postId) {
-      return res.status(400).json({ error: 'معرف المقال مطلوب' });
+    if (!postId || !title || !content || !category) {
+      return res.status(400).json({ error: 'جميع الحقول مطلوبة' });
     }
 
     const sql = neon(process.env.NEON_DB_URL);
     const db = drizzle(sql);
 
-    await db.delete(blogPosts).where(eq(blogPosts.id, postId));
+    await db.update(blogPosts)
+      .set({
+        title,
+        content,
+        category,
+        updatedAt: new Date(),
+      })
+      .where(eq(blogPosts.id, postId));
 
-    res.status(200).json({ message: 'تم حذف المقال بنجاح' });
+    res.status(200).json({ message: 'تم تحديث المقال بنجاح' });
   } catch (error) {
-    console.error('Error deleting blog post:', error);
+    console.error('Error updating blog post:', error);
     Sentry.captureException(error);
-    res.status(500).json({ error: 'حدث خطأ أثناء حذف المقال' });
+    res.status(500).json({ error: 'حدث خطأ أثناء تحديث المقال' });
   }
 }

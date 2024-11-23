@@ -1,4 +1,4 @@
-import { blogPosts } from '../drizzle/schema.js';
+import { messages } from '../drizzle/schema.js';
 import { authenticateUser } from './_apiUtils.js';
 import * as Sentry from '@sentry/node';
 import { neon } from '@neondatabase/serverless';
@@ -30,21 +30,21 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: 'غير مصرح' });
     }
 
-    const { postId } = req.body;
+    const { messageId } = req.body;
 
-    if (!postId) {
-      return res.status(400).json({ error: 'معرف المقال مطلوب' });
+    if (!messageId) {
+      return res.status(400).json({ error: 'معرف الرسالة مطلوب' });
     }
 
     const sql = neon(process.env.NEON_DB_URL);
     const db = drizzle(sql);
 
-    await db.delete(blogPosts).where(eq(blogPosts.id, postId));
+    await db.delete(messages).where(eq(messages.id, messageId));
 
-    res.status(200).json({ message: 'تم حذف المقال بنجاح' });
+    res.status(200).json({ message: 'تم حذف الرسالة بنجاح' });
   } catch (error) {
-    console.error('Error deleting blog post:', error);
+    console.error('Error deleting message:', error);
     Sentry.captureException(error);
-    res.status(500).json({ error: 'حدث خطأ أثناء حذف المقال' });
+    res.status(500).json({ error: 'حدث خطأ أثناء حذف الرسالة' });
   }
 }
