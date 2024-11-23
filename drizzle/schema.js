@@ -17,6 +17,7 @@ export const messages = pgTable('messages', {
   message: text('message').notNull(),
   createdAt: timestamp('created_at').defaultNow(),
   userId: uuid('user_id'),
+  receiverId: uuid('receiver_id'),
 });
 
 export const pages = pgTable('pages', {

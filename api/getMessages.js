@@ -3,7 +3,7 @@ import { authenticateUser } from "./_apiUtils.js";
 import * as Sentry from '@sentry/node';
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
-import { eq, desc } from 'drizzle-orm';
+import { eq, or, desc } from 'drizzle-orm';
 
 Sentry.init({
   dsn: process.env.VITE_PUBLIC_SENTRY_DSN,
@@ -30,7 +30,12 @@ export default async function handler(req, res) {
 
     const userMessages = await db.select()
       .from(messages)
-      .where(eq(messages.userId, user.id))
+      .where(
+        or(
+          eq(messages.userId, user.id),
+          eq(messages.receiverId, user.id)
+        )
+      )
       .orderBy(desc(messages.createdAt));
 
     res.status(200).json(userMessages);

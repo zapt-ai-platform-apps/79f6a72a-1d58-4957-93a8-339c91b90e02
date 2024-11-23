@@ -9,9 +9,13 @@ function Messages() {
   const [messages, setMessages] = createSignal([]);
   const [loading, setLoading] = createSignal(false);
   const showNotification = useNotification();
+  const [currentUser, setCurrentUser] = createSignal(null);
 
   onMount(async () => {
     setLoading(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    setCurrentUser(user);
+
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const response = await fetch('/api/getMessages', {
@@ -55,7 +59,9 @@ function Messages() {
             {(message) => (
               <div class="mb-4 p-4 bg-white rounded-lg shadow-md">
                 <p class="text-sm text-gray-600">تاريخ: {new Date(message.createdAt).toLocaleString()}</p>
-                <p class="text-lg font-semibold text-gray-800 mt-2">نوع الرسالة: {message.type}</p>
+                <p class="text-lg font-semibold text-gray-800 mt-2">
+                  {message.userId === currentUser().id ? 'مرسلة بواسطةك' : 'مرسلة من المشرف'}
+                </p>
                 <p class="text-gray-700 mt-2 whitespace-pre-wrap">الرسالة: {message.message}</p>
               </div>
             )}
