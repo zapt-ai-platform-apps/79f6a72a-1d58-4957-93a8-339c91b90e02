@@ -17,6 +17,12 @@ function Services() {
         >
           إنشاء تطبيقك الخاص
         </button>
+        <button
+          onClick={() => navigate('/order-your-website')}
+          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          اطلب موقعك الخاص
+        </button>
       </div>
     </div>
   );
