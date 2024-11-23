@@ -12,6 +12,7 @@ const Assistant = lazy(() => import('./pages/Assistant'));
 const Blog = lazy(() => import('./pages/Blog'));
 const BlogPost = lazy(() => import('./pages/BlogPost'));
 const OrderYourApp = lazy(() => import('./pages/OrderYourApp'));
+const OrderYourAppForm = lazy(() => import('./pages/OrderYourAppForm'));
 const OrderYourWebsite = lazy(() => import('./pages/OrderYourWebsite'));
 const JoinUs = lazy(() => import('./pages/JoinUs'));
 const Messages = lazy(() => import('./pages/Messages'));
@@ -76,6 +77,7 @@ function App() {
                   <Route path="/blog" component={Blog} />
                   <Route path="/blog/:id" component={BlogPost} />
                   <Route path="/order-your-app" component={OrderYourApp} />
+                  <Route path="/order-your-app-form" component={OrderYourAppForm} />
                   <Route path="/order-your-website" component={OrderYourWebsite} />
                   <Route path="/join-us" component={JoinUs} />
                   <Route path="/messages" component={Messages} />

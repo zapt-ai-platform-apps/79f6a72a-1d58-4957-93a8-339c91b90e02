@@ -74,7 +74,7 @@ function OrderYourApp() {
               ))}
             </ul>
             <button
-              onClick={() => navigate(`/contact-us?package=${pkg.value}`)}
+              onClick={() => navigate(`/order-your-app-form?package=${pkg.value}`)}
               class={`mt-4 w-full px-6 py-3 ${pkg.bgColor} ${pkg.hoverColor} text-white rounded-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
             >
               ابدأ الآن
