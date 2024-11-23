@@ -27,6 +27,7 @@ const Radio = lazy(() => import('./pages/Radio'));
 const TextEditor = lazy(() => import('./pages/TextEditor'));
 const TextResult = lazy(() => import('./pages/TextResult'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const ImageGenerator = lazy(() => import('./pages/ImageGenerator'));
 
 function App() {
   const [user, setUser] = createSignal(null);
@@ -89,6 +90,7 @@ function App() {
                   <Route path="/text-editor" component={TextEditor} />
                   <Route path="/text-result" component={TextResult} />
                   <Route path="/admin" component={AdminDashboard} />
+                  <Route path="/image-generator" component={ImageGenerator} />
                 </Routes>
               </Suspense>
             </div>
