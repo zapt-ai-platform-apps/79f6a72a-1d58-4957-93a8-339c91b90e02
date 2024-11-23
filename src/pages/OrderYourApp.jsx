@@ -1,7 +1,7 @@
 import { useNavigate } from '@solidjs/router';
 import { createSignal } from 'solid-js';
 
-function CreateYourApp() {
+function OrderYourApp() {
   const navigate = useNavigate();
   const [selectedPackage, setSelectedPackage] = createSignal('');
 
@@ -53,9 +53,9 @@ function CreateYourApp() {
       >
         🔙
       </button>
-      <h1 class="text-5xl font-bold text-purple-600 mb-6">✨ إنشاء تطبيقك الخاص ✨</h1>
+      <h1 class="text-5xl font-bold text-purple-600 mb-6">✨ اطلب تطبيقك الخاص ✨</h1>
       <p class="text-xl text-center leading-relaxed max-w-3xl mb-8">
-        🌟 انطلق في رحلتك الرقمية معنا! قم بإنشاء تطبيقك الخاص المتوافق مع قارئات الشاشة للمكفوفين. نحن ندعم جميع المشاريع ونقدم خدمات تناسب احتياجاتك لتحقيق رؤيتك.
+        🌟 انطلق في رحلتك الرقمية معنا! اطلب تطبيقك الخاص المتوافق مع قارئات الشاشة للمكفوفين. نحن ندعم جميع المشاريع ونقدم خدمات تناسب احتياجاتك لتحقيق رؤيتك.
       </p>
 
       <h2 class="text-3xl font-bold text-purple-600 mb-6">اختر الباقة المثالية لك:</h2>
@@ -115,4 +115,4 @@ function CreateYourApp() {
   );
 }
 
-export default CreateYourApp;
+export default OrderYourApp;
