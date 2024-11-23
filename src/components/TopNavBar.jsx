@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from '@solidjs/router';
+import { Show } from 'solid-js';
 
 function TopNavBar(props) {
   const navigate = useNavigate();
@@ -8,6 +9,10 @@ function TopNavBar(props) {
     if (location.pathname !== path) {
       navigate(path, { replace: true });
     }
+  };
+
+  const isAdmin = () => {
+    return props.user() && props.user().email === 'daoudi.abdennour@gmail.com';
   };
 
   return (
@@ -40,6 +45,17 @@ function TopNavBar(props) {
           <span class="text-2xl mr-4">📞</span>
           <span>اتصل بنا</span>
         </button>
+        <Show when={isAdmin()}>
+          <button
+            class={`flex items-center py-4 px-6 text-left text-lg cursor-pointer hover:bg-gray-100 ${
+              location.pathname === '/admin' ? 'text-primary' : ''
+            }`}
+            onClick={() => navigateTo('/admin')}
+          >
+            <span class="text-2xl mr-4">⚙️</span>
+            <span>لوحة التحكم</span>
+          </button>
+        </Show>
         <div class="mt-auto mb-4 px-6">
           <p class="text-sm text-gray-600">© 2023 Blind Accessibility</p>
         </div>

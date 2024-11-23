@@ -26,6 +26,7 @@ const Login = lazy(() => import('./pages/Login'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Messages = lazy(() => import('./pages/Messages'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
 function App() {
   const [user, setUser] = createSignal(null);
@@ -85,10 +86,11 @@ function App() {
                 <Route path="/profile" component={Profile} />
                 <Route path="/settings" component={Settings} />
                 <Route path="/messages" component={Messages} />
+                <Route path="/admin" component={AdminDashboard} />
               </Routes>
             </Suspense>
           </div>
-          <BottomNavBar />
+          <BottomNavBar user={user} />
           <MadeOnZapt />
         </Show>
       </NotificationProvider>
