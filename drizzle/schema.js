@@ -1,4 +1,4 @@
-import { pgTable, serial, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, timestamp, uuid, integer } from 'drizzle-orm/pg-core';
 
 export const jokes = pgTable('jokes', {
   id: serial('id').primaryKey(),
@@ -36,4 +36,12 @@ export const blogPosts = pgTable('blog_posts', {
   authorId: uuid('author_id').notNull(),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+export const comments = pgTable('comments', {
+  id: serial('id').primaryKey(),
+  postId: integer('post_id').notNull().references(() => blogPosts.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull(),
+  content: text('content').notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
 });

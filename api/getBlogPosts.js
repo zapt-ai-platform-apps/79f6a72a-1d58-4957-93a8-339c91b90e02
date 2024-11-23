@@ -1,9 +1,8 @@
 import { blogPosts } from '../drizzle/schema.js';
-import { authenticateUser } from './_apiUtils.js';
 import * as Sentry from '@sentry/node';
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
-import { eq, desc } from 'drizzle-orm';
+import { eq, ilike, desc, and } from 'drizzle-orm';
 
 Sentry.init({
   dsn: process.env.VITE_PUBLIC_SENTRY_DSN,
@@ -23,26 +22,46 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { category, id } = req.query;
+    const { category, id, page, limit, search } = req.query;
+    const pageNum = parseInt(page) || 1;
+    const pageSize = parseInt(limit) || 10;
 
     const sql = neon(process.env.NEON_DB_URL);
     const db = drizzle(sql);
 
-    let query = db.select()
-      .from(blogPosts)
-      .orderBy(desc(blogPosts.createdAt));
+    let whereConditions = [];
 
     if (category) {
-      query = query.where(eq(blogPosts.category, category));
+      whereConditions.push(eq(blogPosts.category, category));
     }
 
     if (id) {
-      query = query.where(eq(blogPosts.id, parseInt(id)));
+      whereConditions.push(eq(blogPosts.id, parseInt(id)));
     }
 
-    const posts = await query;
+    if (search) {
+      whereConditions.push(
+        ilike(blogPosts.title, `%${search}%`)
+      );
+    }
 
-    res.status(200).json(posts);
+    const conditions = whereConditions.length > 0 ? and(...whereConditions) : undefined;
+
+    const [posts, totalResult] = await Promise.all([
+      db.select()
+        .from(blogPosts)
+        .where(conditions)
+        .orderBy(desc(blogPosts.createdAt))
+        .limit(pageSize)
+        .offset((pageNum - 1) * pageSize),
+      db.select({ count: 'count(*)' })
+        .from(blogPosts)
+        .where(conditions)
+    ]);
+
+    const total = parseInt(totalResult[0].count);
+
+    res.status(200).json({ posts, total });
   } catch (error) {
     console.error('Error fetching blog posts:', error);
     Sentry.captureException(error);
