@@ -16,6 +16,7 @@ export const messages = pgTable('messages', {
   phone: text('phone'),
   message: text('message').notNull(),
   createdAt: timestamp('created_at').defaultNow(),
+  userId: uuid('user_id'),
 });
 
 export const pages = pgTable('pages', {

@@ -1,4 +1,5 @@
 import { messages } from '../drizzle/schema.js';
+import { authenticateUser } from "./_apiUtils.js";
 import * as Sentry from '@sentry/node';
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
@@ -27,6 +28,14 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Type, name, email, and message are required' });
     }
 
+    let userId = null;
+    try {
+      const user = await authenticateUser(req);
+      userId = user.id;
+    } catch (err) {
+      // User not authenticated
+    }
+
     const sql = neon(process.env.NEON_DB_URL);
     const db = drizzle(sql);
 
@@ -36,6 +45,7 @@ export default async function handler(req, res) {
       email,
       phone,
       message,
+      userId, // Will be null if user not authenticated
     });
 
     res.status(201).json({ message: 'Message saved successfully' });

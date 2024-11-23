@@ -25,6 +25,7 @@ const ContactUs = lazy(() => import('./pages/ContactUs'));
 const Login = lazy(() => import('./pages/Login'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Settings = lazy(() => import('./pages/Settings'));
+const Messages = lazy(() => import('./pages/Messages'));
 
 function App() {
   const [user, setUser] = createSignal(null);
@@ -83,6 +84,7 @@ function App() {
                 <Route path="/contact-us" component={ContactUs} />
                 <Route path="/profile" component={Profile} />
                 <Route path="/settings" component={Settings} />
+                <Route path="/messages" component={Messages} />
               </Routes>
             </Suspense>
           </div>
