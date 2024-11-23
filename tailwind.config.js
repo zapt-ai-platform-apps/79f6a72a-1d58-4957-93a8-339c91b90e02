@@ -8,15 +8,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#1D4ED8',
-        secondary: '#9333EA',
-        accent: '#F59E0B',
-        danger: '#EF4444',
-        background: '#F3F4F6',
-        "primary-dark": '#1E40AF',
-        "secondary-dark": '#7E22CE',
-        "accent-dark": '#D97706',
-        "danger-dark": '#B91C1C',
+        primary: '#6200EE', // Deep Purple
+        secondary: '#03DAC5', // Teal
+        accent: '#FF0266', // Pink
+        background: '#FFFFFF',
+        'background-alt': '#F5F5F5',
+        text: '#212121',
+        success: '#388E3C', // Green
+        error: '#D32F2F', // Red
+        warning: '#FBC02D', // Amber
         gray: {
           800: '#1F2937',
         },

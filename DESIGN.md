@@ -5,65 +5,62 @@
 ### A. Core Values
 
 - **Clarity**: Information is immediately understandable
-- **Simplicity**: Reduced cognitive load
-- **Warmth**: Approachable and human
+- **Efficiency**: Tasks completed with minimal effort
+- **Sophistication**: Premium and trustworthy experience
 
 ### B. Design Priorities
 
-1. Accessibility
-2. Clarity of Information
-3. User Confidence
-4. Speed of Use
-5. Learning Curve
-6. Visual Impact
-7. Flexibility
+1. Visual impact
+2. User confidence
+3. Speed of use
+4. Accessibility
+5. Flexibility
+6. Information density
+7. Learning curve
 
 ### C. Key Characteristics
 
-- **Guided Experience**
-- **Clear Contrast**
+- **Rich Feedback**
 - **Consistent Patterns**
-- **Progressive Disclosure**
+- **Deep Functionality**
+- **Clear Contrast**
+- **Quick Scanning**
 
 ## 2. Visual Theme Layer
 
-### Minimalist with Touches of Material Design
+### Material Design
 
-- Clean white backgrounds
-- Clear contrast
-- Use of shadows and paper-like layers for elevation
-- Best for: Focused experiences and accessibility
+- Paper-like layers
+- Bold colors
+- Motion-focused animations
+- Best for: Modern, interactive, visually engaging apps
 
 ## 3. Design Principles Layer
 
 ### A. Space Management
 
-- **Clean White Space**
-  - Consistent padding and margins using an 8px grid
-  - Clear content sections with sufficient breathing room
 - **Structured Layout**
-  - Use of grid systems
+  - Use of grid systems and consistent spacing
   - Aligned elements for predictability
+- **Contextual Density**
+  - Balanced information display to avoid clutter
 
 ### B. Visual Hierarchy
 
-- **Subtle Depth**
-  - Light shadows and elevation to highlight important elements
 - **Clear Hierarchy**
-  - Headings and subheadings to organize content
-  - Use of color and weight to distinguish elements
+  - Important information stands out through size and color
+  - Secondary information recedes into the background
+- **Subtle Depth**
+  - Use of shadows and elevation to create visual layers
 
 ### C. User Experience
 
-- **Quiet Interface**
-  - Muted primary colors
-  - Reserved use of bold colors for actions
-- **Gentle Interactions**
-  - Subtle hover states
-  - Smooth transitions
+- **Rich Feedback**
+  - Interactive elements provide immediate feedback
+  - Meaningful animations enhance user engagement
 - **Typography with Purpose**
-  - Limited font sizes and weights
-  - Clear reading hierarchy
+  - Use of bold typography for headings
+  - Clear reading hierarchy with varied font sizes
 
 ## 4. Implementation Layer
 
@@ -71,39 +68,41 @@
 
 #### Layout Components
 
-- Responsive Navigation (top)
+- Enhanced Navigation (top and side menus)
 - Responsive Grid System
-- Modal Overlays
+- Tabbed content areas
+- Collapsible panels
 
 #### Content Components
 
-- Cards with elevation
-- Lists with clear item separation
-- Tabs for content categorization
+- Data tables with sorting and filtering
+- Charts and graphs for visualization
+- Modals and dialogs
 
 #### Interactive Components
 
-- Buttons with hover and active states
-- Form elements with clear labels and help text
-- Icons to aid recognition
+- Buttons with micro-interactions
+- Interactive form elements
+- User management components
 
 ### B. Technical Specifications
 
 #### Spacing System
 
 - Base unit: 8px
-- Spacing scale: Multiples of 8px (8, 16, 24, 32, 40, 48, 56, 64)
+- Spacing scale: Multiples of 8px
 
 #### Color System
 
-- Primary color: #1D4ED8 (Blue)
-- Secondary color: #9333EA (Purple)
-- Accent color: #F59E0B (Amber)
-- Neutral colors: Shades of gray for backgrounds and borders
+- Primary color: #6200EE (Deep Purple)
+- Secondary color: #03DAC5 (Teal)
+- Accent color: #FF0266 (Pink)
+- Background color: #FFFFFF and #F5F5F5
+- Text color: #212121
 - Feedback colors:
-  - Success: #10B981 (Green)
-  - Error: #EF4444 (Red)
-  - Warning: #F59E0B (Amber)
+  - Success: #388E3C (Green)
+  - Error: #D32F2F (Red)
+  - Warning: #FBC02D (Amber)
 
 #### Typography Scale
 
@@ -116,17 +115,20 @@
   - Small: 14px
 - Font weights:
   - Regular: 400
+  - Medium: 500
   - Bold: 700
 
 #### Interactive States
 
 - **Hover**
-  - Slight background change
+  - Elevation increases
   - Cursor changes to pointer
+  - Color lightens or darkens slightly
 - **Focus**
   - Outline or border highlight
+  - Element elevation increases
 - **Active**
-  - Pressed effect with color darkening
+  - Pressed effect with slight color change
 - **Disabled**
   - Reduced opacity
   - Cursor changes to not-allowed
@@ -135,30 +137,31 @@
 
 - Mobile-first design
 - Breakpoints:
-  - Small (sm): 640px
-  - Medium (md): 768px
-  - Large (lg): 1024px
-  - Extra Large (xl): 1280px
+  - Extra small (xs): 0px
+  - Small (sm): 600px
+  - Medium (md): 960px
+  - Large (lg): 1280px
+  - Extra Large (xl): 1920px
 - Layout adjustments at each breakpoint
-- Components adapt to screen size (e.g., navigation transforms from hamburger menu on mobile to full menu on desktop)
+- Components adapt to screen size
 
 ## Application Process
 
 1. **Strategy Definition**
-   - Maintained core values: Clarity, Simplicity, Warmth
-   - Ensured Accessibility is the top priority
-   - Selected key characteristics to guide the user through the app
+   - Emphasized core values: Clarity, Efficiency, Sophistication
+   - Prioritized Visual Impact and User Confidence
+   - Selected key characteristics to enhance user engagement
 
 2. **Theme Selection**
-   - Combined Minimalist with touches of Material Design for better hierarchy and depth
-   - Ensured the theme aligns with the app's focus on accessibility
+   - Adopted Material Design for modern and interactive experience
+   - Ensured theme aligns with the app's focus on visual enhancement
 
 3. **Principles Application**
-   - Applied clean white space and structured layouts
-   - Implemented visual hierarchy using typography and subtle depth
-   - Designed interactions to be gentle and informative
+   - Applied structured layouts and clear hierarchy
+   - Integrated rich feedback through animations and interactions
+   - Enhanced typography and visual depth
 
 4. **Implementation Planning**
-   - Refactored components into smaller, reusable pieces
+   - Refactored components to include new interactive elements
    - Updated technical specifications in Tailwind configuration
-   - Ensured all components are responsive and accessible
+   - Ensured all components are responsive and visually appealing
