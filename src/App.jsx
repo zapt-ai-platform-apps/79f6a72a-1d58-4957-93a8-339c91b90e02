@@ -5,12 +5,9 @@ import BottomNavBar from './components/BottomNavBar';
 import Loader from './components/Loader';
 import { supabase } from './supabaseClient';
 import NotificationProvider from './components/NotificationProvider';
+import Login from './pages/Login';
 
 const MainPage = lazy(() => import('./pages/MainPage'));
-const Blog = lazy(() => import('./pages/Blog'));
-const BlogPost = lazy(() => import('./pages/BlogPost'));
-const Services = lazy(() => import('./pages/Services'));
-const Tools = lazy(() => import('./pages/Tools'));
 // ... other page imports
 
 function App() {
@@ -37,7 +34,7 @@ function App() {
   });
 
   return (
-    <div class="h-full flex flex-col bg-gray-50 text-gray-800" dir="rtl">
+    <div class="min-h-screen flex flex-col bg-gray-50 text-gray-800" dir="rtl">
       <NotificationProvider>
         <Show when={user()} fallback={<Login />}>
           <button
@@ -54,8 +51,6 @@ function App() {
             <Suspense fallback={<div class="flex items-center justify-center h-full"><Loader loading={true} /></div>}>
               <Routes>
                 <Route path="/" component={MainPage} />
-                <Route path="/blog" component={Blog} />
-                <Route path="/blog/:id" component={BlogPost} />
                 {/* ... other routes */}
               </Routes>
             </Suspense>
