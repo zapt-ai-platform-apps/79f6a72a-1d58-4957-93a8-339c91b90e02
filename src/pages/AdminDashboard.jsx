@@ -16,6 +16,11 @@ function AdminDashboard() {
   const [loadingUsers, setLoadingUsers] = createSignal(false);
   const [loadingSendMessage, setLoadingSendMessage] = createSignal(false);
 
+  const [blogTitle, setBlogTitle] = createSignal('');
+  const [blogContent, setBlogContent] = createSignal('');
+  const [blogCategory, setBlogCategory] = createSignal('');
+  const [loadingSaveBlogPost, setLoadingSaveBlogPost] = createSignal(false);
+
   const navigate = useNavigate();
   const showNotification = useNotification();
 
@@ -116,6 +121,43 @@ function AdminDashboard() {
     }
   };
 
+  const handleSaveBlogPost = async () => {
+    if (!blogTitle() || !blogContent() || !blogCategory()) {
+      showNotification('يرجى تعبئة الحقول المطلوبة.', 'error');
+      return;
+    }
+    setLoadingSaveBlogPost(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const response = await fetch('/api/saveBlogPost', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: blogTitle(),
+          content: blogContent(),
+          category: blogCategory(),
+        }),
+      });
+      if (response.ok) {
+        showNotification('تم حفظ المقال بنجاح.', 'success');
+        setBlogTitle('');
+        setBlogContent('');
+        setBlogCategory('');
+      } else {
+        const errorData = await response.json();
+        showNotification(errorData.error || 'حدث خطأ أثناء حفظ المقال.', 'error');
+      }
+    } catch (error) {
+      console.error('Error saving blog post:', error);
+      showNotification('حدث خطأ أثناء حفظ المقال.', 'error');
+    } finally {
+      setLoadingSaveBlogPost(false);
+    }
+  };
+
   return (
     <div class="h-full flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
       <button
@@ -199,6 +241,43 @@ function AdminDashboard() {
             <Show when={!loadingUsers() && users().length === 0}>
               <p class="text-lg text-center text-gray-700">لا يوجد مستخدمون.</p>
             </Show>
+          </div>
+          {/* إضافة مقال جديد */}
+          <div class="mb-8">
+            <h2 class="text-2xl font-bold text-purple-600 mb-4">إضافة مقال جديد</h2>
+            <div class="mb-4">
+              <label class="block mb-2 text-lg font-semibold text-gray-700">عنوان المقال<span class="text-red-500">*</span>:</label>
+              <input
+                class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+                type="text"
+                value={blogTitle()}
+                onInput={(e) => setBlogTitle(e.target.value)}
+              />
+              <label class="block mb-2 text-lg font-semibold text-gray-700">محتوى المقال<span class="text-red-500">*</span>:</label>
+              <textarea
+                class="w-full h-32 p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+                value={blogContent()}
+                onInput={(e) => setBlogContent(e.target.value)}
+              />
+              <label class="block mb-2 text-lg font-semibold text-gray-700">التصنيف<span class="text-red-500">*</span>:</label>
+              <input
+                class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+                type="text"
+                value={blogCategory()}
+                onInput={(e) => setBlogCategory(e.target.value)}
+              />
+              <button
+                onClick={handleSaveBlogPost}
+                class={`w-full px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 ${
+                  loadingSaveBlogPost() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                }`}
+                disabled={loadingSaveBlogPost()}
+              >
+                <Show when={!loadingSaveBlogPost()} fallback="جاري الحفظ...">
+                  حفظ المقال
+                </Show>
+              </button>
+            </div>
           </div>
         </div>
       </Show>
