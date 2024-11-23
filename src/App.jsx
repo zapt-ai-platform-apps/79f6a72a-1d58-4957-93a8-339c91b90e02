@@ -4,7 +4,6 @@ import TopNavBar from './components/TopNavBar';
 import BottomNavBar from './components/BottomNavBar';
 import Loader from './components/Loader';
 import { supabase } from './supabaseClient';
-import MadeOnZapt from './components/MadeOnZapt';
 import NotificationProvider from './components/NotificationProvider';
 
 const MainPage = lazy(() => import('./pages/MainPage'));
@@ -91,7 +90,6 @@ function App() {
             </Suspense>
           </div>
           <BottomNavBar user={user} />
-          <MadeOnZapt />
         </Show>
       </NotificationProvider>
     </div>

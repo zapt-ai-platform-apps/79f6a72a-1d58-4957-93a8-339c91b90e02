@@ -1,5 +1,4 @@
 import { useNavigate, useLocation } from '@solidjs/router';
-import { Show } from 'solid-js';
 
 function BottomNavBar(props) {
   const navigate = useNavigate();
@@ -9,10 +8,6 @@ function BottomNavBar(props) {
     if (location.pathname !== path) {
       navigate(path, { replace: true });
     }
-  };
-
-  const isAdmin = () => {
-    return props.user() && props.user().email === 'daoudi.abdennour@gmail.com';
   };
 
   return (
@@ -54,17 +49,6 @@ function BottomNavBar(props) {
           <span class="text-2xl">👤</span>
           <span>الملف الشخصي</span>
         </button>
-        <Show when={isAdmin()}>
-          <button
-            class={`flex-1 flex flex-col items-center py-2 cursor-pointer ${
-              location.pathname === '/admin' ? 'text-primary border-t-2 border-primary' : ''
-            }`}
-            onClick={() => navigateTo('/admin')}
-          >
-            <span class="text-2xl">⚙️</span>
-            <span>لوحة التحكم</span>
-          </button>
-        </Show>
       </div>
     </nav>
   );
