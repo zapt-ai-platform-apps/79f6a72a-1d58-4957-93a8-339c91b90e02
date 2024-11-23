@@ -1,4 +1,3 @@
-```jsx
 import { Routes, Route } from '@solidjs/router';
 import { lazy, Suspense, createSignal, onMount, createEffect, Show } from 'solid-js';
 import TopNavBar from './components/TopNavBar';
@@ -56,43 +55,45 @@ function App() {
     <div class="min-h-screen flex flex-col bg-gray-50 text-gray-800" dir="rtl">
       <NotificationProvider>
         <Show when={user()} fallback={<Login />}>
-          <button
-            class="fixed top-2 right-2 z-20 bg-blue-500 text-white p-2 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
-            onClick={() => setShowTopNavBar(!showTopNavBar())}
-            aria-label="تبديل القائمة"
-          >
-            <Show when={showTopNavBar()} fallback="☰">×</Show>
-          </button>
-          <Show when={showTopNavBar()}>
-            <TopNavBar user={user} />
-          </Show>
-          <div class={`flex-grow ${showTopNavBar() ? 'pt-16' : ''} pb-16 h-full`}>
-            <Suspense fallback={<div class="flex items-center justify-center h-full"><Loader loading={true} /></div>}>
-              <Routes>
-                <Route path="/" component={MainPage} />
-                <Route path="/assistant" component={Assistant} />
-                <Route path="/blog" component={Blog} />
-                <Route path="/blog/:id" component={BlogPost} />
-                <Route path="/create-your-app" component={CreateYourApp} />
-                <Route path="/join-us" component={JoinUs} />
-                <Route path="/messages" component={Messages} />
-                <Route path="/profile" component={Profile} />
-                <Route path="/services" component={Services} />
-                <Route path="/settings" component={Settings} />
-                <Route path="/tools" component={Tools} />
-                <Route path="/voice-assistant" component={VoiceAssistant} />
-                <Route path="/content-generator" component={ContentGenerator} />
-                <Route path="/content-result" component={ContentResult} />
-                <Route path="/resume-builder" component={ResumeBuilder} />
-                <Route path="/resume-result" component={ResumeResult} />
-                <Route path="/radio" component={Radio} />
-                <Route path="/text-editor" component={TextEditor} />
-                <Route path="/text-result" component={TextResult} />
-                <Route path="/admin" component={AdminDashboard} />
-              </Routes>
-            </Suspense>
-          </div>
-          <BottomNavBar user={user} />
+          <>
+            <button
+              class="fixed top-2 right-2 z-20 bg-blue-500 text-white p-2 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
+              onClick={() => setShowTopNavBar(!showTopNavBar())}
+              aria-label="تبديل القائمة"
+            >
+              <Show when={showTopNavBar()} fallback="☰">×</Show>
+            </button>
+            <Show when={showTopNavBar()}>
+              <TopNavBar user={user} />
+            </Show>
+            <div class={`flex-grow ${showTopNavBar() ? 'pt-16' : ''} pb-16 h-full`}>
+              <Suspense fallback={<div class="flex items-center justify-center h-full"><Loader loading={true} /></div>}>
+                <Routes>
+                  <Route path="/" component={MainPage} />
+                  <Route path="/assistant" component={Assistant} />
+                  <Route path="/blog" component={Blog} />
+                  <Route path="/blog/:id" component={BlogPost} />
+                  <Route path="/create-your-app" component={CreateYourApp} />
+                  <Route path="/join-us" component={JoinUs} />
+                  <Route path="/messages" component={Messages} />
+                  <Route path="/profile" component={Profile} />
+                  <Route path="/services" component={Services} />
+                  <Route path="/settings" component={Settings} />
+                  <Route path="/tools" component={Tools} />
+                  <Route path="/voice-assistant" component={VoiceAssistant} />
+                  <Route path="/content-generator" component={ContentGenerator} />
+                  <Route path="/content-result" component={ContentResult} />
+                  <Route path="/resume-builder" component={ResumeBuilder} />
+                  <Route path="/resume-result" component={ResumeResult} />
+                  <Route path="/radio" component={Radio} />
+                  <Route path="/text-editor" component={TextEditor} />
+                  <Route path="/text-result" component={TextResult} />
+                  <Route path="/admin" component={AdminDashboard} />
+                </Routes>
+              </Suspense>
+            </div>
+            <BottomNavBar user={user} />
+          </>
         </Show>
       </NotificationProvider>
     </div>
@@ -100,4 +101,3 @@ function App() {
 }
 
 export default App;
-```
