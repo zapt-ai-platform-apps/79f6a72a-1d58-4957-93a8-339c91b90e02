@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router';
-import { createSignal, Show } from 'solid-js';
+import { createSignal, Show, For } from 'solid-js';
 import { createEvent } from '../supabaseClient';
 import { createNotification } from '../components/Notification';
 import BackButton from '../components/BackButton';
@@ -11,6 +11,11 @@ function ImageGenerator() {
   const [inputPrompt, setInputPrompt] = createSignal('');
   const [loading, setLoading] = createSignal(false);
   const [generatedImageUrl, setGeneratedImageUrl] = createSignal('');
+  const [selectedSize, setSelectedSize] = createSignal('512x512');
+  const [selectedFormat, setSelectedFormat] = createSignal('png');
+
+  const sizes = ['256x256', '512x512', '1024x1024'];
+  const formats = ['png', 'jpg', 'gif'];
 
   const handleGenerateImage = async () => {
     if (inputPrompt().trim() === '') {
@@ -22,6 +27,8 @@ function ImageGenerator() {
     try {
       const imageUrl = await createEvent('generate_image', {
         prompt: inputPrompt(),
+        size: selectedSize(),
+        format: selectedFormat(),
       });
       setGeneratedImageUrl(imageUrl);
     } catch (error) {
@@ -36,7 +43,7 @@ function ImageGenerator() {
     if (generatedImageUrl()) {
       const link = document.createElement('a');
       link.href = generatedImageUrl();
-      link.download = 'generated_image.png';
+      link.download = `generated_image.${selectedFormat()}`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -45,12 +52,12 @@ function ImageGenerator() {
   };
 
   return (
-    <div class="min-h-screen flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
+    <div class="h-full flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
       <NotificationComponent />
       <BackButton />
       <h1 class="text-4xl font-bold text-purple-600 mb-6">منشئ الصور الاحترافي بالذكاء الاصطناعي</h1>
       <p class="text-lg text-center leading-relaxed max-w-2xl mb-8">
-        أدخل وصفاً للصورة التي ترغب في إنشائها باستخدام الذكاء الاصطناعي.
+        أدخل وصفاً للصورة التي ترغب في إنشائها باستخدام الذكاء الاصطناعي. يمكنك اختيار حجم الصورة وصيغتها قبل الإنشاء.
       </p>
 
       <div class="w-full max-w-md">
@@ -61,6 +68,38 @@ function ImageGenerator() {
           onInput={(e) => setInputPrompt(e.target.value)}
           disabled={loading()}
         />
+
+        <div class="mb-4">
+          <label class="block mb-2 text-lg font-semibold text-gray-700">اختر حجم الصورة:</label>
+          <select
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
+            value={selectedSize()}
+            onInput={(e) => setSelectedSize(e.target.value)}
+            disabled={loading()}
+          >
+            <For each={sizes}>
+              {(size) => (
+                <option value={size}>{size}</option>
+              )}
+            </For>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label class="block mb-2 text-lg font-semibold text-gray-700">اختر صيغة الصورة:</label>
+          <select
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
+            value={selectedFormat()}
+            onInput={(e) => setSelectedFormat(e.target.value)}
+            disabled={loading()}
+          >
+            <For each={formats}>
+              {(format) => (
+                <option value={format}>{format.toUpperCase()}</option>
+              )}
+            </For>
+          </select>
+        </div>
 
         <button
           onClick={handleGenerateImage}
