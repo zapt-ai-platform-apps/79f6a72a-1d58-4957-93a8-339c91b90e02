@@ -8,6 +8,7 @@ function Profile() {
   const navigate = useNavigate();
   const [user, setUser] = createSignal(null);
 
+  const [username, setUsername] = createSignal('');
   const [name, setName] = createSignal('');
   const [email, setEmail] = createSignal('');
   const [bio, setBio] = createSignal('');
@@ -25,6 +26,7 @@ function Profile() {
 
     if (user) {
       const metadata = user.user_metadata || {};
+      setUsername(metadata.username || '');
       setName(metadata.name || '');
       setEmail(user.email || '');
       setBio(metadata.bio || '');
@@ -37,6 +39,7 @@ function Profile() {
   const handleUpdateProfile = async () => {
     setLoading(true);
     const updates = {
+      username: username(),
       name: name(),
       bio: bio(),
       gender: gender(),
@@ -67,6 +70,7 @@ function Profile() {
 
   const handleCancelEdit = () => {
     const metadata = user().user_metadata || {};
+    setUsername(metadata.username || '');
     setName(metadata.name || '');
     setEmail(user().email || '');
     setBio(metadata.bio || '');
@@ -95,6 +99,14 @@ function Profile() {
         <div class="w-full max-w-md">
           <Show when={!editing()} fallback={
             <>
+              <label class="block mb-2 text-lg font-semibold text-gray-700">اسم المستخدم:</label>
+              <input
+                class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+                type="text"
+                value={username()}
+                onInput={(e) => setUsername(e.target.value)}
+              />
+
               <label class="block mb-2 text-lg font-semibold text-gray-700">الاسم:</label>
               <input
                 class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
