@@ -1,8 +1,7 @@
 import { useNavigate } from '@solidjs/router';
-import { createSignal, onMount, Show, For } from 'solid-js';
+import { createSignal, onMount, Show } from 'solid-js';
 import { supabase } from '../supabaseClient';
 import { useNotification } from '../components/NotificationProvider';
-import countries from '../data/countries';
 
 function Profile() {
   const navigate = useNavigate();
@@ -100,7 +99,16 @@ function Profile() {
           <Show when={!editing()} fallback={
             <>
               {/* نموذج تعديل الملف الشخصي */}
-              {/* ... باقي عناصر النموذج ... */}
+              <div class="mb-4">
+                <label class="block mb-2 text-lg font-semibold text-gray-700">الاسم الكامل:</label>
+                <input
+                  class="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+                  type="text"
+                  value={name()}
+                  onInput={(e) => setName(e.target.value)}
+                />
+              </div>
+              {/* باقي عناصر النموذج */}
               <div class="flex space-x-4">
                 <button
                   onClick={handleUpdateProfile}

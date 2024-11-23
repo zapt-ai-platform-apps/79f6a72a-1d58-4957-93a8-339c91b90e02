@@ -14,36 +14,32 @@ function BottomNavBar(props) {
     <nav class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-300 text-gray-800">
       <div class="flex">
         <button
-          class={`flex-1 flex flex-col items-center py-2 cursor-pointer ${
-            location.pathname === '/' ? 'text-primary border-t-2 border-primary' : ''
-          }`}
+          class={`flex-1 flex flex-col items-center py-2 cursor-pointer`}
+          classList={{ 'text-primary border-t-2 border-primary': location.pathname === '/' }}
           onClick={() => navigateTo('/')}
         >
           <span class="text-2xl">🏠</span>
           <span>الرئيسية</span>
         </button>
         <button
-          class={`flex-1 flex flex-col items-center py-2 cursor-pointer ${
-            location.pathname === '/services' ? 'text-primary border-t-2 border-primary' : ''
-          }`}
+          class={`flex-1 flex flex-col items-center py-2 cursor-pointer`}
+          classList={{ 'text-primary border-t-2 border-primary': location.pathname === '/services' }}
           onClick={() => navigateTo('/services')}
         >
           <span class="text-2xl">🔧</span>
           <span>خدمات</span>
         </button>
         <button
-          class={`flex-1 flex flex-col items-center py-2 cursor-pointer ${
-            location.pathname === '/tools' ? 'text-primary border-t-2 border-primary' : ''
-          }`}
+          class={`flex-1 flex flex-col items-center py-2 cursor-pointer`}
+          classList={{ 'text-primary border-t-2 border-primary': location.pathname === '/tools' }}
           onClick={() => navigateTo('/tools')}
         >
           <span class="text-2xl">🛠️</span>
           <span>أدوات</span>
         </button>
         <button
-          class={`flex-1 flex flex-col items-center py-2 cursor-pointer ${
-            location.pathname === '/profile' ? 'text-primary border-t-2 border-primary' : ''
-          }`}
+          class={`flex-1 flex flex-col items-center py-2 cursor-pointer`}
+          classList={{ 'text-primary border-t-2 border-primary': location.pathname === '/profile' }}
           onClick={() => navigateTo('/profile')}
         >
           <span class="text-2xl">👤</span>

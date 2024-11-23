@@ -18,9 +18,10 @@ export function createNotification() {
   const NotificationComponent = () => (
     <Show when={notification()}>
       <div
-        class={`fixed top-4 right-4 p-4 rounded shadow-lg text-white z-50 ${
+        class={`fixed top-4 right-4 p-4 rounded shadow-lg text-white z-50 cursor-pointer ${
           notification().type === 'success' ? 'bg-green-500' : 'bg-red-500'
         }`}
+        onClick={() => setNotification(null)}
       >
         {notification().message}
       </div>
