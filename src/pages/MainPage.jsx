@@ -10,6 +10,15 @@ function MainPage() {
         اكتشف حلولًا مبتكرة تزيد إنتاجيتك وتعزز إمكانية وصولك. ابدأ الآن رحلتك نحو تجربة رقمية أفضل!
       </p>
 
+      <div class="grid grid-cols-1 gap-4 w-full max-w-md mt-6">
+        <button
+          onClick={() => navigate('/blog')}
+          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          المدونة
+        </button>
+      </div>
+
       <div class="mt-8 text-center">
         <h2 class="text-3xl font-bold text-purple-600 mb-4">انضم إلى فريقنا</h2>
         <p class="text-lg leading-relaxed max-w-2xl mb-4">

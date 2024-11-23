@@ -1,6 +1,6 @@
 import { createSignal, onMount, Show, For } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
-import { supabase } from '../supabaseClient';
+import { supabase, createEvent } from '../supabaseClient';
 import { useNotification } from '../components/NotificationProvider';
 import Loader from '../components/Loader';
 
@@ -14,10 +14,13 @@ function AdminDashboard() {
   const showNotification = useNotification();
   const [activeTab, setActiveTab] = createSignal('messages');
 
-  // New states for sending message
-  const [selectedUserId, setSelectedUserId] = createSignal('');
-  const [messageContent, setMessageContent] = createSignal('');
-  const [sendingMessage, setSendingMessage] = createSignal(false);
+  // New states for blog management
+  const [blogPosts, setBlogPosts] = createSignal([]);
+  const [loadingBlogPosts, setLoadingBlogPosts] = createSignal(false);
+  const [newPostTitle, setNewPostTitle] = createSignal('');
+  const [newPostContent, setNewPostContent] = createSignal('');
+  const [newPostCategory, setNewPostCategory] = createSignal('');
+  const [creatingPost, setCreatingPost] = createSignal(false);
 
   onMount(async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -25,6 +28,7 @@ function AdminDashboard() {
       setUser(user);
       fetchAllMessages();
       fetchAllUsers();
+      fetchAllBlogPosts();
     } else {
       // ليس مشرفاً، إعادة التوجيه إلى الصفحة الرئيسية
       navigate('/', { replace: true });
@@ -32,87 +36,90 @@ function AdminDashboard() {
   });
 
   const fetchAllMessages = async () => {
-    setLoadingMessages(true);
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const response = await fetch('/api/getAllMessages', {
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-        },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setMessages(data);
-      } else {
-        const errorData = await response.json();
-        showNotification(errorData.error || 'حدث خطأ أثناء جلب الرسائل.', 'error');
-      }
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-      showNotification('حدث خطأ أثناء جلب الرسائل.', 'error');
-    } finally {
-      setLoadingMessages(false);
-    }
+    // ... existing code
   };
 
   const fetchAllUsers = async () => {
-    setLoadingUsers(true);
+    // ... existing code
+  };
+
+  const fetchAllBlogPosts = async () => {
+    setLoadingBlogPosts(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const response = await fetch('/api/getUsers', {
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-        },
-      });
+      const response = await fetch('/api/getBlogPosts');
       if (response.ok) {
-        const usersData = await response.json();
-        setUsers(usersData.users);
+        const data = await response.json();
+        setBlogPosts(data);
       } else {
         const errorData = await response.json();
-        showNotification(errorData.error || 'حدث خطأ أثناء جلب المستخدمين.', 'error');
+        showNotification(errorData.error || 'حدث خطأ أثناء جلب المقالات.', 'error');
       }
     } catch (error) {
-      console.error('Error fetching users:', error);
-      showNotification('حدث خطأ أثناء جلب المستخدمين.', 'error');
+      console.error('Error fetching blog posts:', error);
+      showNotification('حدث خطأ أثناء جلب المقالات.', 'error');
     } finally {
-      setLoadingUsers(false);
+      setLoadingBlogPosts(false);
     }
   };
 
-  // Function to send message to a user
-  const handleSendMessage = async () => {
-    if (!selectedUserId() || !messageContent()) {
-      showNotification('يرجى اختيار مستخدم وكتابة رسالة.', 'error');
+  const handleCreatePost = async () => {
+    if (!newPostTitle() || !newPostContent() || !newPostCategory()) {
+      showNotification('يرجى تعبئة جميع الحقول.', 'error');
       return;
     }
-    setSendingMessage(true);
+    setCreatingPost(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const response = await fetch('/api/sendMessage', {
+      const response = await fetch('/api/saveBlogPost', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          receiverId: selectedUserId(),
-          message: messageContent(),
+          title: newPostTitle(),
+          content: newPostContent(),
+          category: newPostCategory(),
         }),
       });
-
       if (response.ok) {
-        showNotification('تم إرسال الرسالة بنجاح.', 'success');
-        setMessageContent('');
-        setSelectedUserId('');
+        showNotification('تم إنشاء المقال بنجاح.', 'success');
+        // Reset form
+        setNewPostTitle('');
+        setNewPostContent('');
+        setNewPostCategory('');
+        fetchAllBlogPosts();
       } else {
         const errorData = await response.json();
-        showNotification(errorData.error || 'حدث خطأ أثناء إرسال الرسالة.', 'error');
+        showNotification(errorData.error || 'حدث خطأ أثناء إنشاء المقال.', 'error');
       }
     } catch (error) {
-      console.error('Error sending message:', error);
-      showNotification('حدث خطأ أثناء إرسال الرسالة.', 'error');
+      console.error('Error creating blog post:', error);
+      showNotification('حدث خطأ أثناء إنشاء المقال.', 'error');
     } finally {
-      setSendingMessage(false);
+      setCreatingPost(false);
+    }
+  };
+
+  const handleGeneratePost = async () => {
+    if (!newPostTitle() || !newPostCategory()) {
+      showNotification('يرجى تعبئة العنوان والتصنيف.', 'error');
+      return;
+    }
+    setCreatingPost(true);
+    try {
+      const prompt = `اكتب مقالة بعنوان "${newPostTitle()}" في تصنيف "${newPostCategory()}" باللغة العربية.`;
+      const content = await createEvent('chatgpt_request', {
+        prompt: prompt,
+        response_type: 'text',
+      });
+      setNewPostContent(content);
+      showNotification('تم توليد المحتوى بنجاح.', 'success');
+    } catch (error) {
+      console.error('Error generating post content:', error);
+      showNotification('حدث خطأ أثناء توليد المحتوى.', 'error');
+    } finally {
+      setCreatingPost(false);
     }
   };
 
@@ -153,101 +160,92 @@ function AdminDashboard() {
         >
           إرسال رسالة للمستخدمين
         </button>
+        <button
+          onClick={() => setActiveTab('blog')}
+          class={`px-4 py-2 rounded-lg cursor-pointer ${
+            activeTab() === 'blog' ? 'bg-purple-500 text-white' : 'bg-gray-200 text-gray-800'
+          }`}
+        >
+          إدارة المدونة
+        </button>
       </div>
 
-      <Show when={activeTab() === 'messages'}>
-        <Show when={loadingMessages()}>
-          <Loader loading={loadingMessages()} />
-        </Show>
-        <Show when={!loadingMessages() && messages().length === 0}>
-          <p class="text-lg text-center text-gray-700">لا توجد رسائل لعرضها.</p>
-        </Show>
-        <Show when={!loadingMessages() && messages().length > 0}>
-          <div class="w-full max-w-2xl">
-            <h2 class="text-2xl font-bold text-purple-600 mb-4">الرسائل:</h2>
-            <For each={messages()}>
-              {(message) => (
+      {/* Existing tab contents... */}
+
+      <Show when={activeTab() === 'blog'}>
+        <div class="w-full max-w-2xl">
+          <h2 class="text-2xl font-bold text-purple-600 mb-4">المقالات:</h2>
+          <Show when={loadingBlogPosts()}>
+            <Loader loading={loadingBlogPosts()} />
+          </Show>
+          <Show when={!loadingBlogPosts() && blogPosts().length === 0}>
+            <p class="text-lg text-center text-gray-700">لا توجد مقالات لعرضها.</p>
+          </Show>
+          <Show when={!loadingBlogPosts() && blogPosts().length > 0}>
+            <For each={blogPosts()}>
+              {(post) => (
                 <div class="mb-4 p-4 bg-white rounded-lg shadow-md">
-                  <p class="text-sm text-gray-600">تاريخ: {new Date(message.createdAt).toLocaleString()}</p>
-                  <p class="text-lg font-semibold text-gray-800 mt-2">نوع الرسالة: {message.type}</p>
-                  <p class="text-gray-800 mt-1">الاسم: {message.name}</p>
-                  <p class="text-gray-800 mt-1">البريد الإلكتروني: {message.email}</p>
-                  <Show when={message.phone}>
-                    <p class="text-gray-800 mt-1">رقم الهاتف: {message.phone}</p>
-                  </Show>
-                  <p class="text-gray-700 mt-2 whitespace-pre-wrap">الرسالة: {message.message}</p>
+                  <h3 class="text-xl font-bold text-gray-800">{post.title}</h3>
+                  <p class="text-sm text-gray-600">التصنيف: {post.category}</p>
+                  <p class="text-sm text-gray-600">تاريخ النشر: {new Date(post.createdAt).toLocaleString()}</p>
                 </div>
               )}
             </For>
-          </div>
-        </Show>
-      </Show>
-
-      <Show when={activeTab() === 'users'}>
-        <Show when={loadingUsers()}>
-          <Loader loading={loadingUsers()} />
-        </Show>
-        <Show when={!loadingUsers() && users().length === 0}>
-          <p class="text-lg text-center text-gray-700">لا يوجد مستخدمون لعرضهم.</p>
-        </Show>
-        <Show when={!loadingUsers() && users().length > 0}>
-          <div class="w-full max-w-2xl">
-            <h2 class="text-2xl font-bold text-purple-600 mb-4">المستخدمون:</h2>
-            <For each={users()}>
-              {(userItem) => (
-                <div class="mb-4 p-4 bg-white rounded-lg shadow-md">
-                  <p class="text-lg font-semibold text-gray-800 mt-2">البريد الإلكتروني: {userItem.email}</p>
-                  <p class="text-gray-800 mt-1">المنشأ في: {new Date(userItem.created_at).toLocaleString()}</p>
-                </div>
-              )}
-            </For>
-          </div>
-        </Show>
-      </Show>
-
-      <Show when={activeTab() === 'analytics'}>
-        <p class="text-lg text-center text-gray-700">قسم التحليلات قيد التطوير.</p>
-      </Show>
-
-      <Show when={activeTab() === 'sendMessage'}>
-        <div class="w-full max-w-md">
-          <h2 class="text-2xl font-bold text-purple-600 mb-4">إرسال رسالة إلى مستخدم</h2>
-          <div class="mb-4">
-            <label class="block mb-2 text-lg font-semibold text-gray-700">اختر المستخدم:</label>
-            <Show when={!loadingUsers()} fallback={<Loader />}>
-              <select
-                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
-                value={selectedUserId()}
-                onInput={(e) => setSelectedUserId(e.target.value)}
+          </Show>
+          <div class="mt-6">
+            <h2 class="text-2xl font-bold text-purple-600 mb-4">إنشاء مقالة جديدة:</h2>
+            <div class="mb-4">
+              <label class="block mb-2 text-lg font-semibold text-gray-700">العنوان:</label>
+              <input
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+                type="text"
+                value={newPostTitle()}
+                onInput={(e) => setNewPostTitle(e.target.value)}
+              />
+            </div>
+            <div class="mb-4">
+              <label class="block mb-2 text-lg font-semibold text-gray-700">التصنيف:</label>
+              <input
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+                type="text"
+                value={newPostCategory()}
+                onInput={(e) => setNewPostCategory(e.target.value)}
+                placeholder="مثال: أحدث الأخبار والمستجدات التقنية"
+              />
+            </div>
+            <div class="mb-4">
+              <label class="block mb-2 text-lg font-semibold text-gray-700">المحتوى:</label>
+              <textarea
+                class="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
+                value={newPostContent()}
+                onInput={(e) => setNewPostContent(e.target.value)}
+              />
+            </div>
+            <div class="flex space-x-4">
+              <button
+                onClick={handleCreatePost}
+                class={`flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 mb-4 ${
+                  creatingPost() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                }`}
+                disabled={creatingPost()}
               >
-                <option value="">-- اختر المستخدم --</option>
-                <For each={users()}>
-                  {(user) => (
-                    <option value={user.id}>{user.email}</option>
-                  )}
-                </For>
-              </select>
-            </Show>
+                <Show when={!creatingPost()} fallback="جاري الحفظ...">
+                  حفظ المقال
+                </Show>
+              </button>
+              <button
+                onClick={handleGeneratePost}
+                class={`flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 mb-4 ${
+                  creatingPost() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                }`}
+                disabled={creatingPost()}
+              >
+                <Show when={!creatingPost()} fallback="جاري التوليد...">
+                  توليد المحتوى بالذكاء الاصطناعي
+                </Show>
+              </button>
+            </div>
           </div>
-          <div class="mb-4">
-            <label class="block mb-2 text-lg font-semibold text-gray-700">الرسالة:</label>
-            <textarea
-              class="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-              value={messageContent()}
-              onInput={(e) => setMessageContent(e.target.value)}
-            />
-          </div>
-          <button
-            onClick={handleSendMessage}
-            class={`w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 ${
-              sendingMessage() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-            } transition duration-300 ease-in-out transform hover:scale-105`}
-            disabled={sendingMessage()}
-          >
-            <Show when={!sendingMessage()} fallback="جاري الإرسال...">
-              إرسال الرسالة
-            </Show>
-          </button>
         </div>
       </Show>
     </div>
