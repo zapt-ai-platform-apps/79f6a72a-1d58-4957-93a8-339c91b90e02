@@ -1,3 +1,4 @@
+```jsx
 import { useNavigate } from '@solidjs/router';
 import { createSignal, Show, onCleanup } from 'solid-js';
 import { createEvent } from '../supabaseClient';
@@ -15,7 +16,7 @@ function VoiceAssistant() {
   const [loadingAudio, setLoadingAudio] = createSignal(false);
 
   const { NotificationComponent, showNotification } = createNotification();
-  let currentAudio = null;
+  let audio = new Audio();
 
   let recognition;
 
@@ -85,17 +86,26 @@ function VoiceAssistant() {
   };
 
   const handleSpeakResponse = async (text) => {
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio = null;
-    }
+    audio.pause();
+    audio.src = '';
     setLoadingAudio(true);
     try {
       const audioUrl = await createEvent('text_to_speech', {
         text: text,
       });
-      currentAudio = new Audio(audioUrl);
-      currentAudio.play();
+      audio.src = audioUrl;
+
+      audio.oncanplaythrough = () => {
+        audio.play().catch((e) => {
+          console.error('Error playing audio:', e);
+        });
+      };
+
+      audio.onerror = (e) => {
+        console.error('Audio error:', e);
+      };
+
+      audio.load();
     } catch (error) {
       console.error('خطأ في تحويل النص إلى كلام:', error);
       showNotification('حدث خطأ أثناء تشغيل الصوت.', 'error');
@@ -105,9 +115,9 @@ function VoiceAssistant() {
   };
 
   onCleanup(() => {
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio = null;
+    if (audio) {
+      audio.pause();
+      audio.src = '';
     }
   });
 
@@ -176,3 +186,4 @@ function VoiceAssistant() {
 }
 
 export default VoiceAssistant;
+```
