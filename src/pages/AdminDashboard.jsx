@@ -21,6 +21,15 @@ function AdminDashboard() {
   const [blogCategory, setBlogCategory] = createSignal('');
   const [loadingSaveBlogPost, setLoadingSaveBlogPost] = createSignal(false);
 
+  const [allUsers, setAllUsers] = createSignal([]);
+  const [loadingAllUsers, setLoadingAllUsers] = createSignal(false);
+
+  const [posts, setPosts] = createSignal([]);
+  const [loadingPosts, setLoadingPosts] = createSignal(false);
+
+  const [comments, setComments] = createSignal([]);
+  const [loadingComments, setLoadingComments] = createSignal(false);
+
   const navigate = useNavigate();
   const showNotification = useNotification();
 
@@ -33,6 +42,9 @@ function AdminDashboard() {
       setIsAdmin(true);
       fetchMessages();
       fetchUsers();
+      fetchAllUsers();
+      fetchPosts();
+      fetchComments();
     } else {
       setIsAdmin(false);
     }
@@ -83,6 +95,68 @@ function AdminDashboard() {
       showNotification('حدث خطأ أثناء جلب المستخدمين.', 'error');
     } finally {
       setLoadingUsers(false);
+    }
+  };
+
+  const fetchAllUsers = async () => {
+    setLoadingAllUsers(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const response = await fetch('/api/getAllUsers', {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setAllUsers(data);
+      } else {
+        const errorData = await response.json();
+        showNotification(errorData.error || 'حدث خطأ أثناء جلب جميع المستخدمين.', 'error');
+      }
+    } catch (error) {
+      console.error('Error fetching all users:', error);
+      showNotification('حدث خطأ أثناء جلب جميع المستخدمين.', 'error');
+    } finally {
+      setLoadingAllUsers(false);
+    }
+  };
+
+  const fetchPosts = async () => {
+    setLoadingPosts(true);
+    try {
+      const response = await fetch('/api/getBlogPosts');
+      if (response.ok) {
+        const data = await response.json();
+        setPosts(data.posts);
+      } else {
+        const errorData = await response.json();
+        showNotification(errorData.error || 'حدث خطأ أثناء جلب المقالات.', 'error');
+      }
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      showNotification('حدث خطأ أثناء جلب المقالات.', 'error');
+    } finally {
+      setLoadingPosts(false);
+    }
+  };
+
+  const fetchComments = async () => {
+    setLoadingComments(true);
+    try {
+      const response = await fetch('/api/getAllComments');
+      if (response.ok) {
+        const data = await response.json();
+        setComments(data);
+      } else {
+        const errorData = await response.json();
+        showNotification(errorData.error || 'حدث خطأ أثناء جلب التعليقات.', 'error');
+      }
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+      showNotification('حدث خطأ أثناء جلب التعليقات.', 'error');
+    } finally {
+      setLoadingComments(false);
     }
   };
 
@@ -146,6 +220,7 @@ function AdminDashboard() {
         setBlogTitle('');
         setBlogContent('');
         setBlogCategory('');
+        fetchPosts();
       } else {
         const errorData = await response.json();
         showNotification(errorData.error || 'حدث خطأ أثناء حفظ المقال.', 'error');
@@ -155,6 +230,81 @@ function AdminDashboard() {
       showNotification('حدث خطأ أثناء حفظ المقال.', 'error');
     } finally {
       setLoadingSaveBlogPost(false);
+    }
+  };
+
+  const handleDeletePost = async (postId) => {
+    if (!confirm('هل أنت متأكد من حذف هذا المقال؟')) return;
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const response = await fetch('/api/deleteBlogPost', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ postId }),
+      });
+      if (response.ok) {
+        showNotification('تم حذف المقال بنجاح.', 'success');
+        fetchPosts();
+      } else {
+        const errorData = await response.json();
+        showNotification(errorData.error || 'حدث خطأ أثناء حذف المقال.', 'error');
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      showNotification('حدث خطأ أثناء حذف المقال.', 'error');
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    if (!confirm('هل أنت متأكد من حذف هذا التعليق؟')) return;
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const response = await fetch('/api/deleteComment', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ commentId }),
+      });
+      if (response.ok) {
+        showNotification('تم حذف التعليق بنجاح.', 'success');
+        fetchComments();
+      } else {
+        const errorData = await response.json();
+        showNotification(errorData.error || 'حدث خطأ أثناء حذف التعليق.', 'error');
+      }
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      showNotification('حدث خطأ أثناء حذف التعليق.', 'error');
+    }
+  };
+
+  const handleToggleUserStatus = async (userId, isActive) => {
+    if (!confirm(`هل أنت متأكد من ${isActive ? 'تعطيل' : 'تفعيل'} هذا المستخدم؟`)) return;
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const response = await fetch('/api/toggleUserStatus', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId, isActive }),
+      });
+      if (response.ok) {
+        showNotification(`تم ${isActive ? 'تعطيل' : 'تفعيل'} المستخدم بنجاح.`, 'success');
+        fetchAllUsers();
+      } else {
+        const errorData = await response.json();
+        showNotification(errorData.error || 'حدث خطأ أثناء تحديث حالة المستخدم.', 'error');
+      }
+    } catch (error) {
+      console.error('Error updating user status:', error);
+      showNotification('حدث خطأ أثناء تحديث حالة المستخدم.', 'error');
     }
   };
 
@@ -168,7 +318,105 @@ function AdminDashboard() {
       </button>
       <Show when={isAdmin()} fallback={<p class="text-lg text-center text-gray-700">ليس لديك صلاحية الوصول إلى هذه الصفحة.</p>}>
         <h1 class="text-4xl font-bold text-purple-600 mb-6">لوحة التحكم الإدارية</h1>
-        <div class="w-full max-w-4xl">
+        <div class="w-full max-w-6xl">
+          {/* إدارة المستخدمين */}
+          <div class="mb-8">
+            <h2 class="text-2xl font-bold text-purple-600 mb-4">إدارة المستخدمين</h2>
+            <Show when={loadingAllUsers()}>
+              <Loader loading={loadingAllUsers()} />
+            </Show>
+            <Show when={!loadingAllUsers() && allUsers().length > 0}>
+              <div class="overflow-x-auto">
+                <table class="min-w-full bg-white">
+                  <thead>
+                    <tr>
+                      <th class="py-2 px-4 border-b">البريد الإلكتروني</th>
+                      <th class="py-2 px-4 border-b">الحالة</th>
+                      <th class="py-2 px-4 border-b">إجراء</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <For each={allUsers()}>
+                      {(user) => (
+                        <tr>
+                          <td class="py-2 px-4 border-b">{user.email}</td>
+                          <td class="py-2 px-4 border-b">{user.confirmed_at ? 'مفعّل' : 'غير مفعّل'}</td>
+                          <td class="py-2 px-4 border-b">
+                            <button
+                              onClick={() => handleToggleUserStatus(user.id, !!user.confirmed_at)}
+                              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                            >
+                              {user.confirmed_at ? 'تعطيل' : 'تفعيل'}
+                            </button>
+                          </td>
+                        </tr>
+                      )}
+                    </For>
+                  </tbody>
+                </table>
+              </div>
+            </Show>
+            <Show when={!loadingAllUsers() && allUsers().length === 0}>
+              <p class="text-lg text-center text-gray-700">لا يوجد مستخدمون.</p>
+            </Show>
+          </div>
+          {/* إدارة المقالات */}
+          <div class="mb-8">
+            <h2 class="text-2xl font-bold text-purple-600 mb-4">إدارة المقالات</h2>
+            <Show when={loadingPosts()}>
+              <Loader loading={loadingPosts()} />
+            </Show>
+            <Show when={!loadingPosts() && posts().length > 0}>
+              <div class="space-y-4">
+                <For each={posts()}>
+                  {(post) => (
+                    <div class="p-4 bg-white rounded-lg shadow-md">
+                      <h3 class="text-xl font-bold text-gray-800 mb-2">{post.title}</h3>
+                      <p class="text-gray-600 mb-2">التصنيف: {post.category}</p>
+                      <p class="text-gray-700 mb-2">المحتوى: {post.content.substring(0, 100)}...</p>
+                      <button
+                        onClick={() => handleDeletePost(post.id)}
+                        class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                      >
+                        حذف
+                      </button>
+                    </div>
+                  )}
+                </For>
+              </div>
+            </Show>
+            <Show when={!loadingPosts() && posts().length === 0}>
+              <p class="text-lg text-center text-gray-700">لا توجد مقالات.</p>
+            </Show>
+          </div>
+          {/* إدارة التعليقات */}
+          <div class="mb-8">
+            <h2 class="text-2xl font-bold text-purple-600 mb-4">إدارة التعليقات</h2>
+            <Show when={loadingComments()}>
+              <Loader loading={loadingComments()} />
+            </Show>
+            <Show when={!loadingComments() && comments().length > 0}>
+              <div class="space-y-4">
+                <For each={comments()}>
+                  {(comment) => (
+                    <div class="p-4 bg-white rounded-lg shadow-md">
+                      <p class="text-gray-600 mb-2">تاريخ: {new Date(comment.createdAt).toLocaleString()}</p>
+                      <p class="text-gray-700 mb-2">تعليق: {comment.content}</p>
+                      <button
+                        onClick={() => handleDeleteComment(comment.id)}
+                        class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+                      >
+                        حذف
+                      </button>
+                    </div>
+                  )}
+                </For>
+              </div>
+            </Show>
+            <Show when={!loadingComments() && comments().length === 0}>
+              <p class="text-lg text-center text-gray-700">لا توجد تعليقات.</p>
+            </Show>
+          </div>
           {/* عرض الرسائل */}
           <div class="mb-8">
             <h2 class="text-2xl font-bold text-purple-600 mb-4">الرسائل</h2>
