@@ -181,6 +181,13 @@ function Profile() {
             </button>
 
             <button
+              onClick={() => navigate('/settings')}
+              class="w-full px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 mb-4 cursor-pointer"
+            >
+              الإعدادات
+            </button>
+
+            <button
               onClick={handleSignOut}
               class="w-full px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
             >
