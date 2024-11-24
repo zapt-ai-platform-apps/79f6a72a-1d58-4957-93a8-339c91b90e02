@@ -58,7 +58,7 @@
 
   - Primary actions and information stand out through size, color, and placement.
   - Secondary information is less prominent but easily accessible.
-  - **Addition**: A motivating slogan has been added below the main title on the homepage to inspire users and reinforce the app's mission.
+  - The main page's slogan has been updated to a more professional and empowering statement to better reflect the app's mission and values.
 
 - **Subtle Depth**
 
@@ -231,7 +231,7 @@
    - Applied structured layouts with clear hierarchy suitable for screen readers.
    - Integrated accessible colors, fonts, and interactive elements.
    - Ensured that all user interactions provide rich feedback.
-   - Updated the main page to include an attractive and motivating slogan beneath the main title, enhancing the visual hierarchy and user engagement.
+   - Updated the main page's slogan to a more professional and empowering statement, enhancing the visual hierarchy and aligning with the app's mission to elevate accessibility for all users.
 
 4. **Implementation Planning**
 
