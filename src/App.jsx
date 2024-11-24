@@ -54,9 +54,9 @@ function App() {
   return (
     <div class="min-h-screen flex flex-col bg-gray-50 text-gray-800" dir="rtl">
       <NotificationProvider>
-        <TopNavBar />
         <Show when={user()} fallback={<Login />}>
           <>
+            <TopNavBar />
             <div class="flex-grow pb-16 h-full">
               <Suspense fallback={<div class="flex items-center justify-center h-full"><Loader loading={true} /></div>}>
                 <Routes>
