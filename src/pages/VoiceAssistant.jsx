@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router';
-import { createSignal, Show, onCleanup } from 'solid-js';
+import { createSignal, Show, onCleanup, onMount } from 'solid-js';
 import { createEvent } from '../supabaseClient';
 import { createNotification } from '../components/Notification';
 import { SolidMarkdown } from 'solid-markdown';
@@ -19,7 +19,7 @@ function VoiceAssistant() {
 
   let recognition;
 
-  const startListening = () => {
+  onMount(() => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
       alert('متصفحك لا يدعم التعرف على الصوت.');
       return;
@@ -49,8 +49,19 @@ function VoiceAssistant() {
       console.error('Error during recognition:', event.error);
       setListening(false);
     };
+  });
 
-    recognition.start();
+  const startListening = () => {
+    if (listening()) {
+      console.warn('Already listening');
+      return;
+    }
+
+    try {
+      recognition.start();
+    } catch (e) {
+      console.error('Error starting recognition:', e);
+    }
   };
 
   const handleAssistantRequest = async (inputText) => {
@@ -117,6 +128,9 @@ function VoiceAssistant() {
     if (audio) {
       audio.pause();
       audio.src = '';
+    }
+    if (recognition && listening()) {
+      recognition.stop();
     }
   });
 
