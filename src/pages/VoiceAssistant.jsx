@@ -1,4 +1,3 @@
-```jsx
 import { useNavigate } from '@solidjs/router';
 import { createSignal, Show, onCleanup } from 'solid-js';
 import { createEvent } from '../supabaseClient';
@@ -186,4 +185,3 @@ function VoiceAssistant() {
 }
 
 export default VoiceAssistant;
-```
