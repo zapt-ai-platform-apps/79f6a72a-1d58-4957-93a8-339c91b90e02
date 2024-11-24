@@ -58,6 +58,7 @@
 
   - Primary actions and information stand out through size, color, and placement.
   - Secondary information is less prominent but easily accessible.
+  - **Addition**: A motivating slogan has been added below the main title on the homepage to inspire users and reinforce the app's mission.
 
 - **Subtle Depth**
 
@@ -104,11 +105,6 @@
   - Sections are clearly defined with headings.
 
 #### Content Components
-
-- **Motivational Slogan**
-
-  - Displays an attractive and motivational text slogan on the main page.
-  - Positioned prominently to capture user attention.
 
 - **Accessible Forms**
 
@@ -223,7 +219,7 @@
 
    - Emphasized core values: Clarity, Efficiency, Accessibility, Sophistication, User Empowerment.
    - Prioritized Accessibility and Clarity to make the app suitable for users with visual impairments.
-   - Included a motivational slogan to enhance user engagement and motivation.
+   - Selected key characteristics that ensure user trust and ease of use.
 
 2. **Theme Selection**
 
@@ -235,6 +231,7 @@
    - Applied structured layouts with clear hierarchy suitable for screen readers.
    - Integrated accessible colors, fonts, and interactive elements.
    - Ensured that all user interactions provide rich feedback.
+   - Updated the main page to include an attractive and motivating slogan beneath the main title, enhancing the visual hierarchy and user engagement.
 
 4. **Implementation Planning**
 
