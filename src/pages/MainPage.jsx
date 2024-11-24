@@ -24,9 +24,6 @@ function MainPage() {
       <AnnouncementBanner />
       <h1 class="text-5xl font-bold text-purple-600 mb-6">Blind Accessibility</h1>
       <h2 class="text-2xl font-semibold text-gray-700 mb-4">نمكن الجميع من الوصول إلى عالم الرقميات</h2>
-      <p class="text-center max-w-2xl text-lg leading-relaxed mb-8">
-        نسعى لتقديم أدوات وخدمات ذكية تزيد من إنتاجيتك وتعزز إمكانية الوصول لديك. ابدأ الآن رحلتك نحو تجربة رقمية لا مثيل لها!
-      </p>
 
       {/* Selection Menu */}
       <div class="w-full max-w-md mb-6">
