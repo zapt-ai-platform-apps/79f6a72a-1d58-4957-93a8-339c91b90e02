@@ -1,5 +1,5 @@
 import { createSignal, onMount, Show, For } from 'solid-js';
-import { supabase } from '../../supabaseClient';
+import { supabase, createEvent } from '../../supabaseClient';
 import { useNotification } from '../NotificationProvider';
 import Loader from '../Loader';
 import categories from '../../data/categories';
@@ -14,6 +14,7 @@ function BlogPostManagement() {
   const [editCategory, setEditCategory] = createSignal('');
   const [loadingSave, setLoadingSave] = createSignal(false);
   const [isAddingNew, setIsAddingNew] = createSignal(false);
+  const [loadingGenerate, setLoadingGenerate] = createSignal(false);
   const showNotification = useNotification();
 
   onMount(() => {
@@ -81,6 +82,31 @@ function BlogPostManagement() {
     setEditContent('');
     setEditCategory('');
     setIsAddingNew(true);
+  };
+
+  const handleGenerateArticle = async () => {
+    setLoadingGenerate(true);
+    try {
+      const result = await createEvent('chatgpt_request', {
+        prompt: 'اكتب مقالًا حصريًا في مجال التكنولوجيا باللغة العربية، وأعد النتيجة في الشكل التالي: { "title": "عنوان المقال", "content": "محتوى المقال", "category": "تصنيف المقال" }. يجب أن يكون المقال مفيدًا وجذابًا، ويحتوي على معلومات حديثة.',
+        response_type: 'json',
+      });
+
+      if (result && result.title && result.content && result.category) {
+        setEditingPost(null);
+        setIsAddingNew(true);
+        setEditTitle(result.title);
+        setEditContent(result.content);
+        setEditCategory(result.category);
+      } else {
+        showNotification('فشل الحصول على المقال من الذكاء الاصطناعي.', 'error');
+      }
+    } catch (error) {
+      console.error('Error generating article:', error);
+      showNotification('حدث خطأ أثناء إنشاء المقال بواسطة الذكاء الاصطناعي.', 'error');
+    } finally {
+      setLoadingGenerate(false);
+    }
   };
 
   const handleCancelEdit = () => {
@@ -159,12 +185,23 @@ function BlogPostManagement() {
   return (
     <div>
       <h2 class="text-2xl font-bold text-purple-600 mb-4">إدارة المقالات</h2>
-      <button
-        onClick={handleAddNewPost}
-        class="mb-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-      >
-        إضافة مقال جديد
-      </button>
+      <div class="flex space-x-reverse space-x-4 mb-4">
+        <button
+          onClick={handleAddNewPost}
+          class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          إضافة مقال جديد
+        </button>
+        <button
+          onClick={handleGenerateArticle}
+          class={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${loadingGenerate() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+          disabled={loadingGenerate()}
+        >
+          <Show when={!loadingGenerate()} fallback="جاري الإنشاء...">
+            إضافة مقال باستخدام الذكاء الاصطناعي
+          </Show>
+        </button>
+      </div>
       <Show when={editingPost() || isAddingNew()}>
         <div class="mb-4">
           <label class="block mb-2 text-lg font-semibold text-gray-700">عنوان المقال<span class="text-red-500">*</span>:</label>
