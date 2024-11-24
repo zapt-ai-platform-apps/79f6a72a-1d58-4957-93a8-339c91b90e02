@@ -13,7 +13,6 @@ const OrderYourApp = lazy(() => import('./pages/OrderYourApp'));
 const OrderYourAppForm = lazy(() => import('./pages/OrderYourAppForm'));
 const OrderYourWebsite = lazy(() => import('./pages/OrderYourWebsite'));
 const Messages = lazy(() => import('./pages/Messages'));
-const Profile = lazy(() => import('./pages/Profile'));
 const Services = lazy(() => import('./pages/Services'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Tools = lazy(() => import('./pages/Tools'));
@@ -68,7 +67,6 @@ function App() {
                   <Route path="/order-your-app-form" component={OrderYourAppForm} />
                   <Route path="/order-your-website" component={OrderYourWebsite} />
                   <Route path="/messages" component={Messages} />
-                  <Route path="/profile" component={Profile} />
                   <Route path="/services" component={Services} />
                   <Route path="/settings" component={Settings} />
                   <Route path="/tools" component={Tools} />

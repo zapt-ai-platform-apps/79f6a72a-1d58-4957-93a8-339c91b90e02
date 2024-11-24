@@ -37,14 +37,6 @@ function BottomNavBar(props) {
           <span class="text-2xl">🛠️</span>
           <span>أدوات</span>
         </button>
-        <button
-          class={`flex-1 flex flex-col items-center py-2 cursor-pointer`}
-          classList={{ 'text-primary border-t-2 border-primary': location.pathname === '/profile' }}
-          onClick={() => navigateTo('/profile')}
-        >
-          <span class="text-2xl">👤</span>
-          <span>الملف الشخصي</span>
-        </button>
       </div>
     </nav>
   );
