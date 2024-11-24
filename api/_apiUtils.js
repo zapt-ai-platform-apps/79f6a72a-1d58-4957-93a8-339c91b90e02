@@ -1,9 +1,9 @@
-import { initializeZapt } from '@zapt/zapt-js';
+import { createClient } from '@supabase/supabase-js';
 
-const { supabase } = initializeZapt(process.env.APP_ID, {
-  supabaseUrl: process.env.SUPABASE_URL,
-  supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
-});
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+export const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function authenticateUser(req) {
   const authHeader = req.headers.authorization;

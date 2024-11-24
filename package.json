@@ -12,7 +12,6 @@
     "solid-js": "^1.8.22",
     "@sentry/browser": "^8.35.0",
     "@sentry/node": "^8.35.0",
-    "@zapt/zapt-js": "^1.0.5",
     "@solidjs/router": "^0.8.4",
     "docx": "^7.7.0",
     "file-saver": "^2.0.5",
@@ -21,7 +20,8 @@
     "@supabase/auth-ui-solid": "^0.3.8",
     "drizzle-orm": "^0.33.0",
     "@neondatabase/serverless": "^0.9.5",
-    "@supabase/supabase-js": "^2.0.0"
+    "@supabase/supabase-js": "^2.0.0",
+    "openai": "^4.10.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",

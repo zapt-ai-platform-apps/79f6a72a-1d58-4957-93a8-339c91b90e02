@@ -1,6 +1,6 @@
 import { useNavigate } from '@solidjs/router';
 import { createSignal, Show } from 'solid-js';
-import { createEvent } from '../supabaseClient';
+import { supabase } from '../supabaseClient';
 import { useNotification } from '../components/NotificationProvider';
 import Loader from '../components/Loader';
 import { SolidMarkdown } from 'solid-markdown';
@@ -20,11 +20,20 @@ function Assistant() {
     if (inputText().trim() === '') return;
     setLoading(true);
     try {
-      const result = await createEvent('chatgpt_request', {
-        prompt: inputText(),
-        response_type: 'text',
+      const response = await fetch('/api/chatgptRequest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: inputText(),
+        }),
       });
-      setAssistantResponse(result || 'لا يوجد رد.');
+      if (response.ok) {
+        const data = await response.json();
+        setAssistantResponse(data.result || 'لا يوجد رد.');
+      } else {
+        console.error('Error fetching assistant response:', response.statusText);
+        showNotification('حدث خطأ أثناء الحصول على الرد.', 'error');
+      }
     } catch (error) {
       console.error('Error:', error);
       showNotification('حدث خطأ أثناء الحصول على الرد.', 'error');
@@ -52,11 +61,21 @@ function Assistant() {
     if (!assistantResponse()) return;
     setLoadingAudio(true);
     try {
-      const result = await createEvent('text_to_speech', {
-        text: assistantResponse(),
+      const response = await fetch('/api/textToSpeech', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: assistantResponse(),
+        }),
       });
-      const audio = new Audio(result);
-      audio.play();
+      if (response.ok) {
+        const data = await response.json();
+        const audio = new Audio(data.audioUrl);
+        audio.play();
+      } else {
+        console.error('Error in text to speech:', response.statusText);
+        showNotification('حدث خطأ أثناء تحويل النص إلى صوت.', 'error');
+      }
     } catch (error) {
       console.error('خطأ في تحويل النص إلى كلام:', error);
       showNotification('حدث خطأ أثناء تشغيل الصوت.', 'error');
