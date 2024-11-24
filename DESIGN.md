@@ -105,6 +105,11 @@
 
 #### Content Components
 
+- **Motivational Slogan**
+
+  - Displays an attractive and motivational text slogan on the main page.
+  - Positioned prominently to capture user attention.
+
 - **Accessible Forms**
 
   - Inputs are labeled and support validation feedback.
@@ -218,7 +223,7 @@
 
    - Emphasized core values: Clarity, Efficiency, Accessibility, Sophistication, User Empowerment.
    - Prioritized Accessibility and Clarity to make the app suitable for users with visual impairments.
-   - Selected key characteristics that ensure user trust and ease of use.
+   - Included a motivational slogan to enhance user engagement and motivation.
 
 2. **Theme Selection**
 
