@@ -16,20 +16,6 @@ function MainPage() {
         {/* Content removed as per request */}
       </div>
 
-      <div class="mt-8 text-center">
-        <h2 class="text-3xl font-bold text-purple-600 mb-4">انضم إلى فريقنا</h2>
-        <p class="text-lg leading-relaxed max-w-2xl mb-4">
-          نحن نبحث عن أفراد موهوبين وشغوفين للانضمام إلى فريقنا والمساهمة في تحسين إمكانية الوصول للجميع.
-          إذا كنت ترغب في المشاركة والتميز، تواصل معنا الآن!
-        </p>
-        <button
-          onClick={() => navigate('/join-us')}
-          class="mt-4 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-        >
-          انضم إلينا
-        </button>
-      </div>
-
       <SocialMediaLinks />
     </div>
   );
