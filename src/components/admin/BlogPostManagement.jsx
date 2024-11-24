@@ -2,6 +2,7 @@ import { createSignal, onMount, Show, For } from 'solid-js';
 import { supabase } from '../../supabaseClient';
 import { useNotification } from '../NotificationProvider';
 import Loader from '../Loader';
+import categories from '../../data/categories';
 
 function BlogPostManagement() {
   const [posts, setPosts] = createSignal([]);
@@ -180,12 +181,18 @@ function BlogPostManagement() {
             onInput={(e) => setEditContent(e.target.value)}
           />
           <label class="block mb-2 text-lg font-semibold text-gray-700">التصنيف<span class="text-red-500">*</span>:</label>
-          <input
-            class="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent box-border"
-            type="text"
+          <select
+            class="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer box-border"
             value={editCategory()}
             onInput={(e) => setEditCategory(e.target.value)}
-          />
+          >
+            <option value="">-- اختر التصنيف --</option>
+            <For each={categories}>
+              {(category) => (
+                <option value={category}>{category}</option>
+              )}
+            </For>
+          </select>
           <div class="flex space-x-reverse space-x-4">
             <button
               onClick={handleSavePost}
