@@ -12,6 +12,7 @@ function BlogPostManagement() {
   const [editContent, setEditContent] = createSignal('');
   const [editCategory, setEditCategory] = createSignal('');
   const [loadingSave, setLoadingSave] = createSignal(false);
+  const [isAddingNew, setIsAddingNew] = createSignal(false);
   const showNotification = useNotification();
 
   onMount(() => {
@@ -70,6 +71,15 @@ function BlogPostManagement() {
     setEditTitle(post.title);
     setEditContent(post.content);
     setEditCategory(post.category);
+    setIsAddingNew(false);
+  };
+
+  const handleAddNewPost = () => {
+    setEditingPost(null);
+    setEditTitle('');
+    setEditContent('');
+    setEditCategory('');
+    setIsAddingNew(true);
   };
 
   const handleCancelEdit = () => {
@@ -77,6 +87,7 @@ function BlogPostManagement() {
     setEditTitle('');
     setEditContent('');
     setEditCategory('');
+    setIsAddingNew(false);
   };
 
   const handleSavePost = async () => {
@@ -87,30 +98,58 @@ function BlogPostManagement() {
     setLoadingSave(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const response = await fetch('/api/updateBlogPost', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          postId: editingPost().id,
-          title: editTitle(),
-          content: editContent(),
-          category: editCategory(),
-        }),
-      });
-      if (response.ok) {
-        showNotification('تم تحديث المقال بنجاح.', 'success');
-        setPosts(posts().map((post) => (post.id === editingPost().id ? { ...post, title: editTitle(), content: editContent(), category: editCategory() } : post)));
-        handleCancelEdit();
+      let response;
+
+      if (isAddingNew()) {
+        // Save new post
+        response = await fetch('/api/saveBlogPost', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: editTitle(),
+            content: editContent(),
+            category: editCategory(),
+          }),
+        });
+        if (response.ok) {
+          showNotification('تم إضافة المقال بنجاح.', 'success');
+          // Fetch posts again to include the new one
+          fetchPosts();
+          handleCancelEdit();
+        } else {
+          const errorData = await response.json();
+          showNotification(errorData.error || 'حدث خطأ أثناء إضافة المقال.', 'error');
+        }
       } else {
-        const errorData = await response.json();
-        showNotification(errorData.error || 'حدث خطأ أثناء تحديث المقال.', 'error');
+        // Update existing post
+        response = await fetch('/api/updateBlogPost', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            postId: editingPost().id,
+            title: editTitle(),
+            content: editContent(),
+            category: editCategory(),
+          }),
+        });
+        if (response.ok) {
+          showNotification('تم تحديث المقال بنجاح.', 'success');
+          setPosts(posts().map((post) => (post.id === editingPost().id ? { ...post, title: editTitle(), content: editContent(), category: editCategory() } : post)));
+          handleCancelEdit();
+        } else {
+          const errorData = await response.json();
+          showNotification(errorData.error || 'حدث خطأ أثناء تحديث المقال.', 'error');
+        }
       }
     } catch (error) {
-      console.error('Error updating blog post:', error);
-      showNotification('حدث خطأ أثناء تحديث المقال.', 'error');
+      console.error('Error saving blog post:', error);
+      showNotification('حدث خطأ أثناء حفظ المقال.', 'error');
     } finally {
       setLoadingSave(false);
     }
@@ -119,7 +158,13 @@ function BlogPostManagement() {
   return (
     <div>
       <h2 class="text-2xl font-bold text-purple-600 mb-4">إدارة المقالات</h2>
-      <Show when={editingPost()}>
+      <button
+        onClick={handleAddNewPost}
+        class="mb-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+      >
+        إضافة مقال جديد
+      </button>
+      <Show when={editingPost() || isAddingNew()}>
         <div class="mb-4">
           <label class="block mb-2 text-lg font-semibold text-gray-700">عنوان المقال<span class="text-red-500">*</span>:</label>
           <input
@@ -141,7 +186,7 @@ function BlogPostManagement() {
             value={editCategory()}
             onInput={(e) => setEditCategory(e.target.value)}
           />
-          <div class="flex space-x-4">
+          <div class="flex space-x-reverse space-x-4">
             <button
               onClick={handleSavePost}
               class={`flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 ${
@@ -150,7 +195,7 @@ function BlogPostManagement() {
               disabled={loadingSave()}
             >
               <Show when={!loadingSave()} fallback="جاري الحفظ...">
-                حفظ التغييرات
+                {isAddingNew() ? 'إضافة المقال' : 'حفظ التغييرات'}
               </Show>
             </button>
             <button
