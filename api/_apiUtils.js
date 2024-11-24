@@ -1,6 +1,9 @@
 import { initializeZapt } from '@zapt/zapt-js';
 
-const { supabase } = initializeZapt(process.env.APP_ID);
+const { supabase } = initializeZapt(process.env.APP_ID, {
+  supabaseUrl: process.env.SUPABASE_URL,
+  supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
+});
 
 export async function authenticateUser(req) {
   const authHeader = req.headers.authorization;
