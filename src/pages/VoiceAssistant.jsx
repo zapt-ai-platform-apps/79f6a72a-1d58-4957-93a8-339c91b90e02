@@ -47,6 +47,7 @@ function VoiceAssistant() {
 
     recognition.onerror = (event) => {
       console.error('Error during recognition:', event.error);
+      recognition.abort();
       setListening(false);
     };
   });
@@ -59,8 +60,10 @@ function VoiceAssistant() {
 
     try {
       recognition.start();
+      setListening(true);
     } catch (e) {
       console.error('Error starting recognition:', e);
+      setListening(false);
     }
   };
 
