@@ -28,6 +28,8 @@ const TextResult = lazy(() => import('./pages/TextResult'));
 const ImageGenerator = lazy(() => import('./pages/ImageGenerator'));
 const ContactUs = lazy(() => import('./pages/ContactUs'));
 const JoinTheTeam = lazy(() => import('./pages/JoinTheTeam'));
+const Blog = lazy(() => import('./pages/Blog'));
+const Store = lazy(() => import('./pages/Store'));
 
 function App() {
   const [user, setUser] = createSignal(null);
@@ -81,6 +83,8 @@ function App() {
                   <Route path="/image-generator" component={ImageGenerator} />
                   <Route path="/contact-us" component={ContactUs} />
                   <Route path="/join-the-team" component={JoinTheTeam} />
+                  <Route path="/blog" component={Blog} />
+                  <Route path="/store" component={Store} />
                 </Routes>
               </Suspense>
             </div>
