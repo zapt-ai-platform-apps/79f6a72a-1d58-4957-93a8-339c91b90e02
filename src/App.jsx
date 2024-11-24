@@ -9,8 +9,6 @@ import NotificationProvider from './components/NotificationProvider';
 const MainPage = lazy(() => import('./pages/MainPage'));
 const Login = lazy(() => import('./pages/Login'));
 const Assistant = lazy(() => import('./pages/Assistant'));
-const Blog = lazy(() => import('./pages/Blog'));
-const BlogPost = lazy(() => import('./pages/BlogPost'));
 const OrderYourApp = lazy(() => import('./pages/OrderYourApp'));
 const OrderYourAppForm = lazy(() => import('./pages/OrderYourAppForm'));
 const OrderYourWebsite = lazy(() => import('./pages/OrderYourWebsite'));
@@ -28,7 +26,6 @@ const ResumeResult = lazy(() => import('./pages/ResumeResult'));
 const Radio = lazy(() => import('./pages/Radio'));
 const TextEditor = lazy(() => import('./pages/TextEditor'));
 const TextResult = lazy(() => import('./pages/TextResult'));
-const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const ImageGenerator = lazy(() => import('./pages/ImageGenerator'));
 
 function App() {
@@ -74,8 +71,6 @@ function App() {
                 <Routes>
                   <Route path="/" component={MainPage} />
                   <Route path="/assistant" component={Assistant} />
-                  <Route path="/blog" component={Blog} />
-                  <Route path="/blog/:id" component={BlogPost} />
                   <Route path="/order-your-app" component={OrderYourApp} />
                   <Route path="/order-your-app-form" component={OrderYourAppForm} />
                   <Route path="/order-your-website" component={OrderYourWebsite} />
@@ -93,7 +88,6 @@ function App() {
                   <Route path="/radio" component={Radio} />
                   <Route path="/text-editor" component={TextEditor} />
                   <Route path="/text-result" component={TextResult} />
-                  <Route path="/admin" component={AdminDashboard} />
                   <Route path="/image-generator" component={ImageGenerator} />
                 </Routes>
               </Suspense>

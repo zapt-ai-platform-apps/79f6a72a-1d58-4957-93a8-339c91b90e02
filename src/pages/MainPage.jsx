@@ -11,12 +11,7 @@ function MainPage() {
       </p>
 
       <div class="grid grid-cols-1 gap-4 w-full max-w-md mt-6">
-        <button
-          onClick={() => navigate('/blog')}
-          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-        >
-          المدونة
-        </button>
+        {/* Content removed as per request */}
       </div>
 
       <div class="mt-8 text-center">

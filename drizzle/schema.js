@@ -27,21 +27,3 @@ export const pages = pgTable('pages', {
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });
-
-export const blogPosts = pgTable('blog_posts', {
-  id: serial('id').primaryKey(),
-  title: text('title').notNull(),
-  content: text('content').notNull(),
-  category: text('category').notNull(),
-  authorId: uuid('author_id').notNull(),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
-});
-
-export const comments = pgTable('comments', {
-  id: serial('id').primaryKey(),
-  postId: integer('post_id').notNull().references(() => blogPosts.id, { onDelete: 'cascade' }),
-  userId: uuid('user_id').notNull(),
-  content: text('content').notNull(),
-  createdAt: timestamp('created_at').defaultNow(),
-});
