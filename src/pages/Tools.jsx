@@ -1,7 +1,17 @@
 import { useNavigate } from '@solidjs/router';
+import { createSignal } from 'solid-js';
 
 function Tools() {
   const navigate = useNavigate();
+  const [selectedTool, setSelectedTool] = createSignal('');
+
+  const handleSelectionChange = (e) => {
+    const value = e.target.value;
+    setSelectedTool(value);
+    if (value) {
+      navigate(value);
+    }
+  };
 
   return (
     <div class="flex flex-col items-center p-4 min-h-screen text-gray-800 pt-8 pb-16">
@@ -10,49 +20,22 @@ function Tools() {
         استفد من أدواتنا الحديثة المصممة لتعزيز إنتاجيتك وتحسين إمكانية الوصول بطريقة مبتكرة وسهلة الاستخدام.
       </p>
 
-      <div class="grid grid-cols-1 gap-4 w-full max-w-md mt-6">
-        <button
-          onClick={() => navigate('/assistant')}
-          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+      <div class="w-full max-w-md mt-6">
+        <label class="block mb-2 text-lg font-semibold">اختر الأداة:</label>
+        <select
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
+          value={selectedTool()}
+          onInput={handleSelectionChange}
         >
-          المساعد الذكي
-        </button>
-        <button
-          onClick={() => navigate('/voice-assistant')}
-          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-        >
-          المساعد الصوتي
-        </button>
-        <button
-          onClick={() => navigate('/resume-builder')}
-          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-        >
-          منشئ السيرة الذاتية
-        </button>
-        <button
-          onClick={() => navigate('/content-generator')}
-          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-        >
-          منشئ المحتوى
-        </button>
-        <button
-          onClick={() => navigate('/text-editor')}
-          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-        >
-          محرر النصوص
-        </button>
-        <button
-          onClick={() => navigate('/radio')}
-          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-        >
-          الراديو العربي
-        </button>
-        <button
-          onClick={() => navigate('/image-generator')}
-          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-        >
-          منشئ الصور الاحترافي
-        </button>
+          <option value="">-- اختر الأداة --</option>
+          <option value="/assistant">المساعد الذكي</option>
+          <option value="/voice-assistant">المساعد الصوتي</option>
+          <option value="/resume-builder">منشئ السيرة الذاتية</option>
+          <option value="/content-generator">منشئ المحتوى</option>
+          <option value="/text-editor">محرر النصوص</option>
+          <option value="/radio">الراديو العربي</option>
+          <option value="/image-generator">منشئ الصور الاحترافي</option>
+        </select>
       </div>
     </div>
   );

@@ -1,7 +1,17 @@
 import { useNavigate } from '@solidjs/router';
+import { createSignal } from 'solid-js';
 
 function Services() {
   const navigate = useNavigate();
+  const [selectedService, setSelectedService] = createSignal('');
+
+  const handleSelectionChange = (e) => {
+    const value = e.target.value;
+    setSelectedService(value);
+    if (value) {
+      navigate(value);
+    }
+  };
 
   return (
     <div class="min-h-screen flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
@@ -10,19 +20,17 @@ function Services() {
         اكتشف خدماتنا المتميزة المصممة خصيصًا لتسهيل حياتك الرقمية وتعزيز إمكانية الوصول بكفاءة وفعالية.
       </p>
 
-      <div class="grid grid-cols-1 gap-4 w-full max-w-md mt-6">
-        <button
-          onClick={() => navigate('/order-your-app')}
-          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+      <div class="w-full max-w-md mt-6">
+        <label class="block mb-2 text-lg font-semibold">اختر الخدمة:</label>
+        <select
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
+          value={selectedService()}
+          onInput={handleSelectionChange}
         >
-          اطلب تطبيقك الخاص
-        </button>
-        <button
-          onClick={() => navigate('/order-your-website')}
-          class="bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-        >
-          اطلب موقعك الخاص
-        </button>
+          <option value="">-- اختر الخدمة --</option>
+          <option value="/order-your-app">اطلب تطبيقك الخاص</option>
+          <option value="/order-your-website">اطلب موقعك الخاص</option>
+        </select>
       </div>
     </div>
   );
