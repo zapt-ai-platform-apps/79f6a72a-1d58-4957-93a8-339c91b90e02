@@ -53,7 +53,6 @@ function TopNavBar(props) {
           </button>
         </Show>
         <div class="mt-auto mb-4 px-6">
-          <p class="text-sm text-gray-600">© 2023 Blind Accessibility</p>
           <a
             href="https://www.zapt.ai"
             target="_blank"
