@@ -16,7 +16,7 @@ function TopNavBar() {
         onClick={toggleMenu}
         class="mb-2 px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 cursor-pointer"
       >
-        قائمة
+        قائمة التنقل
       </button>
       <Show when={showMenu()}>
         <div class="flex space-x-reverse space-x-4">
