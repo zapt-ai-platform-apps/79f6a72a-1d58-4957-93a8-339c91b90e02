@@ -1,6 +1,7 @@
 import { Routes, Route } from '@solidjs/router';
 import { lazy, Suspense, createSignal, onMount, createEffect, Show } from 'solid-js';
 import BottomNavBar from './components/BottomNavBar';
+import TopNavBar from './components/TopNavBar';
 import Loader from './components/Loader';
 import { supabase } from './supabaseClient';
 import NotificationProvider from './components/NotificationProvider';
@@ -25,6 +26,8 @@ const Radio = lazy(() => import('./pages/Radio'));
 const TextEditor = lazy(() => import('./pages/TextEditor'));
 const TextResult = lazy(() => import('./pages/TextResult'));
 const ImageGenerator = lazy(() => import('./pages/ImageGenerator'));
+const ContactUs = lazy(() => import('./pages/ContactUs'));
+const JoinTheTeam = lazy(() => import('./pages/JoinTheTeam'));
 
 function App() {
   const [user, setUser] = createSignal(null);
@@ -51,6 +54,7 @@ function App() {
   return (
     <div class="min-h-screen flex flex-col bg-gray-50 text-gray-800" dir="rtl">
       <NotificationProvider>
+        <TopNavBar />
         <Show when={user()} fallback={<Login />}>
           <>
             <div class="flex-grow pb-16 h-full">
@@ -75,6 +79,8 @@ function App() {
                   <Route path="/text-editor" component={TextEditor} />
                   <Route path="/text-result" component={TextResult} />
                   <Route path="/image-generator" component={ImageGenerator} />
+                  <Route path="/contact-us" component={ContactUs} />
+                  <Route path="/join-the-team" component={JoinTheTeam} />
                 </Routes>
               </Suspense>
             </div>
