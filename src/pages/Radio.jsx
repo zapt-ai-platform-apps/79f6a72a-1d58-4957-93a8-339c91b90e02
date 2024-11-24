@@ -58,15 +58,20 @@ function Radio() {
       const response = await fetch(
         `https://de1.api.radio-browser.info/json/stations/bycountry/${encodeURIComponent(
           country.englishName
-        )}?hidebroken=true`
+        )}?hidebroken=true&order=clickcount`
       );
       if (!response.ok) {
         throw new Error('فشل في جلب المحطات.');
       }
       const data = await response.json();
-      // Filter stations with a valid URL
+      // Filter stations with a valid URL and supported codecs
+      const supportedCodecs = ['MP3', 'AAC', 'AAC+', 'audio/mpeg', 'audio/aac', 'audio/aacp'];
       const validStations = data.filter(
-        (station) => station.url_resolved && station.name
+        (station) =>
+          station.url_resolved &&
+          station.name &&
+          station.codec &&
+          supportedCodecs.includes(station.codec.toUpperCase())
       );
       setStations(validStations);
     } catch (err) {
@@ -90,6 +95,9 @@ function Radio() {
       setCurrentStationUrl(station.url_resolved);
       setSelectedStation(index);
       setIsPlaying(true);
+      if (audioElement) {
+        audioElement.load();
+      }
     }
   };
 
@@ -199,11 +207,17 @@ function Radio() {
             <audio
               ref={(el) => (audioElement = el)}
               autoplay
-              src={currentStationUrl()}
               class="w-full"
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
-            />
+              onError={(e) => {
+                console.error('Audio Error:', e);
+                setError('حدث خطأ أثناء تشغيل المحطة.');
+              }}
+            >
+              <source src={currentStationUrl()} type="audio/mpeg" />
+              <p>متصفحك لا يدعم عنصر الصوت.</p>
+            </audio>
             <div class="flex justify-center mt-4 space-x-reverse space-x-4">
               <button
                 onClick={handlePreviousStation}
