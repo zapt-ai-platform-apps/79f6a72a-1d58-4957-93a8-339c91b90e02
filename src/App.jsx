@@ -31,6 +31,7 @@ const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const LearnMore = lazy(() => import('./pages/LearnMore'));
 const UserAccount = lazy(() => import('./pages/UserAccount'));
 const Settings = lazy(() => import('./pages/Settings'));
+const EditProfile = lazy(() => import('./pages/EditProfile'));
 
 function App() {
   const [user, setUser] = createSignal(null);
@@ -96,6 +97,7 @@ function App() {
                     <Route path="/store" component={Store} />
                     <Route path="/user-account" component={UserAccount} />
                     <Route path="/settings" component={Settings} />
+                    <Route path="/edit-profile" component={EditProfile} />
                     <Route path="/*" element={<Navigate href="/" />} />
                   </Routes>
                 </Suspense>

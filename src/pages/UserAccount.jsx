@@ -5,20 +5,45 @@ import BackButton from '../components/BackButton';
 
 function UserAccount() {
   const [user, setUser] = createSignal(null);
+  const [profile, setProfile] = createSignal(null);
   const navigate = useNavigate();
 
   onMount(async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       setUser(user);
+      fetchUserProfile();
     } else {
       navigate('/login');
     }
   });
 
+  const fetchUserProfile = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    try {
+      const response = await fetch('/api/getUserProfile', {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setProfile(data.profile);
+      } else {
+        console.error('Error fetching profile');
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate('/login');
+  };
+
+  const handleEditProfile = () => {
+    navigate('/edit-profile');
   };
 
   return (
@@ -31,7 +56,17 @@ function UserAccount() {
 
       <div class="w-full max-w-md">
         <p class="mb-4"><strong>البريد الإلكتروني:</strong> {user()?.email}</p>
-        {/* يمكنك إضافة المزيد من معلومات المستخدم هنا */}
+        <p class="mb-4"><strong>الاسم الكامل:</strong> {profile()?.fullName || 'غير متوفر'}</p>
+        <p class="mb-4"><strong>اسم المستخدم:</strong> {profile()?.username || 'غير متوفر'}</p>
+        <p class="mb-4"><strong>رقم الهاتف:</strong> {profile()?.phoneNumber || 'غير متوفر'}</p>
+        <p class="mb-4"><strong>الجنس:</strong> {profile()?.gender || 'غير متوفر'}</p>
+        <p class="mb-4"><strong>الدولة:</strong> {profile()?.country || 'غير متوفر'}</p>
+        <button
+          onClick={handleEditProfile}
+          class="w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer mb-4"
+        >
+          تعديل الملف الشخصي
+        </button>
         <button
           onClick={() => navigate('/settings')}
           class="w-full px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer mb-4"
