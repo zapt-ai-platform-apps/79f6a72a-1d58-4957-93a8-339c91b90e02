@@ -58,7 +58,6 @@
 
   - Primary actions and information stand out through size, color, and placement.
   - Secondary information is less prominent but easily accessible.
-  - The main page's slogan has been updated to **"نمكن الجميع من الوصول إلى عالم الرقميات"** to better reflect the app's mission to enable everyone to access the digital world.
 
 - **Subtle Depth**
 
@@ -231,7 +230,6 @@
    - Applied structured layouts with clear hierarchy suitable for screen readers.
    - Integrated accessible colors, fonts, and interactive elements.
    - Ensured that all user interactions provide rich feedback.
-   - Updated the main page's slogan to **"نمكن الجميع من الوصول إلى عالم الرقميات"**, enhancing the visual hierarchy and aligning with the app's mission to enable everyone to access the digital world.
 
 4. **Implementation Planning**
 
