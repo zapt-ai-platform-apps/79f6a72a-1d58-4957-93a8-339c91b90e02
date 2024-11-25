@@ -61,14 +61,16 @@ function TopNavBar() {
           >
             انضم للفريق
           </button>
-          <a
-            href="https://www.zapt.ai"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 cursor-pointer"
-          >
-            Made on ZAPT
-          </a>
+          <Show when={user() && user().email === 'daoudi.abdennour@gmail.com'}>
+            <a
+              href="https://www.zapt.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 cursor-pointer"
+            >
+              Made on ZAPT
+            </a>
+          </Show>
         </div>
       </Show>
     </div>
