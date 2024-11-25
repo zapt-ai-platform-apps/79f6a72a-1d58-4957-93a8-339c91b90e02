@@ -1,4 +1,3 @@
-```jsx
 import { Routes, Route, Navigate } from '@solidjs/router';
 import { lazy, Suspense, createSignal, onMount, Show } from 'solid-js';
 import BottomNavBar from './components/BottomNavBar';
@@ -103,4 +102,3 @@ function App() {
 }
 
 export default App;
-```
