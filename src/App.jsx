@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from '@solidjs/router';
-import { lazy, Suspense, createSignal, onMount, Show } from 'solid-js';
+import { lazy, Suspense, createSignal, onMount, onCleanup, Show } from 'solid-js';
 import BottomNavBar from './components/BottomNavBar';
 import TopNavBar from './components/TopNavBar';
 import Loader from './components/Loader';
