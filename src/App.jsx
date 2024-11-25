@@ -1,9 +1,10 @@
 import { Routes, Route } from '@solidjs/router';
-import { lazy, Suspense } from 'solid-js';
+import { lazy, Suspense, createSignal, onMount } from 'solid-js';
 import BottomNavBar from './components/BottomNavBar';
 import TopNavBar from './components/TopNavBar';
 import Loader from './components/Loader';
 import NotificationProvider from './components/NotificationProvider';
+import { supabase } from './supabaseClient';
 
 const MainPage = lazy(() => import('./pages/MainPage'));
 const Assistant = lazy(() => import('./pages/Assistant'));
@@ -25,39 +26,66 @@ const ContactUs = lazy(() => import('./pages/ContactUs'));
 const JoinTheTeam = lazy(() => import('./pages/JoinTheTeam'));
 const Blog = lazy(() => import('./pages/Blog'));
 const Store = lazy(() => import('./pages/Store'));
+const Login = lazy(() => import('./pages/Login'));
+const SignUp = lazy(() => import('./pages/SignUp'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 
 function App() {
+  const [user, setUser] = createSignal(null);
+  const [loading, setLoading] = createSignal(true);
+
+  onMount(async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    setUser(user);
+    setLoading(false);
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        setUser(session.user);
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+      }
+    });
+  });
+
   return (
     <div class="min-h-screen flex flex-col bg-gray-50 text-gray-800" dir="rtl">
       <NotificationProvider>
-        <TopNavBar />
+        <TopNavBar user={user()} />
         <div class="flex-grow pb-16 h-full">
-          <Suspense fallback={<div class="flex items-center justify-center h-full"><Loader loading={true} /></div>}>
-            <Routes>
-              <Route path="/" component={MainPage} />
-              <Route path="/assistant" component={Assistant} />
-              <Route path="/order-your-app" component={OrderYourApp} />
-              <Route path="/order-your-app-form" component={OrderYourAppForm} />
-              <Route path="/order-your-website" component={OrderYourWebsite} />
-              <Route path="/services" component={Services} />
-              <Route path="/tools" component={Tools} />
-              <Route path="/voice-assistant" component={VoiceAssistant} />
-              <Route path="/content-generator" component={ContentGenerator} />
-              <Route path="/content-result" component={ContentResult} />
-              <Route path="/resume-builder" component={ResumeBuilder} />
-              <Route path="/resume-result" component={ResumeResult} />
-              <Route path="/radio" component={Radio} />
-              <Route path="/text-editor" component={TextEditor} />
-              <Route path="/text-result" component={TextResult} />
-              <Route path="/image-generator" component={ImageGenerator} />
-              <Route path="/contact-us" component={ContactUs} />
-              <Route path="/join-the-team" component={JoinTheTeam} />
-              <Route path="/blog" component={Blog} />
-              <Route path="/store" component={Store} />
-            </Routes>
-          </Suspense>
+          {loading() ? (
+            <div class="flex items-center justify-center h-full"><Loader loading={true} /></div>
+          ) : (
+            <Suspense fallback={<div class="flex items-center justify-center h-full"><Loader loading={true} /></div>}>
+              <Routes>
+                <Route path="/" component={MainPage} />
+                <Route path="/assistant" component={Assistant} />
+                <Route path="/order-your-app" component={OrderYourApp} />
+                <Route path="/order-your-app-form" component={OrderYourAppForm} />
+                <Route path="/order-your-website" component={OrderYourWebsite} />
+                <Route path="/services" component={Services} />
+                <Route path="/tools" component={Tools} />
+                <Route path="/voice-assistant" component={VoiceAssistant} />
+                <Route path="/content-generator" component={ContentGenerator} />
+                <Route path="/content-result" component={ContentResult} />
+                <Route path="/resume-builder" component={ResumeBuilder} />
+                <Route path="/resume-result" component={ResumeResult} />
+                <Route path="/radio" component={Radio} />
+                <Route path="/text-editor" component={TextEditor} />
+                <Route path="/text-result" component={TextResult} />
+                <Route path="/image-generator" component={ImageGenerator} />
+                <Route path="/contact-us" component={ContactUs} />
+                <Route path="/join-the-team" component={JoinTheTeam} />
+                <Route path="/blog" component={Blog} />
+                <Route path="/store" component={Store} />
+                <Route path="/login" component={Login} />
+                <Route path="/signup" component={SignUp} />
+                <Route path="/forgot-password" component={ForgotPassword} />
+              </Routes>
+            </Suspense>
+          )}
         </div>
-        <BottomNavBar />
+        <BottomNavBar user={user()} />
       </NotificationProvider>
     </div>
   );

@@ -1,37 +1,19 @@
-import { createSignal, Show, onMount, onCleanup } from 'solid-js';
+import { Show } from 'solid-js';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from '@solidjs/router';
 
-function TopNavBar() {
+function TopNavBar(props) {
   const [showMenu, setShowMenu] = createSignal(false);
-  const [user, setUser] = createSignal(null);
   const navigate = useNavigate();
 
   const toggleMenu = () => {
     setShowMenu(!showMenu());
   };
 
-  onMount(async () => {
-    const { data: { user: currentUser }, error } = await supabase.auth.getUser();
-    if (error) {
-      console.error('Error getting user:', error);
-    } else {
-      setUser(currentUser);
-    }
-
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-        setUser(session.user);
-      } else if (event === 'SIGNED_OUT') {
-        setUser(null);
-      }
-    });
-
-    // Cleanup the listener when component is unmounted
-    onCleanup(() => {
-      authListener.subscription.unsubscribe();
-    });
-  });
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate('/login');
+  };
 
   return (
     <div class="w-full flex flex-col items-center p-4 bg-white border-b border-gray-300">
@@ -61,7 +43,7 @@ function TopNavBar() {
           >
             انضم للفريق
           </button>
-          <Show when={user() && user().email === 'daoudi.abdennour@gmail.com'}>
+          <Show when={props.user && props.user.email === 'daoudi.abdennour@gmail.com'}>
             <a
               href="https://www.zapt.ai"
               target="_blank"
@@ -70,6 +52,22 @@ function TopNavBar() {
             >
               Made on ZAPT
             </a>
+          </Show>
+          <Show when={props.user}>
+            <button
+              onClick={handleSignOut}
+              class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 cursor-pointer"
+            >
+              تسجيل الخروج
+            </button>
+          </Show>
+          <Show when={!props.user}>
+            <button
+              onClick={() => navigate('/login')}
+              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 cursor-pointer"
+            >
+              تسجيل الدخول
+            </button>
           </Show>
         </div>
       </Show>
