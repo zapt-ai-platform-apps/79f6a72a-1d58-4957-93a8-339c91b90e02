@@ -30,6 +30,8 @@ const Login = lazy(() => import('./pages/Login'));
 const SignUp = lazy(() => import('./pages/SignUp'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const LearnMore = lazy(() => import('./pages/LearnMore'));
+const UserAccount = lazy(() => import('./pages/UserAccount'));
+const Settings = lazy(() => import('./pages/Settings'));
 
 function App() {
   const [user, setUser] = createSignal(null);
@@ -40,12 +42,16 @@ function App() {
     setUser(user);
     setLoading(false);
 
-    supabase.auth.onAuthStateChange((event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         setUser(session.user);
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
       }
+    });
+
+    onCleanup(() => {
+      authListener?.unsubscribe();
     });
   });
 
@@ -90,6 +96,8 @@ function App() {
                     <Route path="/join-the-team" component={JoinTheTeam} />
                     <Route path="/blog" component={Blog} />
                     <Route path="/store" component={Store} />
+                    <Route path="/user-account" component={UserAccount} />
+                    <Route path="/settings" component={Settings} />
                     <Route path="/*" element={<Navigate href="/" />} />
                   </Routes>
                 </Suspense>
