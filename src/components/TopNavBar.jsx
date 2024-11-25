@@ -37,12 +37,6 @@ function TopNavBar(props) {
           >
             اتصل بنا
           </button>
-          <button
-            onClick={() => navigate('/join-the-team')}
-            class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 cursor-pointer"
-          >
-            انضم للفريق
-          </button>
           <Show when={props.user && props.user.email === 'daoudi.abdennour@gmail.com'}>
             <a
               href="https://www.zapt.ai"

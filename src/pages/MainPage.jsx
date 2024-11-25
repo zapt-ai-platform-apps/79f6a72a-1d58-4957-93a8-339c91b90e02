@@ -49,20 +49,14 @@ function MainPage() {
       <div class="mt-8 text-center">
         <h2 class="text-3xl font-bold mb-4 text-purple-600">مرحبًا بك!</h2>
         <p class="text-lg leading-relaxed text-gray-700 mb-6">
-          هل ترغب في إدارة حسابك أو الانضمام إلى فريقنا المميز؟ يمكنك القيام بذلك بكل سهولة!
+          هل ترغب في إدارة حسابك؟ يمكنك القيام بذلك بكل سهولة!
         </p>
-        <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-reverse md:space-x-6">
+        <div class="flex justify-center">
           <button
             onClick={() => navigate('/user-account')}
             class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
           >
             حساب المستخدم
-          </button>
-          <button
-            onClick={() => navigate('/join-the-team')}
-            class="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-          >
-            انضم لفريقنا
           </button>
         </div>
       </div>

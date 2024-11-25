@@ -23,7 +23,6 @@ const TextEditor = lazy(() => import('./pages/TextEditor'));
 const TextResult = lazy(() => import('./pages/TextResult'));
 const ImageGenerator = lazy(() => import('./pages/ImageGenerator'));
 const ContactUs = lazy(() => import('./pages/ContactUs'));
-const JoinTheTeam = lazy(() => import('./pages/JoinTheTeam'));
 const Blog = lazy(() => import('./pages/Blog'));
 const Store = lazy(() => import('./pages/Store'));
 const Login = lazy(() => import('./pages/Login'));
@@ -93,7 +92,6 @@ function App() {
                     <Route path="/text-result" component={TextResult} />
                     <Route path="/image-generator" component={ImageGenerator} />
                     <Route path="/contact-us" component={ContactUs} />
-                    <Route path="/join-the-team" component={JoinTheTeam} />
                     <Route path="/blog" component={Blog} />
                     <Route path="/store" component={Store} />
                     <Route path="/user-account" component={UserAccount} />
