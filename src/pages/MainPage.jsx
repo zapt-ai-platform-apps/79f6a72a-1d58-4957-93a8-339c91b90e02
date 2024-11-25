@@ -46,13 +46,6 @@ function MainPage() {
       </div>
 
       <SocialMediaLinks />
-
-      {/* Made on ZAPT badge */}
-      <div class="mt-8">
-        <a href="https://www.zapt.ai" target="_blank" rel="noopener noreferrer" class="text-base text-gray-500 hover:text-gray-700">
-          Made on ZAPT
-        </a>
-      </div>
     </div>
   );
 }
