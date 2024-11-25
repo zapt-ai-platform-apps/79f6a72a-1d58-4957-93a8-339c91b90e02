@@ -37,7 +37,7 @@ function TopNavBar(props) {
           >
             اتصل بنا
           </button>
-          <Show when={props.user && props.user.email === 'daoudi.abdennour@gmail.com'}>
+          <Show when={props.user() && props.user().email === 'daoudi.abdennour@gmail.com'}>
             <a
               href="https://www.zapt.ai"
               target="_blank"
@@ -47,7 +47,7 @@ function TopNavBar(props) {
               Made on ZAPT
             </a>
           </Show>
-          <Show when={props.user}>
+          <Show when={props.user()}>
             <button
               onClick={handleSignOut}
               class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 cursor-pointer"
@@ -55,7 +55,7 @@ function TopNavBar(props) {
               تسجيل الخروج
             </button>
           </Show>
-          <Show when={!props.user}>
+          <Show when={!props.user()}>
             <button
               onClick={() => navigate('/login')}
               class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 cursor-pointer"

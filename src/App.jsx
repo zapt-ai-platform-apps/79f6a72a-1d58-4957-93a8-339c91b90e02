@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from '@solidjs/router';
 import { lazy, Suspense, createSignal, onMount, onCleanup, Show } from 'solid-js';
 import BottomNavBar from './components/BottomNavBar';
 import TopNavBar from './components/TopNavBar';
-import Footer from './components/Footer'; // Added Footer import
+import Footer from './components/Footer';
 import Loader from './components/Loader';
 import NotificationProvider from './components/NotificationProvider';
 import { supabase } from './supabaseClient';
@@ -73,7 +73,7 @@ function App() {
               </Routes>
             </Show>
             <Show when={user()}>
-              <TopNavBar user={user()} />
+              <TopNavBar user={user} />
               <div class="flex-grow pb-16 h-full">
                 <Suspense fallback={<div class="flex items-center justify-center h-full"><Loader loading={true} /></div>}>
                   <Routes>
@@ -103,12 +103,12 @@ function App() {
                   </Routes>
                 </Suspense>
               </div>
-              <BottomNavBar user={user()} />
+              <BottomNavBar user={user} />
             </Show>
           </>
         )}
       </NotificationProvider>
-      <Footer /> {/* Added Footer component */}
+      <Footer user={user} />
     </div>
   );
 }
