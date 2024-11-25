@@ -1,5 +1,6 @@
-import { Routes, Route } from '@solidjs/router';
-import { lazy, Suspense, createSignal, onMount } from 'solid-js';
+```jsx
+import { Routes, Route, Navigate } from '@solidjs/router';
+import { lazy, Suspense, createSignal, onMount, Show } from 'solid-js';
 import BottomNavBar from './components/BottomNavBar';
 import TopNavBar from './components/TopNavBar';
 import Loader from './components/Loader';
@@ -51,44 +52,55 @@ function App() {
   return (
     <div class="min-h-screen flex flex-col bg-gray-50 text-gray-800" dir="rtl">
       <NotificationProvider>
-        <TopNavBar user={user()} />
-        <div class="flex-grow pb-16 h-full">
-          {loading() ? (
-            <div class="flex items-center justify-center h-full"><Loader loading={true} /></div>
-          ) : (
-            <Suspense fallback={<div class="flex items-center justify-center h-full"><Loader loading={true} /></div>}>
+        {loading() ? (
+          <div class="flex items-center justify-center h-full"><Loader loading={true} /></div>
+        ) : (
+          <>
+            <Show when={!user()}>
               <Routes>
-                <Route path="/" component={MainPage} />
-                <Route path="/assistant" component={Assistant} />
-                <Route path="/order-your-app" component={OrderYourApp} />
-                <Route path="/order-your-app-form" component={OrderYourAppForm} />
-                <Route path="/order-your-website" component={OrderYourWebsite} />
-                <Route path="/services" component={Services} />
-                <Route path="/tools" component={Tools} />
-                <Route path="/voice-assistant" component={VoiceAssistant} />
-                <Route path="/content-generator" component={ContentGenerator} />
-                <Route path="/content-result" component={ContentResult} />
-                <Route path="/resume-builder" component={ResumeBuilder} />
-                <Route path="/resume-result" component={ResumeResult} />
-                <Route path="/radio" component={Radio} />
-                <Route path="/text-editor" component={TextEditor} />
-                <Route path="/text-result" component={TextResult} />
-                <Route path="/image-generator" component={ImageGenerator} />
-                <Route path="/contact-us" component={ContactUs} />
-                <Route path="/join-the-team" component={JoinTheTeam} />
-                <Route path="/blog" component={Blog} />
-                <Route path="/store" component={Store} />
                 <Route path="/login" component={Login} />
                 <Route path="/signup" component={SignUp} />
                 <Route path="/forgot-password" component={ForgotPassword} />
+                <Route path="/*" element={<Navigate href="/login" />} />
               </Routes>
-            </Suspense>
-          )}
-        </div>
-        <BottomNavBar user={user()} />
+            </Show>
+            <Show when={user()}>
+              <TopNavBar user={user()} />
+              <div class="flex-grow pb-16 h-full">
+                <Suspense fallback={<div class="flex items-center justify-center h-full"><Loader loading={true} /></div>}>
+                  <Routes>
+                    <Route path="/" component={MainPage} />
+                    <Route path="/assistant" component={Assistant} />
+                    <Route path="/order-your-app" component={OrderYourApp} />
+                    <Route path="/order-your-app-form" component={OrderYourAppForm} />
+                    <Route path="/order-your-website" component={OrderYourWebsite} />
+                    <Route path="/services" component={Services} />
+                    <Route path="/tools" component={Tools} />
+                    <Route path="/voice-assistant" component={VoiceAssistant} />
+                    <Route path="/content-generator" component={ContentGenerator} />
+                    <Route path="/content-result" component={ContentResult} />
+                    <Route path="/resume-builder" component={ResumeBuilder} />
+                    <Route path="/resume-result" component={ResumeResult} />
+                    <Route path="/radio" component={Radio} />
+                    <Route path="/text-editor" component={TextEditor} />
+                    <Route path="/text-result" component={TextResult} />
+                    <Route path="/image-generator" component={ImageGenerator} />
+                    <Route path="/contact-us" component={ContactUs} />
+                    <Route path="/join-the-team" component={JoinTheTeam} />
+                    <Route path="/blog" component={Blog} />
+                    <Route path="/store" component={Store} />
+                    <Route path="/*" element={<Navigate href="/" />} />
+                  </Routes>
+                </Suspense>
+              </div>
+              <BottomNavBar user={user()} />
+            </Show>
+          </>
+        )}
       </NotificationProvider>
     </div>
   );
 }
 
 export default App;
+```
