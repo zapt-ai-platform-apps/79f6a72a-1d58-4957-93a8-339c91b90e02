@@ -45,6 +45,20 @@ function MainPage() {
         </select>
       </div>
 
+      {/* New Section: Join Our Team */}
+      <div class="mt-8 text-center">
+        <h2 class="text-3xl font-bold mb-4 text-purple-600">انضم إلى فريقنا المميز!</h2>
+        <p class="text-lg leading-relaxed text-gray-700 mb-6">
+          هل لديك الشغف للمساهمة في تمكين الوصول للجميع؟ انضم إلينا وكن جزءًا من فريق يعمل على إحداث تغيير إيجابي باستخدام التقنيات المبتكرة.
+        </p>
+        <button
+          onClick={() => navigate('/join-the-team')}
+          class="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+        >
+          انضم لفريقنا
+        </button>
+      </div>
+
       <SocialMediaLinks />
     </div>
   );
