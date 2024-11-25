@@ -1,4 +1,4 @@
-import { createSignal, Show, onMount } from 'solid-js';
+import { createSignal, Show, onMount, onCleanup } from 'solid-js';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from '@solidjs/router';
 
@@ -61,16 +61,14 @@ function TopNavBar() {
           >
             انضم للفريق
           </button>
-          <Show when={user() && user().email === 'daoudi.abdennour@gmail.com'}>
-            <a
-              href="https://www.zapt.ai"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 cursor-pointer"
-            >
-              Made on ZAPT
-            </a>
-          </Show>
+          <a
+            href="https://www.zapt.ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 cursor-pointer"
+          >
+            Made on ZAPT
+          </a>
         </div>
       </Show>
     </div>

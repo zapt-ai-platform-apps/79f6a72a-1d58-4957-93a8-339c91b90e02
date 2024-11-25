@@ -1,238 +1,94 @@
-# Structured App Design Framework
+# إطار تصميم التطبيق
 
-## 1. Design Strategy Layer
+## 1. طبقة استراتيجية التصميم
 
-### A. Core Values
+### أ. القيم الأساسية
 
-- **Clarity**: Information is immediately understandable.
-- **Efficiency**: Tasks are completed with minimal effort.
-- **Accessibility**: The app is usable by all, especially individuals with visual impairments.
-- **Sophistication**: Provides a premium and trustworthy experience.
-- **User Empowerment**: Users feel in control and confident using the app.
+- **الوضوح**: المعلومات مفهومة مباشرة.
+- **الكفاءة**: إكمال المهام بأقل جهد.
+- **إمكانية الوصول**: التطبيق قابل للاستخدام من قبل الجميع، خاصة الأفراد ذوي الإعاقة البصرية.
 
-### B. Design Priorities
+### ب. أولويات التصميم
 
-1. **Accessibility**
-2. **Clarity of Information**
-3. **User Confidence**
-4. **Visual Impact**
-5. **Speed of Use**
-6. **Flexibility**
-7. **Information Density**
+1. **إمكانية الوصول**
+2. **وضوح المعلومات**
+3. **ثقة المستخدم**
+4. **تأثير بصري**
+5. **سرعة الاستخدام**
+6. **المرونة**
+7. **كثافة المعلومات**
 
-### C. Key Characteristics
+### ج. الخصائص الرئيسية
 
-- **Consistent Patterns**: Familiar UI patterns are used throughout the app.
-- **Quick Scanning**: Information is structured to be easily scanned.
-- **Progressive Disclosure**: Complex options are hidden until needed.
-- **Rich Feedback**: Users receive immediate and informative feedback for their actions.
-- **Guided Experience**: The app guides users through tasks step by step.
+- **أنماط متناسقة**: استخدام أنماط واجهة مستخدم مألوفة في جميع أنحاء التطبيق.
+- **مسح سريع**: هيكلة المعلومات بطريقة تسهل مسحها بسرعة.
+- **الإفصاح التدريجي**: إخفاء الخيارات المعقدة حتى الحاجة إليها.
+- **تغذية راجعة غنية**: يتلقى المستخدمون تغذية راجعة فورية ومفيدة لأفعالهم.
+- **تجربة موجهة**: يوجه التطبيق المستخدمين خلال المهام خطوة بخطوة.
 
-## 2. Visual Theme Layer
+## 2. طبقة الموضوع البصري
 
-### Material Design
+### التصميم المشرق الكلاسيكي
 
-- Paper-like layers with elevation effects.
-- Bold and accessible colors.
-- Motion-focused animations to provide context.
-- Best for: Modern, interactive, visually engaging apps.
+- خلفيات بيضاء نظيفة.
+- تأثيرات الظلال الخفيفة.
+- تباين واضح.
+- مناسب لـ: التطبيقات الاحترافية والمؤسسية.
 
-## 3. Design Principles Layer
+## 3. طبقة مبادئ التصميم
 
-### A. Space Management
+### أ. إدارة المساحة
 
-- **Structured Layout**
+- **تخطيط منظم**: استخدام نظام شبكة ثابت.
+- **مساحات متسقة**: توفير مساحات كافية بين العناصر لتجنب الزحام.
+- **كثافة سياقية**: توازن كثافة المعلومات بناءً على السياق.
 
-  - Use of a consistent grid system.
-  - Predictable and aligned elements that enhance scanability.
-  - Adequate spacing between elements to avoid clutter.
+### ب. التسلسل الهرمي البصري
 
-- **Contextual Density**
+- **تسلسل هرمي واضح**: إبراز المعلومات والإجراءات الأساسية من خلال الحجم واللون والموقع.
+- **عمق خفيف**: استخدام الظلال والطبقات للإشارة إلى التسلسل الهرمي والتفاعل.
 
-  - Balance information density based on context.
-  - Important content areas are spacious for better focus.
+### ج. تجربة المستخدم
 
-### B. Visual Hierarchy
+- **واجهة قابلة للوصول**: ألوان عالية التباين وأحجام خطوط قابلة للقراءة.
+- **تغذية راجعة غنية**: توفير تغذية راجعة فورية للأفعال.
+- **طباعة لغرض**: استخدام أحجام وأوزان خطوط محدودة ومتسقة.
 
-- **Clear Hierarchy**
+## 4. طبقة التنفيذ
 
-  - Primary actions and information stand out through size, color, and placement.
-  - Secondary information is less prominent but easily accessible.
+### أ. أنماط المكونات
 
-- **Subtle Depth**
+#### مكونات التخطيط
 
-  - Use shadows and layering to indicate hierarchy and interactivity.
-  - Elevation effects highlight important components.
+- **التنقل المتجاوب**: شريط تنقل علوي مع روابط أساسية.
+- **نظام الشبكة**: استخدام شبكة 12 عمودًا لتخطيطات مرنة.
 
-### C. User Experience
+#### مكونات المحتوى
 
-- **Accessible Interface**
+- **النماذج القابلة للوصول**: حقول مزودة بتسميات ودعم التحقق من الإدخال.
+- **عرض البيانات**: استخدام القوائم والجداول حيثما كان ذلك مناسبًا.
 
-  - High contrast colors and readable font sizes.
-  - Supports screen readers and keyboard navigation.
-  - Buttons and interactive elements are large and easy to tap.
+#### المكونات التفاعلية
 
-- **Rich Feedback**
+- **الأزرار**: استخدام لون رئيسي لإبراز الإجراءات الأساسية.
+- **الحوارات والنوافذ المنبثقة**: استخدامها للإشعارات الهامة.
 
-  - Interactive elements provide immediate feedback (e.g., button presses).
-  - Transitions and animations guide user attention without overwhelming.
+### ب. المواصفات التقنية
 
-- **Typography with Purpose**
+#### نظام الألوان
 
-  - Limited and consistent font sizes and weights.
-  - Clear reading hierarchy through headings and body text.
+- **اللون الرئيسي**: `#6200EE`
+- **اللون الثانوي**: `#03DAC5`
+- **لون النص**: `#212121`
 
-## 4. Implementation Layer
+#### النهج المتجاوب
 
-### A. Component Patterns
+- تصميم يبدأ من الجوال.
+- نقاط الانهيار: xs, sm, md, lg, xl.
 
-#### Layout Components
+## عملية التطبيق
 
-- **Responsive Navigation**
-
-  - Top navigation bar with essential links.
-  - Side navigation that can be toggled.
-
-- **Grid System**
-
-  - Utilizes a 12-column grid for flexible layouts.
-  - Responsive adjustments at various breakpoints.
-
-- **Cards and Sections**
-
-  - Content is organized into cards for clarity.
-  - Sections are clearly defined with headings.
-
-#### Content Components
-
-- **Accessible Forms**
-
-  - Inputs are labeled and support validation feedback.
-  - Error messages are clear and helpful.
-
-- **Data Presentation**
-
-  - Lists and tables are used where appropriate.
-  - Content adjusts to screen size without loss of information.
-
-- **Media Content**
-
-  - Images and media are optimized and include alt text.
-  - Media controls are accessible.
-
-#### Interactive Components
-
-- **Buttons**
-
-  - Primary actions use the primary color and stand out.
-  - Consistent button styles across the app.
-  - All buttons have `cursor-pointer` class for better accessibility.
-
-- **Modals and Dialogs**
-
-  - Used for important alerts and actions.
-  - Can be closed via button or escape key.
-
-- **Feedback Components**
-
-  - Notifications and toasts inform users of actions.
-  - Loading indicators show progress for longer tasks.
-
-### B. Technical Specifications
-
-#### Spacing System
-
-- Base unit: **8px**
-- Spacing scale: Multiples of the base unit (8px, 16px, 24px, etc.)
-- Consistent margins and paddings.
-
-#### Color System
-
-- **Primary color**: `#6200EE` (Deep Purple)
-- **Secondary color**: `#03DAC5` (Teal)
-- **Accent color**: `#FF0266` (Pink)
-- **Background color**: `#FFFFFF` and `#F5F5F5`
-- **Text color**: `#212121` (Default), `#000000` (High contrast)
-- **Feedback colors**:
-
-  - Success: `#388E3C` (Green)
-  - Error: `#D32F2F` (Red)
-  - Warning: `#FBC02D` (Amber)
-
-#### Typography Scale
-
-- **Font family**: `'Noto Sans Arabic', sans-serif`
-- **Font sizes**:
-
-  - Heading 1: 32px
-  - Heading 2: 24px
-  - Heading 3: 20px
-  - Body: 16px
-  - Small: 14px
-
-- **Font weights**:
-
-  - Regular: 400
-  - Medium: 500
-  - Bold: 700
-
-#### Interactive States
-
-- **Hover**
-
-  - Elements slightly elevate.
-  - Cursor changes to pointer.
-  - Color changes subtly.
-
-- **Focus**
-
-  - Outline or border highlight.
-  - Accessible focus indicators.
-
-- **Active**
-
-  - Pressed effect with slight color or shadow change.
-
-- **Disabled**
-
-  - Reduced opacity.
-  - Cursor changes to not-allowed.
-
-#### Responsive Approach
-
-- Mobile-first design.
-- **Breakpoints**:
-
-  - Extra small (xs): 0px
-  - Small (sm): 600px
-  - Medium (md): 960px
-  - Large (lg): 1280px
-  - Extra Large (xl): 1920px
-
-- Layout and component adjustments at each breakpoint.
-- Touch target sizes are maintained on mobile devices.
-
-## Application Process
-
-1. **Strategy Definition**
-
-   - Emphasized core values: Clarity, Efficiency, Accessibility, Sophistication, User Empowerment.
-   - Prioritized Accessibility and Clarity to make the app suitable for users with visual impairments.
-   - Selected key characteristics that ensure user trust and ease of use.
-
-2. **Theme Selection**
-
-   - Adopted Material Design due to its modern look and accessible components.
-   - Ensured the theme supports the app's focus on accessibility and clarity.
-
-3. **Principles Application**
-
-   - Applied structured layouts with clear hierarchy suitable for screen readers.
-   - Integrated accessible colors, fonts, and interactive elements.
-   - Ensured that all user interactions provide rich feedback.
-
-4. **Implementation Planning**
-
-   - Updated components to include accessible attributes.
-   - Applied the spacing, color, and typography standards throughout the app.
-   - Ensured all components and pages are responsive and accessible on all devices.
+1. **تعريف الاستراتيجية**: التركيز على إمكانية الوصول والوضوح.
+2. **اختيار الموضوع**: تبني التصميم المشرق الكلاسيكي لتعزيز الوضوح.
+3. **تطبيق المبادئ**: استخدام تخطيطات منظمة وتسلسل هرمي واضح.
+4. **تخطيط التنفيذ**: تحديث المكونات لتشمل سمات إمكانية الوصول.
