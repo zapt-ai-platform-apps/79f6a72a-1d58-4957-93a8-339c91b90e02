@@ -45,22 +45,6 @@ function MainPage() {
         </select>
       </div>
 
-      {/* New Section: Main Actions */}
-      <div class="mt-8 text-center">
-        <h2 class="text-3xl font-bold mb-4 text-purple-600">مرحبًا بك!</h2>
-        <p class="text-lg leading-relaxed text-gray-700 mb-6">
-          هل ترغب في إدارة حسابك؟ يمكنك القيام بذلك بكل سهولة!
-        </p>
-        <div class="flex justify-center">
-          <button
-            onClick={() => navigate('/user-account')}
-            class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-          >
-            حساب المستخدم
-          </button>
-        </div>
-      </div>
-
       <SocialMediaLinks />
     </div>
   );
