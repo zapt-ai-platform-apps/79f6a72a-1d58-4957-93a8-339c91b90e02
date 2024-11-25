@@ -1,7 +1,15 @@
 import { useNavigate } from '@solidjs/router';
+import { createSignal, onMount, Show } from 'solid-js';
+import { supabase } from '../supabaseClient';
 
 function LearnMore() {
   const navigate = useNavigate();
+  const [user, setUser] = createSignal(null);
+
+  onMount(async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    setUser(user);
+  });
 
   return (
     <div class="min-h-screen flex flex-col items-center p-4 text-gray-800 pt-8 pb-16">
@@ -117,8 +125,8 @@ function LearnMore() {
             rel="noopener noreferrer"
             class="cursor-pointer transform hover:scale-110 transition duration-300 ease-in-out"
           >
-            <img src="https://images.unsplash.com/photo-1611262588024-d12430b98920?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2NjQ4Nzh8MHwxfHNlYXJjaHw1fHxGYWNlYm9vayUyMGxvZ28lMjBpY29ufGVufDB8fHx8MTczMjU3MzY2N3ww&ixlib=rb-4.0.3&q=80&w=1080"
-              
+            <img
+              src="https://images.unsplash.com/photo-1611262588024-d12430b98920?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2NjQ4Nzh8MHwxfHNlYXJjaHw1fHxGYWNlYm9vayUyMGxvZ28lMjBpY29ufGVufDB8fHx8MTczMjU3MzY2N3ww&ixlib=rb-4.0.3&q=80&w=1080"
               alt="فيسبوك"
               class="w-12 h-12"
               data-image-request="Facebook logo icon"
@@ -130,8 +138,8 @@ function LearnMore() {
             rel="noopener noreferrer"
             class="cursor-pointer transform hover:scale-110 transition duration-300 ease-in-out"
           >
-            <img src="https://images.unsplash.com/photo-1615915468538-0fbd857888ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2NjQ4Nzh8MHwxfHNlYXJjaHw0fHxUZWxlZ3JhbSUyMGxvZ28lMjBpY29ufGVufDB8fHx8MTczMjU3MzY2N3ww&ixlib=rb-4.0.3&q=80&w=1080"
-              
+            <img
+              src="https://images.unsplash.com/photo-1615915468538-0fbd857888ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2NjQ4Nzh8MHwxfHNlYXJjaHw0fHxUZWxlZ3JhbSUyMGxvZ28lMjBpY29ufGVufDB8fHx8MTczMjU3MzY2N3ww&ixlib=rb-4.0.3&q=80&w=1080"
               alt="تيليجرام"
               class="w-12 h-12"
               data-image-request="Telegram logo icon"
@@ -143,8 +151,8 @@ function LearnMore() {
             rel="noopener noreferrer"
             class="cursor-pointer transform hover:scale-110 transition duration-300 ease-in-out"
           >
-            <img src="https://images.unsplash.com/photo-1611605698335-8b1569810432?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2NjQ4Nzh8MHwxfHNlYXJjaHw2fHxXaGF0c0FwcCUyMGxvZ28lMjBpY29ufGVufDB8fHx8MTczMjU3MzY2OHww&ixlib=rb-4.0.3&q=80&w=1080"
-              
+            <img
+              src="https://images.unsplash.com/photo-1611605698335-8b1569810432?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2NjQ4Nzh8MHwxfHNlYXJjaHw2fHxXaGF0c0FwcCUyMGxvZ28lMjBpY29ufGVufDB8fHx8MTczMjU3MzY2OHww&ixlib=rb-4.0.3&q=80&w=1080"
               alt="واتساب"
               class="w-12 h-12"
               data-image-request="WhatsApp logo icon"
@@ -158,14 +166,16 @@ function LearnMore() {
         <p class="text-gray-600">
           © 2023 Blind Accessibility. جميع الحقوق محفوظة.
         </p>
-        <a
-          href="https://www.zapt.ai"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-blue-500 hover:underline mt-2 inline-block"
-        >
-          Made on ZAPT
-        </a>
+        <Show when={user() && user().email === 'daoudi.abdennour@gmail.com'}>
+          <a
+            href="https://www.zapt.ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-blue-500 hover:underline mt-2 inline-block"
+          >
+            Made on ZAPT
+          </a>
+        </Show>
       </div>
     </div>
   );
