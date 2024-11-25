@@ -20,14 +20,21 @@ function MainPage() {
   };
 
   return (
-    <div class="flex flex-col items-center p-4 h-full pt-16 pb-16 text-gray-800">
+    <div class="flex flex-col items-center p-4 min-h-screen pt-16 pb-16 text-gray-800">
       <AnnouncementBanner />
+
+      {/* Description of the App */}
+      <div class="w-full max-w-2xl mb-6 text-center">
+        <p class="text-lg leading-relaxed">
+          تطبيق <span class="font-bold">Blind Accessibility</span> هو منصة شاملة توفر مجموعة متنوعة من الأدوات والخدمات المصممة خصيصًا لتعزيز إمكانية الوصول للأشخاص ذوي الإعاقة البصرية. يهدف التطبيق إلى تسهيل الحياة اليومية للمكفوفين وضعاف البصر من خلال تقديم حلول مبتكرة تعتمد على تقنيات الذكاء الاصطناعي.
+        </p>
+      </div>
 
       {/* Selection Menu */}
       <div class="w-full max-w-md mb-6">
         <label class="block mb-2 text-lg font-semibold">اختر وجهتك:</label>
         <select
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer box-border"
           value={selectedOption()}
           onInput={handleSelectionChange}
         >
@@ -39,6 +46,13 @@ function MainPage() {
       </div>
 
       <SocialMediaLinks />
+
+      {/* Made on ZAPT badge */}
+      <div class="mt-8">
+        <a href="https://www.zapt.ai" target="_blank" rel="noopener noreferrer" class="text-base text-gray-500 hover:text-gray-700">
+          Made on ZAPT
+        </a>
+      </div>
     </div>
   );
 }
