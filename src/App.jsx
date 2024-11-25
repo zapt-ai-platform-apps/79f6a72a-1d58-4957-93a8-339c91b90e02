@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from '@solidjs/router';
 import { lazy, Suspense, createSignal, onMount, onCleanup, Show } from 'solid-js';
 import BottomNavBar from './components/BottomNavBar';
 import TopNavBar from './components/TopNavBar';
+import Footer from './components/Footer'; // Added Footer import
 import Loader from './components/Loader';
 import NotificationProvider from './components/NotificationProvider';
 import { supabase } from './supabaseClient';
@@ -107,6 +108,7 @@ function App() {
           </>
         )}
       </NotificationProvider>
+      <Footer /> {/* Added Footer component */}
     </div>
   );
 }

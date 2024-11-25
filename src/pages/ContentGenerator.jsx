@@ -69,7 +69,7 @@ function ContentGenerator() {
         <div class="mb-4">
           <label class="block mb-2 text-lg font-semibold text-gray-700">اختر نوع المحتوى:</label>
           <select
-            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer box-border"
             value={selectedContentType()}
             onInput={(e) => setSelectedContentType(e.target.value)}
             disabled={loading()}
