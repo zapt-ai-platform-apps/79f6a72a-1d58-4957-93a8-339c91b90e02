@@ -22,7 +22,6 @@ function MainPage() {
   return (
     <div class="flex flex-col items-center p-4 h-full pt-16 pb-16 text-gray-800">
       <AnnouncementBanner />
-      <h1 class="text-5xl font-bold text-purple-600 mb-6">Blind Accessibility</h1>
       <h2 class="text-2xl font-semibold text-gray-700 mb-4">نمكن الجميع من الوصول إلى عالم الرقميات</h2>
 
       {/* Selection Menu */}
